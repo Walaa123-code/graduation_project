@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 
 class AppColors{
-  static const Color whiteColor = Color(0xffF2FEFF);
-  static const Color darkWhitColor = Color(0xffcee2ea);
-  static const Color darkBlueColor = Color(0xff10254e);
-  static const Color blueColor = Color(0xff94c0cd);
-  static const Color lavenderColor = Color(0xffbca9dd);
+  static const Color whiteColor = Color(0xf0ffffff);
+  static const Color darkWhitColor = Color(0xefefefef);
+  static const Color blackColor = Color(0xff171717);
+  static const Color blueColor = Color(0xFF42A5F5);
+  static const Color lavenderColor = Color(0xFF9643B6);
   static const Color mintColor = Color(0xffa6e6dc);
-  static const Color lightGrayColor = Color(0x7e95969a);
+  static const Color grayColor = Color(0xffA0A0A0);
+  static  Color grayShadColor = Colors.grey.shade50;
+  static  Color grayShad1Color = Colors.grey.shade100;
   static const Color mediumGrayColor = Color(0xff515151);
   static const Color darkGrayColor = Color(0xff333333);
+  static const blue = Color(0xff4A6CF7);
+  static const purple = Color(0xff8E54E9);
+  static const gradient = LinearGradient(
+    colors: [blue, purple],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
 }
