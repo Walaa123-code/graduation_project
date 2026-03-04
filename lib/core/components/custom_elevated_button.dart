@@ -3,13 +3,15 @@ import 'package:graduation_project/core/utils/app_colors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   CustomElevatedButton(
-      {super.key, required this.textButton, required this.textStyle, required this.backGroundColor});
-  String textButton;
+      {super.key,  this.textButton,
+        required this.textStyle, required this.backGroundColor, VoidCallback? onPressed});
+  String? textButton;
   TextStyle textStyle;
   Color backGroundColor;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+
       onPressed: () {},
       style: ElevatedButton.styleFrom(
 
@@ -17,7 +19,7 @@ class CustomElevatedButton extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)), ),
       child: Text(
-        textButton,
+        textButton!,
         style: textStyle,
       ),
     );
