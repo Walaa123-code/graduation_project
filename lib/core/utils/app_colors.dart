@@ -14,8 +14,9 @@ class AppColors{
   static const Color darkGrayColor = Color(0xff333333);
   static const blue = Color(0xff4A6CF7);
   static const purple = Color(0xff8E54E9);
+  static const red = Color(0xffda0d0d);
   static const gradient = LinearGradient(
-    colors: [blue, purple],
+    colors: [lavenderColor, blueColor],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

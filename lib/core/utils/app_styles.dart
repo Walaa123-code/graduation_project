@@ -34,6 +34,14 @@ class AppStyles {
       color: AppColors.whiteColor,
       fontSize: 16,
       fontWeight: FontWeight.w500);
+  static TextStyle medium16DarkGray = TextStyle(
+      color: AppColors.darkGrayColor,
+      fontSize: 16,
+      fontWeight: FontWeight.w500);
+  static TextStyle medium14DarkGray = TextStyle(
+      color: AppColors.darkGrayColor,
+      fontSize: 14,
+      fontWeight: FontWeight.w500);
   static TextStyle medium17Gray = TextStyle(
       color: AppColors.mediumGrayColor,
       fontSize: 17,
@@ -42,10 +50,19 @@ class AppStyles {
       color: AppColors.mediumGrayColor,
       fontSize: 15,
       fontWeight: FontWeight.w500);
+  static TextStyle medium16Black = TextStyle(
+      color: AppColors.blackColor,
+      fontSize: 16,
+      fontWeight: FontWeight.w500);
   static TextStyle medium15Black = TextStyle(
       color: AppColors.blackColor,
       fontSize: 15,
       fontWeight: FontWeight.w500);
+  static TextStyle medium16Red = TextStyle(
+      color: AppColors.red,
+      fontSize: 16,
+      fontWeight: FontWeight.w600);
+
   static TextStyle medium18Gray = TextStyle(
       color: AppColors.mediumGrayColor,
       fontSize: 18,
