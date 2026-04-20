@@ -61,7 +61,7 @@ class _LibraryTabState extends State<LibraryTab> {
             Expanded(
               child: IndexedStack(
                 index: selectedIndex,
-                children: [
+                children: const [
                   PodcastTab(),
                   MusicTab(),
                   ExerciseTab(),
