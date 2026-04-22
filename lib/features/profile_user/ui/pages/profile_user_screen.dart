@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/utils/app_styles.dart';
-import 'package:graduation_project/features/profile_user/ui/widgets/profile_header.dart';
+import 'package:mindecho/core/utils/app_styles.dart';
+import 'package:mindecho/features/profile_user/ui/widgets/profile_header.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_item_tile.dart';
 import '../widgets/state_card.dart';
