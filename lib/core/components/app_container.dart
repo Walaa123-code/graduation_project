@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/utils/app_colors.dart';
-import 'package:graduation_project/core/utils/app_styles.dart';
-import 'package:graduation_project/core/components/custom_elevated_button.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import 'package:mindecho/core/utils/app_styles.dart';
+import 'package:mindecho/core/components/custom_elevated_button.dart';
 
 class AppContainer extends StatelessWidget {
   final String title;

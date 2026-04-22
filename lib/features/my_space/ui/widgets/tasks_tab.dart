@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/features/my_space/ui/widgets/task_item_card.dart';
+import 'package:mindecho/features/my_space/ui/widgets/task_item_card.dart';
 import '../../../../core/utils/app_styles.dart';
 
 class TasksTab extends StatelessWidget {

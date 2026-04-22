@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/features/my_space/ui/widgets/space_item_card.dart';
+import 'package:mindecho/features/my_space/ui/widgets/space_item_card.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';

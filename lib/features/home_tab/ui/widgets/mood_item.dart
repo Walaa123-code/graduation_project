@@ -8,7 +8,7 @@ class MoodItem extends StatelessWidget {
   final String text;
   final TextStyle? textStyle;
 
-  const MoodItem(this.emoji, this.text, {this.textStyle});
+  const MoodItem(this.emoji, this.text, {super.key, this.textStyle});
 
   @override
   Widget build(BuildContext context) {

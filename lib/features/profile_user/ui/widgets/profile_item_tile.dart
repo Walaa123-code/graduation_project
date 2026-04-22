@@ -22,7 +22,7 @@ class ProfileItemTile extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: AppColors.lavenderColor.withOpacity(.1),
+          backgroundColor: AppColors.lavenderColor.withValues(alpha: .1),
           child: Icon(icon, color: AppColors.lavenderColor),
         ),
         title: Text(title, style: titleStyle,),

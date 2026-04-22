@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/utils/app_colors.dart';
-import 'package:graduation_project/core/utils/app_styles.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import 'package:mindecho/core/utils/app_styles.dart';
 import '../../../../core/components/app_card.dart';
 import '../../../../core/components/app_container.dart';
 import '../widgets/action_card.dart';
