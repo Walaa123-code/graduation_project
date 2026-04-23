@@ -1,86 +1,132 @@
 import 'package:flutter/material.dart';
-import 'package:mindecho/core/utils/app_styles.dart';
-import 'package:mindecho/features/profile_user/ui/widgets/profile_header.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/app_styles.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../di/di.dart';
+import '../manager/profile_cubit.dart';
+import '../widgets/help&support_screen.dart';
+import '../widgets/notifications_screen.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/settings_screen.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_item_tile.dart';
 import '../widgets/state_card.dart';
 
 class ProfileUserScreen extends StatelessWidget {
+  // ProfileCubit profileCubit = getIt<ProfileCubit>();
   const ProfileUserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF6F7FB),
-      body: Column(
-        children: [
-          ProfileHeader(),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
+    return BlocProvider(
+      create: (context) => getIt<ProfileCubit>()..getProfile(),
+      child: Scaffold(
+        backgroundColor: AppColors.whiteColor,
+        body:
+            BlocBuilder<ProfileCubit, ProfileState>(builder: (context, state) {
+          if (state is ProfileLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is ProfileErrorState) {
+            return Center(child: Text(state.failures.errors.toString()));
+          } else if (state is ProfileSuccessState) {
+            var response = state.profileResponseEntity.data;
+
+            return Column(
               children: [
-                Expanded(
-                  child: StatCard(
-                    "7",
-                    "Session",
-                    labelStyle: AppStyles.medium14DarkGray,
-                    valueStyle: AppStyles.bold17Lavender,
+                ProfileHeader(
+                  userName: response?.fullName ?? "",
+                  userEmail: response?.email ?? "",
+                  imageUrl: response?.profilePicture ?? '',
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: StatCard(
+                          "7",
+                          "Session",
+                          labelStyle: AppStyles.medium14DarkGray,
+                          valueStyle: AppStyles.bold17Lavender,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                          child: StatCard(
+                        "28",
+                        "Exercises",
+                        labelStyle: AppStyles.medium14DarkGray,
+                        valueStyle: AppStyles.bold17Lavender,
+                      )),
+                      const SizedBox(width: 10),
+                      Expanded(
+                          child: StatCard(
+                        "14",
+                        "Days",
+                        labelStyle: AppStyles.medium14DarkGray,
+                        valueStyle: AppStyles.bold17Lavender,
+                      )),
+                    ],
                   ),
                 ),
-                SizedBox(width: 10),
-                Expanded(
-                    child: StatCard(
-                  "28",
-                  "Exercises",
-                  labelStyle: AppStyles.medium14DarkGray,
-                  valueStyle: AppStyles.bold17Lavender,
-                )),
-                SizedBox(width: 10),
-                Expanded(
-                    child: StatCard(
-                  "14",
-                  "Days",
-                  labelStyle: AppStyles.medium14DarkGray,
-                  valueStyle: AppStyles.bold17Lavender,
-                )),
-              ],
-            ),
-          ),
 
-          const SizedBox(height: 5),
-
-          /// settings list
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                ProfileItemTile(
-                  icon: Icons.notifications_outlined,
-                  title: "Notifications",
-                  titleStyle: AppStyles.medium16Black,
-                ),
-                ProfileItemTile(
-                  icon: Icons.settings_outlined,
-                  title: "Settings",
-                  titleStyle: AppStyles.medium16Black,
-                ),
-                ProfileItemTile(
-                  icon: Icons.dark_mode_outlined,
-                  title: "Dark Mode",
-                  titleStyle: AppStyles.medium16Black,
-                ),
-                ProfileItemTile(
-                  icon: Icons.help_outline,
-                  title: "Help & Support",
-                  titleStyle: AppStyles.medium16Black,
-                ),
-                SizedBox(height: 12),
-                LogoutButton(),
+                /// settings list
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      ProfileItemTile(
+                        icon: Icons.notifications_outlined,
+                        title: "Notifications",
+                        titleStyle: AppStyles.medium16Black,
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationsScreen()));
+                        },
+                      ),
+                      ProfileItemTile(
+                        icon: Icons.settings_outlined,
+                        title: "Settings",
+                        titleStyle: AppStyles.medium16Black,
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SettingsScreen()));
+                        },
+                      ),
+                      ProfileItemTile(
+                        icon: Icons.dark_mode_outlined,
+                        title: "Dark Mode",
+                        titleStyle: AppStyles.medium16Black,
+                      ),
+                      ProfileItemTile(
+                        icon: Icons.help_outline,
+                        title: "Help & Support",
+                        titleStyle: AppStyles.medium16Black,
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const HelpSupportScreen()));
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      const LogoutButton(),
+                    ],
+                  ),
+                )
               ],
-            ),
-          )
-        ],
+            );
+          }
+          return const SizedBox();
+        }),
       ),
     );
   }

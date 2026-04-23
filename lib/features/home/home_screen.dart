@@ -16,11 +16,11 @@ class HomeScreen extends StatefulWidget {
 class _TestState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Widget> screen = [
-    HomeTab(),
-    LibraryTab(),
-    MySpaceScreen(),
-    AppointmentsScreen(),
-    ProfileUserScreen(),
+     HomeTab(),
+    const LibraryTab(),
+    const MySpaceScreen(),
+    const AppointmentsScreen(),
+    const ProfileUserScreen(),
   ];
   int currentIndex = 0;
 
@@ -39,7 +39,7 @@ class _TestState extends State<HomeScreen> {
                   currentIndex = index;
                   setState(() {});
                 },
-                items: [
+                items: const [
                   BottomNavigationBarItem(
                       icon: Icon(Icons.home_outlined, size: 30), label: "Home"),
                   BottomNavigationBarItem(
@@ -56,6 +56,7 @@ class _TestState extends State<HomeScreen> {
                       label: "Profile"),
                 ])),
         body: SafeArea(
+          top: false,
           child: Stack(
             children: [
               screen[currentIndex],

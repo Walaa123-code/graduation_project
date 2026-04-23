@@ -5,11 +5,12 @@ class ProfileItemTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final TextStyle titleStyle;
+  final VoidCallback? onTap;
 
   const ProfileItemTile({
     super.key,
     required this.icon,
-    required this.title, required this.titleStyle,
+    required this.title, required this.titleStyle, this.onTap
   });
 
   @override
@@ -21,6 +22,7 @@ class ProfileItemTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: ListTile(
+        onTap: onTap,
         leading: CircleAvatar(
           backgroundColor: AppColors.lavenderColor.withValues(alpha: .1),
           child: Icon(icon, color: AppColors.lavenderColor),
