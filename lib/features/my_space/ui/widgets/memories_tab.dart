@@ -12,7 +12,7 @@ class MemoriesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16),
-      children:  [
+      children:  const [
         AppContainer(title: "Memory World",iconData: Icons.memory_rounded,iconColor: AppColors.whiteColor,
 
             subtitle: "Capture your best emotional moments", buttonText: "Add Memory"),

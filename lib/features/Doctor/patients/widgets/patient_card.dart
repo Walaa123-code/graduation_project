@@ -81,7 +81,7 @@ class PatientCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       patient.lastSeen,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.gray400,
                       ),

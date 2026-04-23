@@ -289,7 +289,7 @@ class _TimeSlotRow extends StatelessWidget {
           const SizedBox(width: 10),
           // Slot card
           Expanded(
-            child: isBooked ? _BookedSlot() : _AvailableSlot(),
+            child: isBooked ? const _BookedSlot() : const _AvailableSlot(),
           ),
         ],
       ),
@@ -309,12 +309,12 @@ class _AvailableSlot extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppTheme.radiusMd),
         border: Border.all(color: AppColors.gray200, width: 1),
       ),
-      child: Row(
+      child: const Row(
         children: [
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Icon(Icons.access_time_rounded, size: 15, color: AppColors.gray300),
-          const SizedBox(width: 8),
-          const Text(
+          SizedBox(width: 8),
+          Text(
             'Available for booking',
             style: TextStyle(
               fontSize: 13,

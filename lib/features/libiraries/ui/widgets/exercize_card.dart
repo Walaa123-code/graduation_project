@@ -22,7 +22,7 @@ class ExerciseCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
             AppColors.lavenderColor,
             AppColors.blueColor,

@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _TestState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Widget> screen = [
-     HomeTab(),
+     const HomeTab(),
     const LibraryTab(),
     const MySpaceScreen(),
     const AppointmentsScreen(),

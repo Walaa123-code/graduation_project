@@ -44,8 +44,8 @@ class AppointmentsHeader extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               // Stat cards row
-              Row(
-                children: const [
+              const Row(
+                children: [
                   _StatChip(label: 'Completed', value: '1'),
                   SizedBox(width: 10),
                   _StatChip(label: 'Upcoming', value: '3'),

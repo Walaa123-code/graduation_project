@@ -75,7 +75,7 @@ class DoctorHomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Stats Row
-                  Row(
+                  const Row(
                     children: [
                       Expanded(
                         child: StatsCard(
@@ -85,7 +85,7 @@ class DoctorHomeScreen extends StatelessWidget {
                           color: AppColors.purpleSoft,
                         ),
                       ),
-                      const SizedBox(width: AppTheme.spacingMd),
+                      SizedBox(width: AppTheme.spacingMd),
                       Expanded(
                         child: StatsCard(
                           label: 'Patients',
@@ -95,7 +95,7 @@ class DoctorHomeScreen extends StatelessWidget {
                         ),
                       ),
                       // Add a third card if needed to match 3-card design
-                      const SizedBox(width: AppTheme.spacingMd),
+                      SizedBox(width: AppTheme.spacingMd),
                       Expanded(
                         child: StatsCard(
                           label: 'Rating',
@@ -143,7 +143,7 @@ class DoctorHomeScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.calendar_today,
+                        const Icon(Icons.calendar_today,
                             size: 48, color: AppColors.gray300),
                         const SizedBox(height: AppTheme.spacingMd),
                         Text(

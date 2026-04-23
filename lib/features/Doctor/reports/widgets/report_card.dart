@@ -73,8 +73,8 @@ class ReportCard extends StatelessWidget {
               const SizedBox(height: 8),
               GestureDetector(
                 onTap: () {},
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Text(
                       'View',
                       style: TextStyle(

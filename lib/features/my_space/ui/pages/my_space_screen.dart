@@ -35,7 +35,7 @@ class MySpaceScreen extends StatelessWidget {
               )
             ],
           ),
-          bottom:  TabBar(
+          bottom:  const TabBar(
             indicatorColor: AppColors.lavenderColor,
             labelColor: AppColors.lavenderColor,
             unselectedLabelColor: AppColors.blackColor,

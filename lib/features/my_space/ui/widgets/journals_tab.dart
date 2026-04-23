@@ -32,7 +32,7 @@ class JournalsTab extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: AppColors.lavenderColor,
                             borderRadius: BorderRadius.circular(50)),
-                        child: Icon(Icons.add, color: AppColors.whiteColor,)),
+                        child: const Icon(Icons.add, color: AppColors.whiteColor,)),
                   ),
                     Text("New", style: AppStyles.bold18Lavender,),
                   ],)

@@ -70,7 +70,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           // Body switches between Upcoming list and Schedule calendar view
           Expanded(
             child: _selectedTab == 0
-                ? _UpcomingList(appointments: _upcoming)
+                ? const _UpcomingList(appointments: _upcoming)
                 : const ScheduleView(),
           ),
         ],
@@ -91,13 +91,13 @@ class _UpcomingList extends StatelessWidget {
     return Column(
       children: [
         const AppointmentsSearchBar(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
               'All Upcoming Appointments',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
                 color: AppColors.gray800,
@@ -125,14 +125,14 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.calendar_today_outlined,
               size: 56, color: AppColors.gray300),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             'No appointments here',
             style: TextStyle(
               fontSize: 16,
@@ -140,8 +140,8 @@ class _EmptyState extends StatelessWidget {
               color: AppColors.gray500,
             ),
           ),
-          const SizedBox(height: 4),
-          const Text(
+          SizedBox(height: 4),
+          Text(
             'This list is currently empty.',
             style: TextStyle(fontSize: 13, color: AppColors.gray400),
           ),

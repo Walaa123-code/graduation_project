@@ -64,9 +64,9 @@ class DoctorProfileScreen extends StatelessWidget {
             const SizedBox(height: AppTheme.spacingLg),
 
             // Stats Row
-            Padding(
+            const Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd),
+                  EdgeInsets.symmetric(horizontal: AppTheme.spacingMd),
               child: Row(
                 children: [
                   Expanded(
@@ -77,7 +77,7 @@ class DoctorProfileScreen extends StatelessWidget {
                       color: Colors.orange,
                     ),
                   ),
-                  const SizedBox(width: AppTheme.spacingMd),
+                  SizedBox(width: AppTheme.spacingMd),
                   Expanded(
                     child: StatsCard(
                       label: 'Sessions',
@@ -86,7 +86,7 @@ class DoctorProfileScreen extends StatelessWidget {
                       color: AppColors.purpleSoft,
                     ),
                   ),
-                  const SizedBox(width: AppTheme.spacingMd),
+                  SizedBox(width: AppTheme.spacingMd),
                   Expanded(
                     child: StatsCard(
                       label: 'Patients',

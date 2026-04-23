@@ -29,7 +29,7 @@ class AppContainer extends StatelessWidget {
       width: double.infinity,
       height: 150,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
             AppColors.lavenderColor,
             AppColors.blueColor,
