@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:graduation_project/core/api/api_constants.dart';
+import 'package:mindecho/core/api/api_constants.dart';
 
 class ApiManager {
   Dio dio = Dio();

@@ -1,4 +1,4 @@
-import 'package:graduation_project/features/profile_user/domain/entities/ProfileResponseEntity.dart';
+import 'package:mindecho/features/profile_user/domain/entities/ProfileResponseEntity.dart';
 
 class ProfileResponseDm extends ProfileResponseEntity {
   ProfileResponseDm({

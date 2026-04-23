@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/core/errors/failures.dart';
-import 'package:graduation_project/features/profile_user/domain/entities/ProfileResponseEntity.dart';
-import 'package:graduation_project/features/profile_user/domain/use_cases/profile_use_case.dart';
+import 'package:mindecho/core/errors/failures.dart';
+import 'package:mindecho/features/profile_user/domain/entities/ProfileResponseEntity.dart';
+import 'package:mindecho/features/profile_user/domain/use_cases/profile_use_case.dart';
 import 'package:injectable/injectable.dart';
 
 part 'profile_state.dart';
