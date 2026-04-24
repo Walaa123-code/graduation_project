@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+
+// ── Existing imports (unchanged) ─────────────────────────────────
 import 'package:mindecho/features/profile_user/data/repositories/profile_repository_impl.dart';
 import 'package:mindecho/features/profile_user/domain/repositories/data_source/remote_data_source/profile_remote_data_source.dart';
 import 'package:mindecho/features/profile_user/domain/repositories/repositories/profile_repository.dart';
@@ -13,44 +15,183 @@ import '../features/home_tab/ui/manager/mood_cubit.dart';
 import '../features/profile_user/data/data_source/remote_data_source_impl/profile_remote_data_source_impl.dart';
 import '../features/profile_user/ui/manager/profile_cubit.dart';
 
+// ── New imports ───────────────────────────────────────────────────
+import '../features/auth/data/repositories/auth_repository_impl.dart';
+import '../features/auth/domain/repositories/auth_repository.dart';
+import '../features/auth/domain/use_cases/login_doctor_use_case.dart';
+import '../features/auth/domain/use_cases/login_user_use_case.dart';
+import '../features/auth/domain/use_cases/register_doctor_use_case.dart';
+import '../features/auth/domain/use_cases/register_user_use_case.dart';
+import '../features/auth/ui/manager/auth_cubit.dart';
+import '../features/appointments/data/repositories/booking_repository_impl.dart';
+import '../features/appointments/domain/repositories/booking_repository.dart';
+import '../features/appointments/domain/use_cases/booking_use_cases.dart';
+import '../features/appointments/ui/manager/booking_cubit.dart';
+import '../features/Doctor/data/repositories/doctor_repository_impl.dart';
+import '../features/Doctor/domain/repositories/doctor_repository.dart';
+import '../features/Doctor/domain/use_cases/doctor_use_cases.dart';
+import '../features/Doctor/ui/manager/doctor_cubit.dart';
+import '../features/Doctor/data/repositories/schedule_repository_impl.dart';
+import '../features/Doctor/domain/repositories/schedule_repository.dart';
+import '../features/Doctor/domain/use_cases/add_schedule_use_case.dart';
+import '../features/Doctor/ui/manager/schedule_cubit.dart';
+import '../features/my_space/data/repositories/journal_repository_impl.dart';
+import '../features/my_space/domain/repositories/journal_repository.dart';
+import '../features/my_space/domain/use_cases/journal_use_cases.dart';
+import '../features/my_space/ui/manager/journal_cubit.dart';
+import '../features/my_space/data/repositories/memory_repository_impl.dart';
+import '../features/my_space/domain/repositories/memory_repository.dart';
+import '../features/my_space/domain/use_cases/memory_use_cases.dart';
+import '../features/my_space/ui/manager/memory_cubit.dart';
 
 final getIt = GetIt.instance;
+
 Future<void> initAppModule() async {
+  // ── Core: ApiManager (singleton) ──────────────────────────────
   getIt.registerLazySingleton<ApiManager>(() => ApiManager());
+
+  // ── Profile (existing – unchanged) ────────────────────────────
   getIt.registerLazySingleton<ProfileRemoteDataSource>(
-        () => ProfileRemoteDataSourceImpl(),
+    () => ProfileRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<ProfileRepository>(
-        () => ProfileRepositoryImpl(profileRemoteDataSource: getIt<ProfileRemoteDataSource>()),
+    () => ProfileRepositoryImpl(
+        profileRemoteDataSource: getIt<ProfileRemoteDataSource>()),
   );
   getIt.registerLazySingleton<ProfileUseCase>(
-        () => ProfileUseCase(profileRepository: getIt<ProfileRepository>()),
+    () => ProfileUseCase(profileRepository: getIt<ProfileRepository>()),
+  );
+  getIt.registerFactory<ProfileCubit>(
+    () => ProfileCubit(profileUseCase: getIt<ProfileUseCase>()),
   );
 
-getIt.registerFactory<ProfileCubit>(()=>ProfileCubit(profileUseCase: getIt<ProfileUseCase>()));
-
-
-
-// --- Mood Feature ---
-
-  // 1. Data Source
+  // ── Mood (existing – unchanged) ────────────────────────────────
   getIt.registerLazySingleton<MoodRemoteDataSource>(
-        () => MoodRemoteDataSourceImpl(apiManager: getIt()),
+    () => MoodRemoteDataSourceImpl(apiManager: getIt()),
   );
-
-  // 2. Repository
   getIt.registerLazySingleton<MoodRepository>(
-        () => MoodRepositoryImpl(moodRemoteDataSource: getIt()),
+    () => MoodRepositoryImpl(moodRemoteDataSource: getIt()),
   );
-
-  // 3. Use Case
   getIt.registerLazySingleton<MoodUseCase>(
-        () => MoodUseCase(moodRepository: getIt()),
+    () => MoodUseCase(moodRepository: getIt()),
+  );
+  getIt.registerFactory<MoodCubit>(
+    () => MoodCubit(moodUseCase: getIt()),
   );
 
-  // 4. Cubit
-  getIt.registerFactory<MoodCubit>(
-        () => MoodCubit(moodUseCase: getIt()),
+  // ── Auth (new) ─────────────────────────────────────────────────
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(apiManager: getIt<ApiManager>()),
+  );
+  getIt.registerLazySingleton<RegisterUserUseCase>(
+    () => RegisterUserUseCase(authRepository: getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton<LoginUserUseCase>(
+    () => LoginUserUseCase(authRepository: getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton<RegisterDoctorUseCase>(
+    () => RegisterDoctorUseCase(authRepository: getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton<LoginDoctorUseCase>(
+    () => LoginDoctorUseCase(authRepository: getIt<AuthRepository>()),
+  );
+  getIt.registerFactory<AuthCubit>(
+    () => AuthCubit(
+      registerUserUseCase: getIt<RegisterUserUseCase>(),
+      loginUserUseCase: getIt<LoginUserUseCase>(),
+      registerDoctorUseCase: getIt<RegisterDoctorUseCase>(),
+      loginDoctorUseCase: getIt<LoginDoctorUseCase>(),
+    ),
+  );
+
+  // ── Booking (new) ──────────────────────────────────────────────
+  getIt.registerLazySingleton<BookingRepository>(
+    () => BookingRepositoryImpl(apiManager: getIt<ApiManager>()),
+  );
+  getIt.registerLazySingleton<CreateBookingUseCase>(
+    () => CreateBookingUseCase(bookingRepository: getIt<BookingRepository>()),
+  );
+  getIt.registerLazySingleton<GetAllBookingsUseCase>(
+    () => GetAllBookingsUseCase(
+        bookingRepository: getIt<BookingRepository>()),
+  );
+  getIt.registerLazySingleton<ChangeBookingStatusUseCase>(
+    () => ChangeBookingStatusUseCase(
+        bookingRepository: getIt<BookingRepository>()),
+  );
+  getIt.registerFactory<BookingCubit>(
+    () => BookingCubit(
+      createBookingUseCase: getIt<CreateBookingUseCase>(),
+      getAllBookingsUseCase: getIt<GetAllBookingsUseCase>(),
+      changeBookingStatusUseCase: getIt<ChangeBookingStatusUseCase>(),
+    ),
+  );
+
+  // ── Doctor (new) ────────────────────────────────────────────────
+  getIt.registerLazySingleton<DoctorRepository>(
+    () => DoctorRepositoryImpl(apiManager: getIt<ApiManager>()),
+  );
+  getIt.registerLazySingleton<GetDoctorProfileUseCase>(
+    () => GetDoctorProfileUseCase(doctorRepository: getIt<DoctorRepository>()),
+  );
+  getIt.registerLazySingleton<UpdateDoctorProfileUseCase>(
+    () => UpdateDoctorProfileUseCase(doctorRepository: getIt<DoctorRepository>()),
+  );
+  getIt.registerLazySingleton<GetAllDoctorsUseCase>(
+    () => GetAllDoctorsUseCase(doctorRepository: getIt<DoctorRepository>()),
+  );
+  getIt.registerFactory<DoctorCubit>(
+    () => DoctorCubit(
+      getDoctorProfileUseCase: getIt<GetDoctorProfileUseCase>(),
+      updateDoctorProfileUseCase: getIt<UpdateDoctorProfileUseCase>(),
+      getAllDoctorsUseCase: getIt<GetAllDoctorsUseCase>(),
+    ),
+  );
+
+  // ── Doctor Schedule (new) ───────────────────────────────────────
+  getIt.registerLazySingleton<ScheduleRepository>(
+    () => ScheduleRepositoryImpl(apiManager: getIt<ApiManager>()),
+  );
+  getIt.registerLazySingleton<AddScheduleUseCase>(
+    () => AddScheduleUseCase(scheduleRepository: getIt<ScheduleRepository>()),
+  );
+  getIt.registerFactory<ScheduleCubit>(
+    () => ScheduleCubit(
+      addScheduleUseCase: getIt<AddScheduleUseCase>(),
+    ),
+  );
+
+  // ── Journal (new) ───────────────────────────────────────────────
+  getIt.registerLazySingleton<JournalRepository>(
+    () => JournalRepositoryImpl(apiManager: getIt<ApiManager>()),
+  );
+  getIt.registerLazySingleton<CreateJournalUseCase>(
+    () => CreateJournalUseCase(journalRepository: getIt<JournalRepository>()),
+  );
+  getIt.registerLazySingleton<GetJournalsUseCase>(
+    () => GetJournalsUseCase(journalRepository: getIt<JournalRepository>()),
+  );
+  getIt.registerFactory<JournalCubit>(
+    () => JournalCubit(
+      createJournalUseCase: getIt<CreateJournalUseCase>(),
+      getJournalsUseCase: getIt<GetJournalsUseCase>(),
+    ),
+  );
+
+  // ── Memory (new) ────────────────────────────────────────────────
+  getIt.registerLazySingleton<MemoryRepository>(
+    () => MemoryRepositoryImpl(apiManager: getIt<ApiManager>()),
+  );
+  getIt.registerLazySingleton<CreateMemoryUseCase>(
+    () => CreateMemoryUseCase(memoryRepository: getIt<MemoryRepository>()),
+  );
+  getIt.registerLazySingleton<GetMemoriesUseCase>(
+    () => GetMemoriesUseCase(memoryRepository: getIt<MemoryRepository>()),
+  );
+  getIt.registerFactory<MemoryCubit>(
+    () => MemoryCubit(
+      createMemoryUseCase: getIt<CreateMemoryUseCase>(),
+      getMemoriesUseCase: getIt<GetMemoriesUseCase>(),
+    ),
   );
 }
-
