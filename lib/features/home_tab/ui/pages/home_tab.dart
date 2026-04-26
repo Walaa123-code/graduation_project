@@ -12,7 +12,7 @@ import '../widgets/mood_item.dart';
 
 class HomeTab extends StatefulWidget {
 
-   HomeTab({super.key});
+   const HomeTab({super.key});
 
   @override
   State<HomeTab> createState() => _HomeTabState();

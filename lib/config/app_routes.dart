@@ -5,4 +5,5 @@ class AppRoutes{
   static const String mySpaceRoutes = "my_space_screen";
   static const String appointmentsRoutes = "appointments_screen";
   static const String profileRoutes = "profile_screen";
+  static const String journalDetailsRoutes = "journal_details";
 }

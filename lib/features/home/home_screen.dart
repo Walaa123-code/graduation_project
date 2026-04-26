@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/features/appointments/ui/pages/appointments_tab.dart';
 import 'package:graduation_project/features/home_tab/ui/pages/home_tab.dart';
 import 'package:graduation_project/features/libiraries/ui/pages/library_tab.dart';
-import 'package:graduation_project/features/my_space/ui/pages/my_space_screen.dart';
 import 'package:graduation_project/features/profile_user/ui/pages/profile_user_screen.dart';
 import '../../core/utils/app_colors.dart';
+import '../my_space/journals/ui/pages/my_space_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

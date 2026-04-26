@@ -38,7 +38,7 @@ class _LibraryTabState extends State<LibraryTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomTextField(),
+            const CustomTextField(),
             SizedBox(height: height * 0.02),
             LibraryTabBar(
               selectedIndex: selectedIndex,

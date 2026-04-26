@@ -31,4 +31,19 @@ class ApiManager {
       data: body,
     );
   }
+
+  Future<Response> deleteData({
+    required String endPoint,
+    Object? body,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    Map<String, dynamic>? headers,
+  }) async {
+    return await dio.delete(
+      ApiConstants.baseUrl + endPoint,
+      queryParameters: queryParameters,
+      options: Options(headers: headers),
+      data: body,
+    );
+  }
 }
