@@ -1,0 +1,491 @@
+/* ===== CSS Variables & Design System ===== */
+:root {
+    /* Colors */
+    --color-teal: #4ECDC4;
+    --color-teal-light: #7FE3DB;
+    --color-teal-bg: #E8F5F4;
+    --color-blue-light: #A8D8EA;
+    --color-purple-soft: #9B7EBD;
+    --color-purple-light: #D4B5F0;
+    --color-purple-bg: #F3E8FF;
+    --color-white: #FFFFFF;
+    --color-gray-50: #F7FAFC;
+    --color-gray-100: #EDF2F7;
+    --color-gray-200: #E2E8F0;
+    --color-gray-300: #CBD5E0;
+    --color-gray-400: #A0AEC0;
+    --color-gray-500: #718096;
+    --color-gray-600: #4A5568;
+    --color-gray-700: #2D3748;
+    --color-gray-800: #1A202C;
+    
+    /* Spacing */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-teal: 0 4px 12px rgba(78, 205, 196, 0.3);
+    --shadow-purple: 0 4px 12px rgba(155, 126, 189, 0.3);
+    
+    /* Typography */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ===== Global Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-white);
+    color: var(--color-gray-700);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Demo Navigation ===== */
+.demo-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-gray-800);
+    padding: var(--spacing-sm);
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.demo-nav button {
+    padding: 6px 12px;
+    background: var(--color-teal);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.demo-nav button:hover {
+    background: var(--color-teal-light);
+    transform: translateY(-1px);
+}
+
+/* ===== Screen Container ===== */
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding-top: 60px; /* Account for demo nav */
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Splash Screen ===== */
+.splash-gradient {
+    width: 100%;
+    max-width: 375px;
+    height: 100vh;
+    background: linear-gradient(135deg, #A8D8EA 0%, #7FE3DB 50%, #D4B5F0 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.splash-circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.4;
+}
+
+.circle-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--color-blue-light);
+    top: -100px;
+    left: -50px;
+}
+
+.circle-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--color-purple-light);
+    bottom: -150px;
+    right: -100px;
+}
+
+.logo-container {
+    text-align: center;
+    z-index: 10;
+}
+
+.logo {
+    margin-bottom: var(--spacing-lg);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.app-name {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--color-white);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.5px;
+}
+
+/* ===== Onboarding Screens ===== */
+.onboarding-container {
+    width: 100%;
+    max-width: 375px;
+    min-height: 100vh;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.skip-btn {
+    position: absolute;
+    top: var(--spacing-lg);
+    left: var(--spacing-lg);
+    background: transparent;
+    border: none;
+    color: var(--color-gray-500);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: var(--spacing-xs) var(--spacing-md);
+    transition: all 0.3s ease;
+}
+
+.skip-btn:hover {
+    color: var(--color-teal);
+}
+
+.illustration {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: var(--spacing-2xl) 0;
+}
+
+.onboarding-content {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.onboarding-content h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-md);
+    letter-spacing: -0.5px;
+}
+
+.onboarding-content p {
+    font-size: 16px;
+    color: var(--color-gray-500);
+    line-height: 1.7;
+    padding: 0 var(--spacing-md);
+}
+
+.onboarding-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-indicators {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-300);
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    width: 24px;
+    background: var(--color-teal);
+}
+
+.next-btn {
+    padding: var(--spacing-sm) var(--spacing-xl);
+    background: var(--color-white);
+    color: var(--color-teal);
+    border: 2px solid var(--color-teal);
+    border-radius: var(--radius-full);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.next-btn:hover {
+    background: var(--color-teal-bg);
+    transform: translateX(2px);
+}
+
+.next-btn.primary {
+    background: var(--color-teal);
+    color: var(--color-white);
+    box-shadow: var(--shadow-teal);
+}
+
+.next-btn.primary:hover {
+    background: var(--color-teal-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(78, 205, 196, 0.4);
+}
+
+/* ===== Auth Container ===== */
+.auth-container {
+    width: 100%;
+    max-width: 375px;
+    min-height: 100vh;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+    font-size: 16px;
+    color: var(--color-gray-500);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* ===== Account Type Cards ===== */
+.account-type-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.account-card {
+    background: var(--color-white);
+    border: 2px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.account-card:hover {
+    border-color: var(--color-teal);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.account-card:active {
+    transform: translateY(-2px);
+}
+
+.account-icon {
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+}
+
+.account-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-xs);
+}
+
+.account-card p {
+    font-size: 15px;
+    color: var(--color-gray-500);
+    line-height: 1.5;
+}
+
+/* ===== Auth Form ===== */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-field {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-md);
+    background: var(--color-gray-50);
+    border: 2px solid var(--color-gray-200);
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-family: var(--font-family);
+    color: var(--color-gray-700);
+    transition: all 0.3s ease;
+}
+
+.input-field::placeholder {
+    color: var(--color-gray-400);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--color-teal);
+    background: var(--color-white);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+}
+
+.forgot-password {
+    text-align: right;
+    font-size: 14px;
+    color: var(--color-teal);
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: -4px;
+    transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: var(--color-teal-light);
+}
+
+.primary-btn {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--color-teal);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-teal);
+    margin-top: var(--spacing-sm);
+}
+
+.primary-btn:hover {
+    background: var(--color-teal-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(78, 205, 196, 0.4);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+.auth-link {
+    text-align: center;
+    font-size: 15px;
+    color: var(--color-gray-500);
+    margin-top: var(--spacing-md);
+}
+
+.auth-link a {
+    color: var(--color-teal);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.auth-link a:hover {
+    color: var(--color-teal-light);
+    text-decoration: underline;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 375px) {
+    .auth-container,
+    .onboarding-container {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .auth-title {
+        font-size: 28px;
+    }
+    
+    .onboarding-content h2 {
+        font-size: 24px;
+    }
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.screen.active {
+    animation: fadeIn 0.5s ease;
+}
+
+/* ===== Accessibility ===== */
+*:focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    .demo-nav {
+        display: none;
+    }
+}

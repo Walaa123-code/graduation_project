@@ -38,7 +38,7 @@ class AppointmentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: Colors.black.withValues(alpha: .05),
             blurRadius: 10,
           )
         ],
@@ -283,7 +283,7 @@ class _ChooseSlotScreenState extends State<ChooseSlotScreen> {
               width: 1.5,
             ),
             color: selected
-                ? AppColors.blue.withOpacity(.08)
+                ? AppColors.blue.withValues(alpha: .08)
                 : Colors.white,
           ),
           child: Center(
@@ -316,7 +316,7 @@ class _ChooseSlotScreenState extends State<ChooseSlotScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           color: isSelected
-              ? AppColors.blue.withOpacity(.08)
+              ? AppColors.blue.withValues(alpha: .08)
               : Colors.white,
           border: Border.all(
             color:

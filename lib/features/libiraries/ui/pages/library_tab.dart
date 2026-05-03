@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/utils/app_colors.dart';
-import 'package:graduation_project/core/utils/app_styles.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import 'package:mindecho/core/utils/app_styles.dart';
 import '../widgets/exercise_tab.dart';
 import '../widgets/library_tab_bar.dart';
 import '../widgets/custom_text_field.dart';
@@ -20,7 +20,6 @@ class _LibraryTabState extends State<LibraryTab> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
@@ -38,7 +37,7 @@ class _LibraryTabState extends State<LibraryTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomTextField(),
+            const CustomTextField(),
             SizedBox(height: height * 0.02),
             LibraryTabBar(
               selectedIndex: selectedIndex,

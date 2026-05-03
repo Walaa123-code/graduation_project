@@ -22,7 +22,7 @@ class MusicTab extends StatelessWidget {
                       "Nature Sounds",
                       style: AppStyles.bold20Black,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       "Relaxation",
                       style: AppStyles.medium15Gray,
@@ -32,12 +32,12 @@ class MusicTab extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.play_circle_fill,
                     color: AppColors.lavenderColor,
                     size: 33,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     "45 min",
                     style: AppStyles.medium15Gray,
@@ -58,7 +58,7 @@ class MusicTab extends StatelessWidget {
                       "Deep Sleep Music",
                       style: AppStyles.bold20Black,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       "Calm Vibes",
                       style: AppStyles.medium15Gray,
@@ -68,12 +68,12 @@ class MusicTab extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.play_circle_fill,
                     color: AppColors.lavenderColor,
                     size: 33,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     "60 min",
                     style: AppStyles.medium15Gray,

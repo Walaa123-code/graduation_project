@@ -12,6 +12,7 @@ class ActionCard extends StatelessWidget {
   final TextStyle? subTitleStyle;
 
   const ActionCard({
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -30,7 +31,7 @@ class ActionCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 25,
-            backgroundColor: color.withOpacity(.15),
+            backgroundColor: color.withValues(alpha: .15),
             child: Icon(
               icon,
               color: color,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/utils/app_colors.dart';
-import 'package:graduation_project/core/utils/app_styles.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import 'package:mindecho/core/utils/app_styles.dart';
 import '../widgets/journals_tab.dart';
 import '../widgets/memories_tab.dart';
 import '../widgets/tasks_tab.dart';
@@ -35,7 +35,7 @@ class MySpaceScreen extends StatelessWidget {
               )
             ],
           ),
-          bottom:  TabBar(
+          bottom:  const TabBar(
             indicatorColor: AppColors.lavenderColor,
             labelColor: AppColors.lavenderColor,
             unselectedLabelColor: AppColors.blackColor,

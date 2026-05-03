@@ -21,7 +21,7 @@ class PodcastTab extends StatelessWidget {
                       "Inner Peace Journey",
                       style: AppStyles.bold20Black,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       "Dr. Ahmed Mahmoud",
                       style: AppStyles.medium15Gray,
@@ -31,12 +31,12 @@ class PodcastTab extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.play_circle_fill,
                     color: AppColors.lavenderColor,
                     size: 33,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     "25 min",
                     style: AppStyles.medium15Gray,
@@ -57,7 +57,7 @@ class PodcastTab extends StatelessWidget {
                       "Dealing With Anger",
                       style: AppStyles.bold20Black,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       "Dr. Sarah Ahmed",
                       style: AppStyles.medium15Gray,
@@ -67,12 +67,12 @@ class PodcastTab extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.play_circle_fill,
                     color: AppColors.lavenderColor,
                     size: 33,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     "18 min",
                     style: AppStyles.medium15Gray,

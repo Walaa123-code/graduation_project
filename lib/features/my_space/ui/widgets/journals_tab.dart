@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/features/my_space/ui/widgets/space_item_card.dart';
+import 'package:mindecho/features/my_space/ui/widgets/space_item_card.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
@@ -32,7 +32,7 @@ class JournalsTab extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: AppColors.lavenderColor,
                             borderRadius: BorderRadius.circular(50)),
-                        child: Icon(Icons.add, color: AppColors.whiteColor,)),
+                        child: const Icon(Icons.add, color: AppColors.whiteColor,)),
                   ),
                     Text("New", style: AppStyles.bold18Lavender,),
                   ],)

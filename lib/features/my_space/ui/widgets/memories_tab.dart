@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/components/app_container.dart';
-import 'package:graduation_project/features/my_space/ui/widgets/space_item_card.dart';
+import 'package:mindecho/core/components/app_container.dart';
+import 'package:mindecho/features/my_space/ui/widgets/space_item_card.dart';
 
 import '../../../../core/utils/app_colors.dart';
 
@@ -12,7 +12,7 @@ class MemoriesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16),
-      children:  [
+      children:  const [
         AppContainer(title: "Memory World",iconData: Icons.memory_rounded,iconColor: AppColors.whiteColor,
 
             subtitle: "Capture your best emotional moments", buttonText: "Add Memory"),

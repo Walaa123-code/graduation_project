@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
-import 'package:graduation_project/features/profile_user/data/repositories/profile_repository_impl.dart';
-import 'package:graduation_project/features/profile_user/domain/repositories/data_source/remote_data_source/profile_remote_data_source.dart';
-import 'package:graduation_project/features/profile_user/domain/repositories/repositories/profile_repository.dart';
-import 'package:graduation_project/features/profile_user/domain/use_cases/profile_use_case.dart';
+import 'package:mindecho/features/profile_user/data/repositories/profile_repository_impl.dart';
+import 'package:mindecho/features/profile_user/domain/repositories/data_source/remote_data_source/profile_remote_data_source.dart';
+import 'package:mindecho/features/profile_user/domain/repositories/repositories/profile_repository.dart';
+import 'package:mindecho/features/profile_user/domain/use_cases/profile_use_case.dart';
 import '../core/api/api_manager.dart';
 import '../features/home_tab/data/data_sources/remote_data_source_impl/mood_remote_data_source_impl.dart';
 import '../features/home_tab/data/repositories/mood_repository_impl.dart';

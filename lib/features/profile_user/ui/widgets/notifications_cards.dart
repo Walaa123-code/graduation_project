@@ -35,7 +35,7 @@ class NotificationsCard extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundColor: AppColors.blue.withOpacity(.1),
+                backgroundColor: AppColors.blue.withValues(alpha: .1),
                 child: Icon(icon, color: AppColors.blue),
               ),
               const SizedBox(width: 12),
