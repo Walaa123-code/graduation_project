@@ -18,5 +18,6 @@ class JournalDetailsCubit extends Cubit<JournalDetailsState> {
       (error) => emit(JournalDetailsErrorState(failures: error)),
       (response) => emit(JournalDetailsSuccessState(getResponseEntity: response)),
     );
+
   }
 }

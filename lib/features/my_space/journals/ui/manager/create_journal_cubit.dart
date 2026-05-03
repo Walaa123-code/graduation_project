@@ -15,6 +15,7 @@ class CreateJournalCubit extends Cubit<CreateJournalState> {
           failures: ServerError(errors: "Title and Content cannot be empty")));
       return;
     }
+
     emit(CreateJournalLoadingState());
     var either = await journalUseCase.call(title, content);
     either.fold(

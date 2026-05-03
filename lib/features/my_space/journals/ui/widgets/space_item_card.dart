@@ -25,6 +25,7 @@ class SpaceItemCard extends StatefulWidget {
     required this.journal,
   });
 
+
   @override
   State<SpaceItemCard> createState() => _SpaceItemCardState();
 }

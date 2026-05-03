@@ -11,7 +11,6 @@ import 'core/utils/my_bloc_observar.dart';
 import 'di/di.dart';
 import 'features/home_tab/ui/manager/mood_cubit.dart';
 
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 

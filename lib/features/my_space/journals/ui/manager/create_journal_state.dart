@@ -10,6 +10,7 @@ final class CreateJournalSuccessState extends CreateJournalState {
  CreateJournalSuccessState({ required this.createResponseEntity});
 }
 
+
 final class CreateJournalLoadingState extends CreateJournalState {}
 
 final class CreateJournalErrorState extends CreateJournalState {

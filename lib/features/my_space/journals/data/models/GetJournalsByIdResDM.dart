@@ -18,4 +18,5 @@ class GetJournalByIdResDM extends GetJournalByIdResEntity {
       errors: json['errors'],
     );
   }
+
 }

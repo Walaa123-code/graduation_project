@@ -22,7 +22,6 @@ class JournalRepositoryImpl implements JournalRepository {
     var either = await journalDataSource.getJournalById(id);
     return either;
   }
-
   @override
   Future<Either<Failures, GetJournalByIdResEntity>> createJournal(
       String title, String content) async {

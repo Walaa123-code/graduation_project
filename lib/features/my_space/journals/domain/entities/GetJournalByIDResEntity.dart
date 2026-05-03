@@ -5,7 +5,6 @@ class GetJournalByIdResEntity {
   final String? message;
   final JournalDataEntity? data;
   final dynamic errors;
-
   GetJournalByIdResEntity({
     this.success,
     this.message,

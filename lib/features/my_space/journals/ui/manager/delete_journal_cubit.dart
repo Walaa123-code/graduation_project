@@ -16,6 +16,7 @@ class DeleteJournalCubit extends Cubit<DeleteJournalState> {
 
     var either = await journalUseCase.invoke1(id);
 
+
     either.fold(
       (error) => emit(DeleteJournalErrorState(failures: error)),
       (response) =>

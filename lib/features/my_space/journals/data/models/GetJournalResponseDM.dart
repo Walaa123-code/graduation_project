@@ -21,4 +21,5 @@ class GetJournalResponseDM extends GetJournalResponseEntity {
       errors: json['errors'],
     );
   }
+
 }

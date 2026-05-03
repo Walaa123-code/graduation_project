@@ -17,6 +17,7 @@ class JournalsDetails extends StatelessWidget {
           style: AppStyles.bold23Black,
         ),
 
+
         leading: IconButton(
           icon:
               const Icon(Icons.arrow_back_ios, color: AppColors.lavenderColor),

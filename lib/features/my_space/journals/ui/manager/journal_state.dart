@@ -22,3 +22,4 @@ final class GetJournalByIdSuccessState extends JournalState {
   GetJournalByIdSuccessState({required this.getJournalByIdResponseEntity});
 }
 final class GetJournalByIdLoadingState extends JournalState {}
+

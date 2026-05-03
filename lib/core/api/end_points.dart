@@ -6,4 +6,6 @@ class EndPoints {
   static const String createJournal = "/api/Journal";
   static const String updateJournal = "/api/Journal/update";
   static const String deleteJournal = "/api/Journal/";
+
+
 }

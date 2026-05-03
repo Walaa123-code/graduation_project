@@ -15,7 +15,6 @@ class JournalUseCase {
   Future<Either<Failures, GetJournalByIdResEntity>> execute(int id) {
     return journalRepository.getJournalsById(id);
   }
-
   Future<Either<Failures, GetJournalByIdResEntity>> call(
       String title, String content) {
     return journalRepository.createJournal(title, content);

@@ -5,6 +5,7 @@ class JournalDataEntity {
   final String? date;
   final dynamic userId;
 
+
   JournalDataEntity({
     this.id,
     this.title,

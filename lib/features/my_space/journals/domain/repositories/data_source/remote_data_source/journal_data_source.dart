@@ -11,5 +11,6 @@ abstract class JournalDataSource {
       String title, String content);
   Future<Either<Failures, GetJournalByIdResEntity>> updateJournal(
       int id, String title, String content);
+
   Future<Either<Failures, DeleteJournalResEntity>> deleteJournal(int id);
 }

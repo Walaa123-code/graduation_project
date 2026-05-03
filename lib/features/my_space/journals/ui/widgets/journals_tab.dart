@@ -15,7 +15,6 @@ class JournalsTab extends StatefulWidget {
   @override
   State<JournalsTab> createState() => _JournalsTabState();
 }
-
 class _JournalsTabState extends State<JournalsTab> {
   @override
   Widget build(BuildContext context) {

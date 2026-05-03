@@ -18,7 +18,6 @@ class JournalDataDM extends JournalDataEntity {
       userId: json['userId'],
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'id': id,

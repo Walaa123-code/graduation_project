@@ -16,7 +16,6 @@ class AddJournalScreen extends StatefulWidget {
   @override
   State<AddJournalScreen> createState() => _AddJournalScreenState();
 }
-
 class _AddJournalScreenState extends State<AddJournalScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();

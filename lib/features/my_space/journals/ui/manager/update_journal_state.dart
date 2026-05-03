@@ -16,3 +16,4 @@ final class UpdateJournalErrorState extends UpdateJournalState {
   final Failures failures;
   UpdateJournalErrorState({required this.failures});
 }
+

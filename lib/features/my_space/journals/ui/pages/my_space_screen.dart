@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/core/utils/app_colors.dart';
 import 'package:graduation_project/core/utils/app_styles.dart';
 import '../../../../../di/di.dart';
-import '../../../memories/ui/widgets/memories_tab.dart';
+import '../../../ui/widgets/memories_tab.dart';
 import '../manager/delete_journal_cubit.dart';
 import '../manager/journal_cubit.dart';
 import '../widgets/journals_tab.dart';
-import '../widgets/memories_tab.dart';
 
 class MySpaceScreen extends StatelessWidget {
   const MySpaceScreen({super.key});

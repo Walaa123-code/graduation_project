@@ -21,3 +21,4 @@ class UpdateJournalCubit extends Cubit<UpdateJournalState> {
     );
   }
 }
+

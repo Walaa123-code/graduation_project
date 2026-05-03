@@ -9,7 +9,6 @@ class AppCard extends StatelessWidget {
   final double elevation;
   final Color? color;
   final VoidCallback? onTap;
-
   const AppCard({
     super.key,
     required this.child,

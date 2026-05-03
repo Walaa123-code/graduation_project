@@ -60,7 +60,6 @@ class JournalDataSourceImpl implements JournalDataSource {
     }
     return Left(NetworkError(errors: "No Internet Connection"));
   }
-
   @override
   Future<Either<Failures, GetJournalByIdResEntity>> createJournal(String title,
       String content) async {

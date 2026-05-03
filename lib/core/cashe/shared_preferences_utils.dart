@@ -5,7 +5,6 @@ class SharedPreferencesUtils {
   static init() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
-
   static Future<bool> saveData(
       {required String key, required dynamic value}) async {
     if (value is String) return await sharedPreferences.setString(key, value);

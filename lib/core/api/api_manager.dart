@@ -16,7 +16,6 @@ class ApiManager {
       options: Options(headers: headers),
     );
   }
-
   Future<Response> postData({
     required String endPoint,
     Object? body,

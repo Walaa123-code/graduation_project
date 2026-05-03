@@ -10,6 +10,7 @@ final class DeleteJournalSuccessState extends DeleteJournalState {
   DeleteJournalSuccessState({required this.deleteResponseEntity});
 }
 
+
 final class DeleteJournalLoadingState extends DeleteJournalState {}
 
 final class DeleteJournalErrorState extends DeleteJournalState {

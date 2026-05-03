@@ -16,7 +16,6 @@ class DeleteJournalResDm extends DeleteJournalResEntity {
       errors: json['errors'],
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'success': success,

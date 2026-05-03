@@ -64,7 +64,6 @@ Future<void> initAppModule() async {
   getIt.registerFactory<MoodCubit>(
         () => MoodCubit(moodUseCase: getIt<MoodUseCase>()),
   );
-
   // --- Journals Feature ---
   // 1. Data Source
   getIt.registerLazySingleton<JournalDataSource>(

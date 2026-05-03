@@ -6,6 +6,7 @@ class GetJournalResponseEntity {
   final List<JournalDataEntity>? data;
   final dynamic errors;
 
+
   GetJournalResponseEntity({
     this.success,
     this.message,
