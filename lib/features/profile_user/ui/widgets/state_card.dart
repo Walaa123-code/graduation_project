@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/components/app_card.dart';
+import 'package:mindecho/core/components/app_card.dart';
 
-import '../../../../core/utils/app_colors.dart';
+
 
 class StatCard extends StatelessWidget {
   final String value;

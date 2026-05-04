@@ -3,9 +3,9 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
 
 class CustomTaskCard extends StatelessWidget {
-  String text;
-  IconData icon;
-  CustomTaskCard({super.key, required this.text, required this.icon});
+  final String text;
+  final IconData icon;
+  const CustomTaskCard({super.key, required this.text, required this.icon});
 
   @override
   Widget build(BuildContext context) {

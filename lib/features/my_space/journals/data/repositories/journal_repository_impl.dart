@@ -1,11 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:graduation_project/core/errors/failures.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/DeleteJournalResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalByIDResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalResponseEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/repositories/repositories/journal_repository.dart';
-
+import '../../../../../core/errors/failures.dart';
+import '../../domain/entities/DeleteJournalResEntity.dart';
+import '../../domain/entities/GetJournalByIDResEntity.dart';
+import '../../domain/entities/GetJournalResponseEntity.dart';
 import '../../domain/repositories/data_source/remote_data_source/journal_data_source.dart';
+import '../../domain/repositories/repositories/journal_repository.dart';
 
 class JournalRepositoryImpl implements JournalRepository {
   JournalDataSource journalDataSource;

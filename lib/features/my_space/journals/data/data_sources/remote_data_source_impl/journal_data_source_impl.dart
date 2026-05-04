@@ -1,16 +1,6 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dartz/dartz.dart';
-import 'package:graduation_project/core/api/api_manager.dart';
-import 'package:graduation_project/core/api/end_points.dart';
-import 'package:graduation_project/core/errors/failures.dart';
-import 'package:graduation_project/features/my_space/journals/data/models/DeleteJournalResDM.dart';
-import 'package:graduation_project/features/my_space/journals/data/models/GetJournalResponseDM.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/DeleteJournalResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalByIDResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/repositories/data_source/remote_data_source/journal_data_source.dart';
 
-import '../../../../../../core/cashe/shared_preferences_utils.dart';
-import '../../models/GetJournalsByIdResDM.dart';
+import '../../../../../../core/api/api_manager.dart';
+import '../../../domain/repositories/data_source/remote_data_source/journal_data_source.dart';
 
 class JournalDataSourceImpl implements JournalDataSource {
   ApiManager apiManager;

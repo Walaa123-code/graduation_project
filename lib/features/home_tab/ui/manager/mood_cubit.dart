@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:graduation_project/features/home_tab/domain/entities/MoodResponseEntity.dart';
-import 'package:graduation_project/features/home_tab/domain/use_cases/MoodUseCase.dart';
+import 'package:mindecho/features/home_tab/domain/entities/MoodResponseEntity.dart';
+import 'package:mindecho/features/home_tab/domain/use_cases/MoodUseCase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 

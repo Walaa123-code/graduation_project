@@ -1,13 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/features/my_space/journals/ui/widgets/space_item_card.dart';
+import 'package:mindecho/features/my_space/ui/widgets/space_item_card.dart';
 
 import '../../../../../di/di.dart';
 import '../manager/journal_cubit.dart';
 import '../manager/journal_details_cubit.dart';
-import 'journal_build_header.dart';
-import 'journals_details.dart';
+import '../widgets/journal_build_header.dart';
+import '../widgets/journals_details.dart';
 
 class JournalsTab extends StatefulWidget {
   const JournalsTab({super.key});
@@ -15,6 +14,7 @@ class JournalsTab extends StatefulWidget {
   @override
   State<JournalsTab> createState() => _JournalsTabState();
 }
+
 class _JournalsTabState extends State<JournalsTab> {
   @override
   Widget build(BuildContext context) {
@@ -58,11 +58,12 @@ class _JournalsTabState extends State<JournalsTab> {
                     );
                   },
                   child: SpaceItemCard(
-                    journal: journal , // السطر ده مهم جداً عشان التعديل والمسح
+                    journal: journal, // السطر ده مهم جداً عشان التعديل والمسح
                     title: journal.title ?? "No Title",
                     subtitle: journal.content ?? "No Content",
                     emoji: "😊",
-                  ),                );
+                  ),
+                );
               },
             );
           }

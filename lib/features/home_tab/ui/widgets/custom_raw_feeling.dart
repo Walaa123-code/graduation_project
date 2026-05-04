@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/app_styles.dart';
 
 class CustomRaw extends StatelessWidget {
-  String text;
-  String text1;
-  String text2;
-  String image;
-  String image1;
-  String image2;
-  CustomRaw(
+  final String text;
+  final String text1;
+  final String text2;
+  final String image;
+  final String image1;
+  final String image2;
+  const CustomRaw(
       {super.key,
       required this.text,
       required this.image,
@@ -19,8 +19,6 @@ class CustomRaw extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

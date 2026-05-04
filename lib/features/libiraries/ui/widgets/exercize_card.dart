@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/utils/app_colors.dart';
-import 'package:graduation_project/core/utils/app_styles.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import 'package:mindecho/core/utils/app_styles.dart';
 
 class ExerciseCard extends StatelessWidget {
   final String title;
@@ -22,7 +22,7 @@ class ExerciseCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
             AppColors.lavenderColor,
             AppColors.blueColor,

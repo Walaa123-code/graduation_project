@@ -9,7 +9,7 @@ class CustomContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return         Container(
       height: 130,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.lavenderColor,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20),

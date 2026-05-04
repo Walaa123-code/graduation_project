@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/core/utils/app_colors.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
 
 class LibraryTabBar extends StatelessWidget {
   final int selectedIndex;
@@ -36,7 +36,7 @@ class LibraryTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
             ),
           ],

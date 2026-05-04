@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmYou - Mental Wellness App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation for demo purposes -->
+    <div class="demo-nav">
+        <button onclick="showScreen('splash')">Splash</button>
+        <button onclick="showScreen('onboarding1')">Onboarding 1</button>
+        <button onclick="showScreen('onboarding2')">Onboarding 2</button>
+        <button onclick="showScreen('onboarding3')">Onboarding 3</button>
+        <button onclick="showScreen('account-type')">Account Type</button>
+        <button onclick="showScreen('user-register')">User Register</button>
+        <button onclick="showScreen('doctor-register')">Doctor Register</button>
+        <button onclick="showScreen('login')">Login</button>
+    </div>
+
+    <!-- Splash Screen -->
+    <div class="screen active" id="splash">
+        <div class="splash-gradient">
+            <div class="splash-circle circle-1"></div>
+            <div class="splash-circle circle-2"></div>
+            <div class="logo-container">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="28" fill="white" opacity="0.9"/>
+                        <path d="M30 15C29 15 28 16 28 17V25C28 26 29 27 30 27C31 27 32 26 32 25V17C32 16 31 15 30 15Z" fill="#4ECDC4"/>
+                        <circle cx="22" cy="28" r="2" fill="#4ECDC4"/>
+                        <circle cx="38" cy="28" r="2" fill="#4ECDC4"/>
+                        <path d="M30 35C30 35 25 32 20 35" stroke="#4ECDC4" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M30 35C30 35 35 32 40 35" stroke="#4ECDC4" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h1 class="app-name">CalmYou</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Screen 1 -->
+    <div class="screen" id="onboarding1">
+        <div class="onboarding-container">
+            <button class="skip-btn" onclick="showScreen('account-type')">Skip</button>
+            <div class="illustration">
+                <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="140" cy="140" r="120" fill="#E8F5F4"/>
+                    <ellipse cx="140" cy="200" rx="60" ry="15" fill="#B8E6E1" opacity="0.5"/>
+                    <circle cx="140" cy="110" r="30" fill="#FFD4A3"/>
+                    <path d="M110 110C110 95 125 85 140 85C155 85 170 95 170 110" stroke="#2D3748" stroke-width="2" stroke-linecap="round"/>
+                    <ellipse cx="140" cy="160" rx="50" ry="60" fill="#FFB84D"/>
+                    <path d="M90 160L80 180L90 200" stroke="#FFB84D" stroke-width="8" stroke-linecap="round"/>
+                    <path d="M190 160L200 180L190 200" stroke="#FFB84D" stroke-width="8" stroke-linecap="round"/>
+                    <ellipse cx="140" cy="240" rx="40" ry="50" fill="#4A5568"/>
+                    <path d="M100 240L90 270" stroke="#4A5568" stroke-width="8" stroke-linecap="round"/>
+                    <path d="M180 240L190 270" stroke="#4A5568" stroke-width="8" stroke-linecap="round"/>
+                    <circle cx="130" cy="105" r="3" fill="#2D3748"/>
+                    <circle cx="150" cy="105" r="3" fill="#2D3748"/>
+                    <path d="M135 115C135 115 140 118 145 115" stroke="#2D3748" stroke-width="2" stroke-linecap="round"/>
+                    <g opacity="0.6">
+                        <path d="M110 70C110 70 115 65 120 70" stroke="#9B7EBD" stroke-width="2" fill="none"/>
+                        <path d="M160 70C160 70 165 65 170 70" stroke="#9B7EBD" stroke-width="2" fill="none"/>
+                        <circle cx="105" cy="80" r="8" fill="#9B7EBD" opacity="0.3"/>
+                        <circle cx="175" cy="80" r="8" fill="#9B7EBD" opacity="0.3"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="onboarding-content">
+                <h2>Practice Mindfulness</h2>
+                <p>Discover guided meditation sessions and breathing exercises designed to reduce stress and bring calm to your daily life.</p>
+            </div>
+            <div class="onboarding-footer">
+                <div class="page-indicators">
+                    <span class="indicator active"></span>
+                    <span class="indicator"></span>
+                    <span class="indicator"></span>
+                </div>
+                <button class="next-btn" onclick="showScreen('onboarding2')">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Screen 2 -->
+    <div class="screen" id="onboarding2">
+        <div class="onboarding-container">
+            <button class="skip-btn" onclick="showScreen('account-type')">Skip</button>
+            <div class="illustration">
+                <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="140" cy="140" r="120" fill="#F3E8FF"/>
+                    <ellipse cx="140" cy="230" rx="50" ry="12" fill="#D4B5F0" opacity="0.4"/>
+                    <rect x="90" y="180" width="100" height="120" rx="8" fill="#9B7EBD"/>
+                    <rect x="100" y="190" width="80" height="4" rx="2" fill="#D4B5F0"/>
+                    <rect x="100" y="200" width="80" height="4" rx="2" fill="#D4B5F0"/>
+                    <rect x="100" y="210" width="60" height="4" rx="2" fill="#D4B5F0"/>
+                    <circle cx="140" cy="120" r="35" fill="#FFD4A3"/>
+                    <path d="M115 115C115 100 127 90 140 90C153 90 165 100 165 115" stroke="#2D3748" stroke-width="2"/>
+                    <ellipse cx="140" cy="165" rx="45" ry="30" fill="#4ECDC4"/>
+                    <path d="M95 165L75 185" stroke="#4ECDC4" stroke-width="7" stroke-linecap="round"/>
+                    <path d="M185 165L205 185" stroke="#4ECDC4" stroke-width="7" stroke-linecap="round"/>
+                    <circle cx="130" cy="115" r="3" fill="#2D3748"/>
+                    <circle cx="150" cy="115" r="3" fill="#2D3748"/>
+                    <path d="M135 125C135 125 140 128 145 125" stroke="#2D3748" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="50" cy="100" r="15" fill="#4ECDC4" opacity="0.3"/>
+                    <circle cx="230" cy="120" r="20" fill="#9B7EBD" opacity="0.3"/>
+                </svg>
+            </div>
+            <div class="onboarding-content">
+                <h2>Connect with Professionals</h2>
+                <p>Access licensed therapists and counselors who understand your journey and are here to support your mental wellness.</p>
+            </div>
+            <div class="onboarding-footer">
+                <div class="page-indicators">
+                    <span class="indicator"></span>
+                    <span class="indicator active"></span>
+                    <span class="indicator"></span>
+                </div>
+                <button class="next-btn" onclick="showScreen('onboarding3')">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Screen 3 -->
+    <div class="screen" id="onboarding3">
+        <div class="onboarding-container">
+            <button class="skip-btn" onclick="showScreen('account-type')">Skip</button>
+            <div class="illustration">
+                <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="140" cy="140" r="120" fill="#FFF4E6"/>
+                    <ellipse cx="140" cy="240" rx="40" ry="10" fill="#D4B5F0" opacity="0.3"/>
+                    <rect x="100" y="180" width="20" height="80" rx="4" fill="#9B7EBD"/>
+                    <rect x="100" y="160" width="20" height="15" fill="#4ECDC4"/>
+                    <rect x="130" y="140" width="20" height="120" rx="4" fill="#9B7EBD"/>
+                    <rect x="130" y="120" width="20" height="15" fill="#4ECDC4"/>
+                    <rect x="160" y="100" width="20" height="160" rx="4" fill="#9B7EBD"/>
+                    <rect x="160" y="80" width="20" height="15" fill="#4ECDC4"/>
+                    <circle cx="140" cy="50" r="25" fill="#FFD4A3"/>
+                    <path d="M120 45C120 35 128 28 140 28C152 28 160 35 160 45" stroke="#2D3748" stroke-width="2"/>
+                    <circle cx="133" cy="47" r="2.5" fill="#2D3748"/>
+                    <circle cx="147" cy="47" r="2.5" fill="#2D3748"/>
+                    <path d="M135 55C135 55 140 57 145 55" stroke="#2D3748" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M50 200L70 180" stroke="#4ECDC4" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+                    <path d="M230 200L210 180" stroke="#4ECDC4" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+                    <circle cx="200" cy="60" r="12" fill="#9B7EBD" opacity="0.3"/>
+                    <circle cx="80" cy="80" r="15" fill="#4ECDC4" opacity="0.3"/>
+                </svg>
+            </div>
+            <div class="onboarding-content">
+                <h2>Track Your Journey</h2>
+                <p>Monitor your emotional wellness, set goals, and celebrate your progress as you grow stronger each day.</p>
+            </div>
+            <div class="onboarding-footer">
+                <div class="page-indicators">
+                    <span class="indicator"></span>
+                    <span class="indicator"></span>
+                    <span class="indicator active"></span>
+                </div>
+                <button class="next-btn primary" onclick="showScreen('account-type')">Get Started</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Type Selection -->
+    <div class="screen" id="account-type">
+        <div class="auth-container">
+            <h2 class="auth-title">Continue as</h2>
+            <div class="account-type-cards">
+                <div class="account-card" onclick="showScreen('user-register')">
+                    <div class="account-icon">
+                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="40" cy="40" r="38" fill="#E8F5F4"/>
+                            <circle cx="40" cy="30" r="12" fill="#4ECDC4"/>
+                            <path d="M20 60C20 50 28 42 40 42C52 42 60 50 60 60" fill="#4ECDC4"/>
+                        </svg>
+                    </div>
+                    <h3>User</h3>
+                    <p>For people seeking mental health support</p>
+                </div>
+                <div class="account-card" onclick="showScreen('doctor-register')">
+                    <div class="account-icon">
+                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="40" cy="40" r="38" fill="#F3E8FF"/>
+                            <circle cx="40" cy="30" r="12" fill="#9B7EBD"/>
+                            <path d="M20 60C20 50 28 42 40 42C52 42 60 50 60 60" fill="#9B7EBD"/>
+                            <rect x="35" y="48" width="10" height="3" fill="white"/>
+                            <rect x="38" y="45" width="4" height="9" fill="white"/>
+                        </svg>
+                    </div>
+                    <h3>Doctor</h3>
+                    <p>For therapists and counselors</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Registration -->
+    <div class="screen" id="user-register">
+        <div class="auth-container">
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Join CalmYou and start your wellness journey</p>
+            <form class="auth-form">
+                <div class="input-group">
+                    <input type="text" placeholder="Full Name" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="email" placeholder="Email Address" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Confirm Password" class="input-field">
+                </div>
+                <button type="button" class="primary-btn" onclick="showScreen('login')">Create Account</button>
+                <p class="auth-link">Already have an account? <a href="#" onclick="showScreen('login'); return false;">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctor Registration -->
+    <div class="screen" id="doctor-register">
+        <div class="auth-container">
+            <h2 class="auth-title">Join Us as a Doctor</h2>
+            <p class="auth-subtitle">Create your doctor account and start helping patients</p>
+            <form class="auth-form">
+                <div class="input-group">
+                    <input type="text" placeholder="Full Name" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="email" placeholder="Email Address" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Confirm Password" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Specialty" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="License Number" class="input-field">
+                </div>
+                <button type="button" class="primary-btn" onclick="showScreen('login')">Create Doctor Account</button>
+                <p class="auth-link">Already have an account? <a href="#" onclick="showScreen('login'); return false;">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div class="screen" id="login">
+        <div class="auth-container">
+            <h2 class="auth-title">Welcome Back</h2>
+            <form class="auth-form">
+                <div class="input-group">
+                    <input type="email" placeholder="Email Address" class="input-field">
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" class="input-field">
+                </div>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+                <button type="button" class="primary-btn">Login</button>
+                <p class="auth-link">New here? <a href="#" onclick="showScreen('user-register'); return false;">Register now</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

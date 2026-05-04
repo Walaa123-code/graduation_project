@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/components/app_card.dart';
-import '../../../../../core/utils/app_colors.dart';
-import '../../../../../core/utils/app_styles.dart';
-import '../../../../../di/di.dart';
-import '../../domain/entities/GetJournalByIDResEntity.dart';
-import '../manager/delete_journal_cubit.dart';
-import '../manager/journal_cubit.dart';
-import '../manager/update_journal_cubit.dart';
-import 'add_journal_screen.dart';
+import '../../../../core/components/app_card.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_styles.dart';
+import '../../../../di/di.dart';
+import '../../journals/domain/entities/GetJournalByIDResEntity.dart';
+import '../../journals/ui/manager/delete_journal_cubit.dart';
+import '../../journals/ui/manager/journal_cubit.dart';
+import '../../journals/ui/manager/update_journal_cubit.dart';
+import '../../journals/ui/widgets/add_journal_screen.dart';
 
 class SpaceItemCard extends StatefulWidget {
   final dynamic journal;

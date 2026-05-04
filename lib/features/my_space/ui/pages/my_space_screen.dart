@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/core/utils/app_colors.dart';
-import 'package:graduation_project/core/utils/app_styles.dart';
-import '../../../../../di/di.dart';
-import '../../../ui/widgets/memories_tab.dart';
-import '../manager/delete_journal_cubit.dart';
-import '../manager/journal_cubit.dart';
-import '../widgets/journals_tab.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_styles.dart';
+import '../../../../di/di.dart';
+import '../../memories/ui/pages/memories_tab.dart';
+import '../../journals/ui/manager/delete_journal_cubit.dart';
+import '../../journals/ui/manager/journal_cubit.dart';
+import '../../journals/ui/pages/journals_tab.dart';
 
 class MySpaceScreen extends StatelessWidget {
   const MySpaceScreen({super.key});
