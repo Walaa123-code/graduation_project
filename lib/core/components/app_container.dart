@@ -10,7 +10,6 @@ class AppContainer extends StatelessWidget {
   final VoidCallback? onPressed;
   final IconData? iconData;
   final Color? iconColor;
-
   const AppContainer({
     super.key,
     required this.title,

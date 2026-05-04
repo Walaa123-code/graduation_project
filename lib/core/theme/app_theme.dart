@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import '../utils/app_colors.dart';
 
 /// CalmYou App Theme
 /// Modern, calming design system with rounded corners and soft shadows

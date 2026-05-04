@@ -16,7 +16,6 @@ class ApiManager {
       options: Options(headers: headers),
     );
   }
-
   Future<Response> postData({
     required String endPoint,
     Object? body,
@@ -25,6 +24,21 @@ class ApiManager {
     Map<String, dynamic>? headers,
   }) async {
     return await dio.post(
+      ApiConstants.baseUrl + endPoint,
+      queryParameters: queryParameters,
+      options: Options(headers: headers),
+      data: body,
+    );
+  }
+
+  Future<Response> deleteData({
+    required String endPoint,
+    Object? body,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    Map<String, dynamic>? headers,
+  }) async {
+    return await dio.delete(
       ApiConstants.baseUrl + endPoint,
       queryParameters: queryParameters,
       options: Options(headers: headers),
