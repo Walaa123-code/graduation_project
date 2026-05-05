@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/components/page_indicator.dart';
 import '../../../../core/components/custom_button.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../../auth/ui/pages/account_type_screen.dart';
 
 /// Onboarding Screen with PageView

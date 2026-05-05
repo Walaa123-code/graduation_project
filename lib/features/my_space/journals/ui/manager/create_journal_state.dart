@@ -1,6 +1,5 @@
 part of 'create_journal_cubit.dart';
 
-@immutable
 sealed class CreateJournalState {}
 
 final class CreateJournalInitialState extends CreateJournalState {}

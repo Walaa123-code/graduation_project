@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:graduation_project/core/errors/failures.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/DeleteJournalResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalByIDResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalResponseEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/repositories/repositories/journal_repository.dart';
+import '../../../../../core/errors/failures.dart';
+import '../entities/DeleteJournalResEntity.dart';
+import '../entities/GetJournalByIDResEntity.dart';
+import '../entities/GetJournalResponseEntity.dart';
+import '../repositories/repositories/journal_repository.dart';
 
 class JournalUseCase {
   JournalRepository journalRepository;

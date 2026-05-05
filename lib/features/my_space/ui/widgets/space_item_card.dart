@@ -22,7 +22,7 @@ class SpaceItemCard extends StatefulWidget {
     required this.title,
     required this.subtitle,
     required this.emoji,
-    required this.journal,
+     this.journal,
   });
 
 

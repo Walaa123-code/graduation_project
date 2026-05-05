@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/components/custom_text_field.dart';
 import '../../../../core/components/custom_button.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../login/ui/pages/login_screen.dart';
 
 /// Doctor Registration Screen

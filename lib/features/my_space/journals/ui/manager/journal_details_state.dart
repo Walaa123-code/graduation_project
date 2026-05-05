@@ -1,6 +1,5 @@
 part of 'journal_details_cubit.dart';
 
-@immutable
 sealed class JournalDetailsState {}
 
 final class JournalDetailsInitialState extends JournalDetailsState {}

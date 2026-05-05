@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../models/report_item.dart';
 import '../widgets/weekly_summary_card.dart';
 import '../widgets/report_card.dart';

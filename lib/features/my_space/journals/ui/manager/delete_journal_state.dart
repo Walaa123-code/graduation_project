@@ -1,6 +1,5 @@
 part of 'delete_journal_cubit.dart';
 
-@immutable
 sealed class DeleteJournalState {}
 
 final class DeleteJournalInitialState extends DeleteJournalState {}

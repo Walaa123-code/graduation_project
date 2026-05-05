@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/features/my_space/journals/domain/use_cases/journal_use_case.dart';
 
 import '../../../../../core/errors/failures.dart';
 import '../../domain/entities/GetJournalByIDResEntity.dart';
+import '../../domain/use_cases/journal_use_case.dart';
 
 part 'update_journal_state.dart';
 

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/core/errors/failures.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalResponseEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/use_cases/journal_use_case.dart';
-
+import '../../../../../core/errors/failures.dart';
 import '../../domain/entities/GetJournalByIDResEntity.dart';
+import '../../domain/entities/GetJournalResponseEntity.dart';
+import '../../domain/use_cases/journal_use_case.dart';
 
 part 'journal_state.dart';
 

@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:graduation_project/core/errors/failures.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/DeleteJournalResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalByIDResEntity.dart';
-import 'package:graduation_project/features/my_space/journals/domain/entities/GetJournalResponseEntity.dart';
+
+import '../../../../../../core/errors/failures.dart';
+import '../../entities/DeleteJournalResEntity.dart';
+import '../../entities/GetJournalByIDResEntity.dart';
+import '../../entities/GetJournalResponseEntity.dart';
 
 abstract class JournalRepository {
   Future<Either<Failures, GetJournalResponseEntity>> getJournal();

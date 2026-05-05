@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/app_colors.dart';
 
 /// Gradient header card for the Appointments screen.
 /// Shows title, subtitle, and three quick-stat counters.

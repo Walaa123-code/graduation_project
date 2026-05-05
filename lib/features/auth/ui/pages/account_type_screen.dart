@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/components/account_type_card.dart';
+import '../../../../core/utils/app_colors.dart';
 import 'user_register_screen.dart';
 import 'doctor_register_screen.dart';
 

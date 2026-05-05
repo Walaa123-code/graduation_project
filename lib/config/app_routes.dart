@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../features/home/home_screen.dart';
 import '../features/onboarding/ui/pages/splash_screen.dart';
 import '../features/onboarding/ui/pages/onboarding_screen.dart';
 import '../features/auth/ui/pages/account_type_screen.dart';
@@ -35,6 +36,8 @@ class Routes {
 class AppRoutes {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case Routes.homeScreenRoutes:
+        return MaterialPageRoute(builder: (context) => const HomeScreen());
       case Routes.splash:
         return MaterialPageRoute(builder: (context) => const SplashScreen());
       case Routes.onboarding:
