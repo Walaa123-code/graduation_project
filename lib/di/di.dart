@@ -16,6 +16,13 @@ import '../features/my_space/journals/ui/manager/create_journal_cubit.dart';
 import '../features/my_space/journals/ui/manager/delete_journal_cubit.dart';
 import '../features/my_space/journals/ui/manager/journal_cubit.dart';
 import '../features/my_space/journals/ui/manager/journal_details_cubit.dart';
+import '../features/my_space/memories/data/data_sources/remote_data_source_impl/memory_data_source_impl.dart';
+import '../features/my_space/memories/data/repositories/Memory_repository_impl.dart';
+import '../features/my_space/memories/domain/repositories/data_source/remote_data_source/memory_data_source.dart';
+import '../features/my_space/memories/domain/repositories/repositories/memory_repository.dart';
+import '../features/my_space/memories/domain/use_cases/memory_use_case.dart';
+import '../features/my_space/memories/ui/manager/delete_memory_cubit.dart';
+import '../features/my_space/memories/ui/manager/memory_cubit.dart';
 import '../features/profile_user/data/data_source/remote_data_source_impl/profile_remote_data_source_impl.dart';
 import '../features/profile_user/data/repositories/profile_repository_impl.dart';
 import '../features/profile_user/domain/repositories/data_source/remote_data_source/profile_remote_data_source.dart';
@@ -94,5 +101,31 @@ Future<void> initAppModule() async {
   // --- Delete Journal ---
   getIt.registerFactory<DeleteJournalCubit>(
     () => DeleteJournalCubit(getIt<JournalUseCase>()),
+  );
+
+  // --- Memories Feature ---
+  // 1. Data Source
+  getIt.registerLazySingleton<MemoryDataSource>(
+    () => MemoryDataSourceImpl(apiManager: getIt<ApiManager>()),
+  );
+
+  // 2. Repository
+  getIt.registerLazySingleton<MemoryRepository>(
+    () => MemoryRepositoryImpl(memoryDataSource: getIt<MemoryDataSource>()),
+  );
+
+  // 3. Use Case
+  getIt.registerLazySingleton<MemoryUseCase>(
+    () => MemoryUseCase(memoryRepository: getIt<MemoryRepository>()),
+  );
+
+  // 4. Cubit
+  getIt.registerFactory<MemoryCubit>(
+    () => MemoryCubit(getIt<MemoryUseCase>()),
+  );
+
+  // 5. Delete Memory Cubit (لو عندك كوبيت للمسح زي الجورنال)
+  getIt.registerFactory<DeleteMemoryCubit>(
+    () => DeleteMemoryCubit(getIt<MemoryUseCase>()),
   );
 }

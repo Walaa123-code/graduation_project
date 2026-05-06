@@ -1,13 +1,12 @@
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-
 import '../../../../../../core/api/api_manager.dart';
 import '../../../../../../core/api/end_points.dart';
 import '../../../../../../core/cashe/shared_preferences_utils.dart';
 import '../../../../../../core/errors/failures.dart';
 import '../../../domain/entities/DeleteJournalResEntity.dart';
 import '../../../domain/entities/GetJournalByIDResEntity.dart';
+import '../../../domain/entities/GetJournalResponseEntity.dart';
 import '../../../domain/repositories/data_source/remote_data_source/journal_data_source.dart';
 import '../../models/DeleteJournalResDM.dart';
 import '../../models/GetJournalResponseDM.dart';
@@ -17,12 +16,9 @@ class JournalDataSourceImpl implements JournalDataSource {
   ApiManager apiManager;
 
   JournalDataSourceImpl({required this.apiManager});
-
-  // 1. دالة التوكن (اللي إنتِ عملتيها)
   String? _getToken() =>
       SharedPreferencesUtils.getData(key: 'token') as String?;
 
-  // 2. دالة التحقق من الاتصال (بتلم كل الزحمة اللي فوق)
   Future<bool> _isConnected() async {
     dynamic result = await Connectivity().checkConnectivity();
     if (result is List) return !result.contains(ConnectivityResult.none);
@@ -30,7 +26,7 @@ class JournalDataSourceImpl implements JournalDataSource {
   }
 
   @override
-  Future<Either<Failures, GetJournalResponseDM>> getJournal() async {
+  Future<Either<Failures, GetJournalResponseEntity>> getJournal() async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.getData(
@@ -39,7 +35,7 @@ class JournalDataSourceImpl implements JournalDataSource {
         );
         return Right(GetJournalResponseDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: e.toString()));
+        return Left(ServerError(errors: _handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
@@ -56,14 +52,15 @@ class JournalDataSourceImpl implements JournalDataSource {
         );
         return Right(GetJournalByIdResDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: e.toString()));
+        return Left(ServerError(errors: _handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
   }
+
   @override
-  Future<Either<Failures, GetJournalByIdResEntity>> createJournal(String title,
-      String content) async {
+  Future<Either<Failures, GetJournalByIdResEntity>> createJournal(
+      String title, String content) async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.postData(
@@ -73,25 +70,25 @@ class JournalDataSourceImpl implements JournalDataSource {
         );
         return Right(GetJournalByIdResDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: e.toString()));
+        return Left(ServerError(errors: _handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
   }
 
   @override
-  Future<Either<Failures, GetJournalByIdResEntity>> updateJournal(int id,
-      String title, String content) async {
+  Future<Either<Failures, GetJournalByIdResEntity>> updateJournal(
+      int id, String title, String content) async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.postData(
           endPoint: EndPoints.updateJournal,
-          body: {"Title": title, "Content": content, "Id": id},
+          body: {"title": title, "content": content, "id": id},
           headers: {'Authorization': 'Bearer ${_getToken()}'},
         );
         return Right(GetJournalByIdResDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: e.toString()));
+        return Left(ServerError(errors: _handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
@@ -108,9 +105,19 @@ class JournalDataSourceImpl implements JournalDataSource {
 
         return Right(DeleteJournalResDm.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: e.toString()));
+        return Left(ServerError(errors: _handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
   }
+}
+
+String _handleError(dynamic e) {
+  if (e.toString().contains('host lookup') ||
+      e.toString().contains('SocketException')) {
+    return "Server unreachable. Please check your internet connection.";
+  } else if (e.toString().contains('401')) {
+    return "Session expired. Please login again.";
+  }
+  return "Something went wrong. Please try again later.";
 }

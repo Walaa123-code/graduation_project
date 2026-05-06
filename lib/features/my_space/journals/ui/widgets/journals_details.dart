@@ -31,7 +31,7 @@ class JournalsDetails extends StatelessWidget {
                 child:
                     CircularProgressIndicator(color: AppColors.lavenderColor));
           } else if (state is JournalDetailsSuccessState) {
-            final journal = state.getResponseEntity.data;
+            final journal = state.getResponseDetEntity.data;
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),

@@ -1,28 +1,25 @@
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-
 import '../../../../../../core/api/api_manager.dart';
 import '../../../../../../core/api/end_points.dart';
 import '../../../../../../core/cashe/shared_preferences_utils.dart';
 import '../../../../../../core/errors/failures.dart';
-import '../../../domain/entities/DeleteJournalResEntity.dart';
+import '../../../domain/entities/DeleteMemoryResEntity.dart';
 import '../../../domain/entities/GetMemoryByIDResEntity.dart';
+import '../../../domain/entities/GetMemoryResponseEntity.dart';
 import '../../../domain/repositories/data_source/remote_data_source/memory_data_source.dart';
-import '../../models/DeleteJournalResDM.dart';
-import '../../models/GetJournalResponseDM.dart';
+import '../../models/DeleteMemoryResDM.dart';
 import '../../models/GetMemoryByIdResDM.dart';
+import '../../models/GetMemoryResponseDM.dart';
 
-class JournalDataSourceImpl implements MemoryDataSource {
+class MemoryDataSourceImpl implements MemoryDataSource {
   ApiManager apiManager;
 
-  JournalDataSourceImpl({required this.apiManager});
+  MemoryDataSourceImpl({required this.apiManager});
 
-  // 1. دالة التوكن (اللي إنتِ عملتيها)
   String? _getToken() =>
       SharedPreferencesUtils.getData(key: 'token') as String?;
 
-  // 2. دالة التحقق من الاتصال (بتلم كل الزحمة اللي فوق)
   Future<bool> _isConnected() async {
     dynamic result = await Connectivity().checkConnectivity();
     if (result is List) return !result.contains(ConnectivityResult.none);
@@ -30,14 +27,14 @@ class JournalDataSourceImpl implements MemoryDataSource {
   }
 
   @override
-  Future<Either<Failures, GetJournalResponseDM>> getJournal() async {
+  Future<Either<Failures, GetMemoryResponseEntity>> getMemory() async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.getData(
-          endPoint: EndPoints.getJournal,
+          endPoint: EndPoints.getMemory,
           headers: {'Authorization': 'Bearer ${_getToken()}'},
         );
-        return Right(GetJournalResponseDM.fromJson(response.data));
+        return Right(GetMemoryResponseDM.fromJson(response.data));
       } catch (e) {
         return Left(ServerError(errors: e.toString()));
       }
@@ -46,32 +43,14 @@ class JournalDataSourceImpl implements MemoryDataSource {
   }
 
   @override
-  Future<Either<Failures, GetJournalByIdResEntity>> getJournalById(
-      int id) async {
+  Future<Either<Failures, GetMemoryByIdResEntity>> getMemoryById(int id) async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.getData(
-          endPoint: "${EndPoints.getJournalById}$id",
+          endPoint: "${EndPoints.getMemoryById}$id",
           headers: {'Authorization': 'Bearer ${_getToken()}'},
         );
-        return Right(GetJournalByIdResDM.fromJson(response.data));
-      } catch (e) {
-        return Left(ServerError(errors: e.toString()));
-      }
-    }
-    return Left(NetworkError(errors: "No Internet Connection"));
-  }
-  @override
-  Future<Either<Failures, GetJournalByIdResEntity>> createJournal(String title,
-      String content) async {
-    if (await _isConnected()) {
-      try {
-        var response = await apiManager.postData(
-          endPoint: EndPoints.createJournal,
-          body: {"title": title, "content": content},
-          headers: {'Authorization': 'Bearer ${_getToken()}'},
-        );
-        return Right(GetJournalByIdResDM.fromJson(response.data));
+        return Right(GetMemoryByIdResDm.fromJson(response.data));
       } catch (e) {
         return Left(ServerError(errors: e.toString()));
       }
@@ -80,16 +59,16 @@ class JournalDataSourceImpl implements MemoryDataSource {
   }
 
   @override
-  Future<Either<Failures, GetJournalByIdResEntity>> updateJournal(int id,
-      String title, String content) async {
+  Future<Either<Failures, GetMemoryResponseEntity>> createMemory(
+      String title, String moodState, String image) async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.postData(
-          endPoint: EndPoints.updateJournal,
-          body: {"Title": title, "Content": content, "Id": id},
+          endPoint: EndPoints.createMemory,
+          body: {"title": title, "moodState": moodState, "imageUrl": image},
           headers: {'Authorization': 'Bearer ${_getToken()}'},
         );
-        return Right(GetJournalByIdResDM.fromJson(response.data));
+        return Right(GetMemoryResponseDM.fromJson(response.data));
       } catch (e) {
         return Left(ServerError(errors: e.toString()));
       }
@@ -98,15 +77,38 @@ class JournalDataSourceImpl implements MemoryDataSource {
   }
 
   @override
-  Future<Either<Failures, DeleteJournalResEntity>> deleteJournal(int id) async {
+  Future<Either<Failures, GetMemoryResponseEntity>> updateMemory(
+      int id, String title, String moodState, String image) async {
+    if (await _isConnected()) {
+      try {
+        var response = await apiManager.postData(
+          endPoint: EndPoints.updateMemory,
+          body: {
+            "title": title,
+            "id": id,
+            "imageUrl": image,
+            "moodState": moodState
+          },
+          headers: {'Authorization': 'Bearer ${_getToken()}'},
+        );
+        return Right(GetMemoryResponseDM.fromJson(response.data));
+      } catch (e) {
+        return Left(ServerError(errors: e.toString()));
+      }
+    }
+    return Left(NetworkError(errors: "No Internet Connection"));
+  }
+
+  @override
+  Future<Either<Failures, DeleteMemoryResEntity>> deleteMemory(int id) async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.deleteData(
-          endPoint: "${EndPoints.deleteJournal}$id",
+          endPoint: "${EndPoints.deleteMemory}$id",
           headers: {'Authorization': 'Bearer ${_getToken()}'},
         );
 
-        return Right(DeleteJournalResDm.fromJson(response.data));
+        return Right(DeleteMemoryResDM.fromJson(response.data));
       } catch (e) {
         return Left(ServerError(errors: e.toString()));
       }

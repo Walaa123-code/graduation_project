@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import 'package:mindecho/core/utils/app_styles.dart';
 import 'package:mindecho/features/my_space/ui/widgets/space_item_card.dart';
 
 import '../../../../../di/di.dart';
@@ -25,7 +27,42 @@ class _JournalsTabState extends State<JournalsTab> {
           if (state is GetJournalLoadingState) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetJournalErrorState) {
-            return Text(state.failures.errors.toString());
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.cloud_off_rounded,
+                        size: 75, color: AppColors.gray300),
+                    const SizedBox(height: 20),
+                    Text(
+                      "Connection Problem",
+                      style: AppStyles.bold20Black,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.failures
+                          .errors, // الرسالة اللي جاية من الـ _handleError في الـ DataSource
+                      textAlign: TextAlign.center,
+                      style: AppStyles.medium16DarkGray,
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<JournalCubit>().getJournal();
+                      },
+                      icon: const Icon(Icons.refresh),
+                      label: Text(
+                        "Try Again",
+                        style: AppStyles.bold20Whit,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+            // Text(state.failures.errors.toString());
           } else if (state is GetJournalSuccessState) {
             final journals = state.getJournalResponseEntity.data ?? [];
             return ListView.builder(
@@ -38,12 +75,6 @@ class _JournalsTabState extends State<JournalsTab> {
 
                 final journal = journals[index - 1];
                 return InkWell(
-                  // onTap: () {
-                  //   // 1. نادي الـ API
-                  //   context
-                  //       .read<JournalDetailsCubit>()
-                  //       .getJournalById(journal.id!.toInt());
-                  // 2. روحي لصفحة التفاصيل مع تمرير الـ Cubit
                   onTap: () {
                     Navigator.push(
                       context,
@@ -58,7 +89,7 @@ class _JournalsTabState extends State<JournalsTab> {
                     );
                   },
                   child: SpaceItemCard(
-                    journal: journal, // السطر ده مهم جداً عشان التعديل والمسح
+                    itemData: journal, // السطر ده مهم جداً عشان التعديل والمسح
                     title: journal.title ?? "No Title",
                     subtitle: journal.content ?? "No Content",
                     emoji: "😊",

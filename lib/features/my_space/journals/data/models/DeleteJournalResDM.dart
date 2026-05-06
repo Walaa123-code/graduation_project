@@ -1,3 +1,4 @@
+
 import '../../domain/entities/DeleteJournalResEntity.dart';
 
 class DeleteJournalResDm extends DeleteJournalResEntity {

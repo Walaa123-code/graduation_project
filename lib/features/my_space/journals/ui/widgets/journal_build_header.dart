@@ -64,4 +64,3 @@ class JournalBuildHeader extends StatelessWidget {
     );
   }
 }
-

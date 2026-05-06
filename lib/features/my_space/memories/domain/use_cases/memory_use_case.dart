@@ -8,25 +8,25 @@ import '../repositories/repositories/memory_repository.dart';
 class MemoryUseCase {
   MemoryRepository memoryRepository;
   MemoryUseCase({required this.memoryRepository});
-  Future<Either<Failures, GetMemoryResponseEntity>> invoke() {
+  Future<Either<Failures, GetMemoryResponseEntity>> invokeI() {
     return memoryRepository.getMemory();
   }
 
-  Future<Either<Failures, GetMemoryByIdResEntity>> execute(int id) {
+  Future<Either<Failures, GetMemoryByIdResEntity>> executeI(int id) {
     return memoryRepository.getMemoryById(id);
   }
 
-  Future<Either<Failures, GetMemoryResponseEntity>> call(
+  Future<Either<Failures, GetMemoryResponseEntity>> callI(
       String moodState, String title, String image) {
     return memoryRepository.createMemory(moodState, title, image);
   }
 
-  Future<Either<Failures, GetMemoryResponseEntity>> execute1(
+  Future<Either<Failures, GetMemoryResponseEntity>> executeII(
       int id, String title, String moodState, String image) {
     return memoryRepository.updateMemory(id, title, moodState, image);
   }
 
-  Future<Either<Failures, DeleteMemoryResEntity>> invoke1(int id) {
+  Future<Either<Failures, DeleteMemoryResEntity>> invokeII(int id) {
     return memoryRepository.deleteMemory(id);
   }
 }

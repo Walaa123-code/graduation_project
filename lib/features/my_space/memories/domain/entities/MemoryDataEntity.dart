@@ -9,7 +9,7 @@ class MemoryDataEntity {
 
   final num? id;
   final String? title;
-  final num? moodState;
+  final dynamic moodState;
   final String? date;
   final String? imageUrl;
 }

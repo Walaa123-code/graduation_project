@@ -5,8 +5,8 @@ sealed class JournalDetailsState {}
 final class JournalDetailsInitialState extends JournalDetailsState {}
 final class JournalDetailsLoadingState extends JournalDetailsState {}
 final class JournalDetailsSuccessState extends JournalDetailsState {
-  final GetJournalByIdResEntity getResponseEntity;
-  JournalDetailsSuccessState({required this.getResponseEntity});
+  final GetJournalByIdResEntity getResponseDetEntity;
+  JournalDetailsSuccessState({required this.getResponseDetEntity});
 }
 final class JournalDetailsErrorState extends JournalDetailsState {
   final Failures failures;

@@ -1,76 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/components/app_card.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
-import '../../../../di/di.dart';
-import '../../journals/domain/entities/GetJournalByIDResEntity.dart';
 import '../../journals/ui/manager/delete_journal_cubit.dart';
 import '../../journals/ui/manager/journal_cubit.dart';
-import '../../journals/ui/manager/update_journal_cubit.dart';
-import '../../journals/ui/widgets/add_journal_screen.dart';
+import '../../memories/ui/manager/delete_memory_cubit.dart';
+import '../../memories/ui/manager/delete_memory_state.dart';
+import '../../memories/ui/manager/memory_cubit.dart';
 
 class SpaceItemCard extends StatefulWidget {
-  final dynamic journal;
+  final dynamic itemData; // غيرنا الاسم من journal لـ itemData
   final String title;
   final String subtitle;
   final String emoji;
+  final bool isMemory; // ضيفنا الفلاج ده
 
   const SpaceItemCard({
     super.key,
     required this.title,
     required this.subtitle,
     required this.emoji,
-     this.journal,
+    this.itemData,
+    this.isMemory = false, // القيمة الافتراضية جورنال
   });
-
 
   @override
   State<SpaceItemCard> createState() => _SpaceItemCardState();
 }
 
 class _SpaceItemCardState extends State<SpaceItemCard> {
-  void _navigateToEdit() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(
-          create: (context) => getIt<UpdateJournalCubit>(),
-          child: AddJournalScreen(isUpdate: true, journal: widget.journal),
-        ),
-      ),
-    );
-    if (mounted) {
-      context.read<JournalCubit>().getJournal();
+
+  void _navigateToEdit() {
+    print("Navigate to edit ${widget.itemData.id}");
+  }
+
+  // ميثود المسح بتنادي على الكيوبيت المناسب بناءً على نوع العنصر
+  void _executeDelete() {
+    if (widget.isMemory) {
+      context.read<DeleteMemoryCubit>().deleteMemory(widget.itemData.id);
+    } else {
+      context.read<DeleteJournalCubit>().deleteJournal(widget.itemData.id);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DeleteJournalCubit, DeleteJournalState>(
-      listener: (context, state) {
-        if (state is DeleteJournalLoadingState) {
-        } else if (state is DeleteJournalSuccessState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(
-              state.deleteResponseEntity.message ?? "Deleted Successfully",
-              style: AppStyles.medium16White,
-            )),
-          );
-          context.read<JournalCubit>().getJournal();
-        } else if (state is DeleteJournalErrorState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(
-              state.failures.errors ?? "Error occurred",
-              style: AppStyles.medium16White,
-            )),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        // بيسمع لو المسح نجح في الميموري، يحدث لستة الميموري
+        BlocListener<DeleteMemoryCubit, DeleteMemoryState>(
+          listener: (context, state) {
+            if (state is DeleteMemorySuccessState) {
+              context.read<MemoryCubit>().getMemory();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Memory deleted successfully")),
+              );
+            }
+          },
+        ),
+        // بيسمع لو المسح نجح في الجورنال، يحدث لستة الجورنال
+        BlocListener<DeleteJournalCubit, DeleteJournalState>(
+          listener: (context, state) {
+            if (state is DeleteJournalSuccessState) {
+              context.read<JournalCubit>().getJournal();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Journal deleted successfully")),
+              );
+            }
+          },
+        ),
+      ],
       child: AppCard(
+        // ... باقي كود الـ AppCard بتاعك زي ما هو
         child: Row(
           children: [
             Text(widget.emoji, style: const TextStyle(fontSize: 25)),
@@ -80,40 +82,20 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    widget.title,
-                    style: AppStyles.bold20Lavender,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  Text(widget.title, style: AppStyles.bold20Lavender, maxLines: 1),
                   const SizedBox(height: 4),
-                  Text(
-                    widget.subtitle,
-                    style: AppStyles.medium15Black,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  Text(widget.subtitle, style: AppStyles.medium15Black, maxLines: 1),
                 ],
               ),
             ),
             PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert, color: AppColors.lavenderColor),
               onSelected: (value) {
-                if (value == 'edit') {
-                  _navigateToEdit();
-                } else if (value == 'delete') {
-                  _showDeleteDialog(context); // نادي ميثود التأكيد
-                }
+                if (value == 'edit') _navigateToEdit();
+                else if (value == 'delete') _showDeleteDialog(context);
               },
-              itemBuilder: (BuildContext context) => [
-                const PopupMenuItem(
-                  value: 'edit',
-                  child: Text("Edit"),
-                ),
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: Text("Delete"),
-                ),
+              itemBuilder: (context) => [
+                const PopupMenuItem(value: 'edit', child: Text("Edit")),
+                const PopupMenuItem(value: 'delete', child: Text("Delete")),
               ],
             ),
           ],
@@ -122,29 +104,25 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
     );
   }
 
+  // ميثود إظهار الدايالوج
   void _showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text("Delete Journal"),
+        title: Text(widget.isMemory ? "Delete Memory" : "Delete Journal"),
         content: Text(
-          "Are you sure you want to delete this journal?",
+          "Are you sure you want to delete this ${widget.isMemory ? 'memory' : 'journal'}?",
           style: AppStyles.medium15Gray,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text(
-              "Cancel",
-              style: AppStyles.medium16Black,
-            ),
+            child: Text("Cancel", style: AppStyles.medium16Black),
           ),
           TextButton(
             onPressed: () {
-              context
-                  .read<DeleteJournalCubit>()
-                  .deleteJournal(widget.journal.id);
-              Navigator.pop(dialogContext);
+              _executeDelete(); // بينفذ المسح
+              Navigator.pop(dialogContext); // بيقفل الدايالوج
             },
             child: Text("Delete", style: AppStyles.medium16Red),
           ),

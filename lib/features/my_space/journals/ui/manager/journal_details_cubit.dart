@@ -17,7 +17,7 @@ class JournalDetailsCubit extends Cubit<JournalDetailsState> {
     var either = await journalUseCase.execute(id);
     either.fold(
       (error) => emit(JournalDetailsErrorState(failures: error)),
-      (response) => emit(JournalDetailsSuccessState(getResponseEntity: response)),
+      (response) => emit(JournalDetailsSuccessState(getResponseDetEntity: response)),
     );
 
   }

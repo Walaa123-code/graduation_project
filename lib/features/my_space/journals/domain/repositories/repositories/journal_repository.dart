@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../../../core/errors/failures.dart';
+import '../../../../memories/domain/entities/DeleteMemoryResEntity.dart';
 import '../../entities/DeleteJournalResEntity.dart';
 import '../../entities/GetJournalByIDResEntity.dart';
 import '../../entities/GetJournalResponseEntity.dart';

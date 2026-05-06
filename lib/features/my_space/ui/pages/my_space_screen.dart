@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mindecho/features/my_space/memories/ui/manager/memory_cubit.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../di/di.dart';
@@ -62,11 +63,21 @@ class MySpaceScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(
-            children: [
-              JournalsTab(),
-              MemoriesTab(),
+          body: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => getIt<JournalCubit>()..getJournal(),
+              ),
+              BlocProvider(
+                create: (context) => getIt<MemoryCubit>()..getMemory(),
+              ),
             ],
+            child: const TabBarView(
+              children: [
+                JournalsTab(),
+                MemoriesTab(),
+              ],
+            ),
           ),
         ),
       ),
