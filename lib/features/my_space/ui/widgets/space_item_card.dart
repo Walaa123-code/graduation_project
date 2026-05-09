@@ -10,11 +10,11 @@ import '../../memories/ui/manager/delete_memory_state.dart';
 import '../../memories/ui/manager/memory_cubit.dart';
 
 class SpaceItemCard extends StatefulWidget {
-  final dynamic itemData; // غيرنا الاسم من journal لـ itemData
+  final dynamic itemData;
   final String title;
   final String subtitle;
   final String emoji;
-  final bool isMemory; // ضيفنا الفلاج ده
+  final bool isMemory;
 
   const SpaceItemCard({
     super.key,
@@ -22,7 +22,7 @@ class SpaceItemCard extends StatefulWidget {
     required this.subtitle,
     required this.emoji,
     this.itemData,
-    this.isMemory = false, // القيمة الافتراضية جورنال
+    this.isMemory = false,
   });
 
   @override
@@ -30,12 +30,10 @@ class SpaceItemCard extends StatefulWidget {
 }
 
 class _SpaceItemCardState extends State<SpaceItemCard> {
-
   void _navigateToEdit() {
     print("Navigate to edit ${widget.itemData.id}");
   }
 
-  // ميثود المسح بتنادي على الكيوبيت المناسب بناءً على نوع العنصر
   void _executeDelete() {
     if (widget.isMemory) {
       context.read<DeleteMemoryCubit>().deleteMemory(widget.itemData.id);
@@ -48,7 +46,6 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        // بيسمع لو المسح نجح في الميموري، يحدث لستة الميموري
         BlocListener<DeleteMemoryCubit, DeleteMemoryState>(
           listener: (context, state) {
             if (state is DeleteMemorySuccessState) {
@@ -59,7 +56,6 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
             }
           },
         ),
-        // بيسمع لو المسح نجح في الجورنال، يحدث لستة الجورنال
         BlocListener<DeleteJournalCubit, DeleteJournalState>(
           listener: (context, state) {
             if (state is DeleteJournalSuccessState) {
@@ -72,7 +68,6 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
         ),
       ],
       child: AppCard(
-        // ... باقي كود الـ AppCard بتاعك زي ما هو
         child: Row(
           children: [
             Text(widget.emoji, style: const TextStyle(fontSize: 25)),
@@ -82,16 +77,19 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(widget.title, style: AppStyles.bold20Lavender, maxLines: 1),
+                  Text(widget.title,
+                      style: AppStyles.bold20Lavender, maxLines: 1),
                   const SizedBox(height: 4),
-                  Text(widget.subtitle, style: AppStyles.medium15Black, maxLines: 1),
+                  Text(widget.subtitle,
+                      style: AppStyles.medium15Black, maxLines: 1),
                 ],
               ),
             ),
             PopupMenuButton<String>(
               onSelected: (value) {
-                if (value == 'edit') _navigateToEdit();
-                else if (value == 'delete') _showDeleteDialog(context);
+                if (value == 'edit') {
+                  _navigateToEdit();
+                } else if (value == 'delete') _showDeleteDialog(context);
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(value: 'edit', child: Text("Edit")),
@@ -104,7 +102,6 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
     );
   }
 
-  // ميثود إظهار الدايالوج
   void _showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -121,8 +118,8 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
           ),
           TextButton(
             onPressed: () {
-              _executeDelete(); // بينفذ المسح
-              Navigator.pop(dialogContext); // بيقفل الدايالوج
+              _executeDelete();
+              Navigator.pop(dialogContext);
             },
             child: Text("Delete", style: AppStyles.medium16Red),
           ),

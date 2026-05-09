@@ -10,7 +10,7 @@ part 'update_journal_state.dart';
 class UpdateJournalCubit extends Cubit<UpdateJournalState> {
   final JournalUseCase journalUseCase;
   UpdateJournalCubit(this.journalUseCase) : super(UpdateJournalInitialState());
-  Future<void> updateJournal(int id, String title, String content) async {
+  Future<void> updateJournal(int id, String title, String content,) async {
     emit(UpdateJournalLoadingState());
 
     var either = await journalUseCase.execute1(id, title, content);

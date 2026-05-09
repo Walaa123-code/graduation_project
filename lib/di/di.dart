@@ -16,11 +16,13 @@ import '../features/my_space/journals/ui/manager/create_journal_cubit.dart';
 import '../features/my_space/journals/ui/manager/delete_journal_cubit.dart';
 import '../features/my_space/journals/ui/manager/journal_cubit.dart';
 import '../features/my_space/journals/ui/manager/journal_details_cubit.dart';
+import '../features/my_space/journals/ui/manager/update_journal_cubit.dart';
 import '../features/my_space/memories/data/data_sources/remote_data_source_impl/memory_data_source_impl.dart';
 import '../features/my_space/memories/data/repositories/Memory_repository_impl.dart';
 import '../features/my_space/memories/domain/repositories/data_source/remote_data_source/memory_data_source.dart';
 import '../features/my_space/memories/domain/repositories/repositories/memory_repository.dart';
 import '../features/my_space/memories/domain/use_cases/memory_use_case.dart';
+import '../features/my_space/memories/ui/manager/create_memory_cubit.dart';
 import '../features/my_space/memories/ui/manager/delete_memory_cubit.dart';
 import '../features/my_space/memories/ui/manager/memory_cubit.dart';
 import '../features/profile_user/data/data_source/remote_data_source_impl/profile_remote_data_source_impl.dart';
@@ -102,6 +104,10 @@ Future<void> initAppModule() async {
   getIt.registerFactory<DeleteJournalCubit>(
     () => DeleteJournalCubit(getIt<JournalUseCase>()),
   );
+  //  Update Journal Cubit
+  getIt.registerFactory<UpdateJournalCubit>(
+        () => UpdateJournalCubit(getIt<JournalUseCase>()),
+  );
 
   // --- Memories Feature ---
   // 1. Data Source
@@ -124,8 +130,13 @@ Future<void> initAppModule() async {
     () => MemoryCubit(getIt<MemoryUseCase>()),
   );
 
-  // 5. Delete Memory Cubit (لو عندك كوبيت للمسح زي الجورنال)
+
+  getIt.registerFactory<CreateMemoryCubit>(
+        () => CreateMemoryCubit(getIt<MemoryUseCase>()),
+  );
+
+// 5. Delete Memory Cubit
   getIt.registerFactory<DeleteMemoryCubit>(
-    () => DeleteMemoryCubit(getIt<MemoryUseCase>()),
+        () => DeleteMemoryCubit(getIt<MemoryUseCase>()),
   );
 }
