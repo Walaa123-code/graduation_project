@@ -1,19 +1,24 @@
-class MoodResponseDm {
-  MoodResponseDm({
+class GetAllMoodResponseEntity {
+  GetAllMoodResponseEntity({
       this.success, 
       this.message, 
       this.data, 
       this.errors,});
 
-  MoodResponseDm.fromJson(dynamic json) {
+  GetAllMoodResponseEntity.fromJson(dynamic json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    if (json['data'] != null) {
+      data = [];
+      json['data'].forEach((v) {
+        data?.add(Data.fromJson(v));
+      });
+    }
     errors = json['errors'];
   }
   bool? success;
   String? message;
-  Data? data;
+  List<Data>? data;
   dynamic errors;
 
   Map<String, dynamic> toJson() {
@@ -21,7 +26,7 @@ class MoodResponseDm {
     map['success'] = success;
     map['message'] = message;
     if (data != null) {
-      map['data'] = data?.toJson();
+      map['data'] = data?.map((v) => v.toJson()).toList();
     }
     map['errors'] = errors;
     return map;
