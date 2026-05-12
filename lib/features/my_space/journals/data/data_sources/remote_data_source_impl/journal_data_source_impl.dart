@@ -113,11 +113,14 @@ class JournalDataSourceImpl implements JournalDataSource {
 }
 
 String _handleError(dynamic e) {
-  if (e.toString().contains('host lookup') ||
-      e.toString().contains('SocketException')) {
-    return "Server unreachable. Please check your internet connection.";
-  } else if (e.toString().contains('401')) {
-    return "Session expired. Please login again.";
+  final msg = e.toString();
+  if (msg.contains('400')) return "Bad request. Please try again.";
+  if (msg.contains('401')) return "Session expired. Please login again.";
+  if (msg.contains('403')) return "Access denied.";
+  if (msg.contains('404')) return "Profile not found.";
+  if (msg.contains('500')) return "Server error. Please try later.";
+  if (msg.contains('host lookup') || msg.contains('SocketException')) {
+    return "Server unreachable. Check your connection.";
   }
-  return "Something went wrong. Please try again later.";
+  return "Something went wrong. Please try again.";
 }

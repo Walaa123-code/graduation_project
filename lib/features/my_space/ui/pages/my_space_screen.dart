@@ -49,15 +49,13 @@ class MySpaceScreen extends StatelessWidget {
               ],
             ),
             bottom: TabBar(
-              labelStyle: AppStyles.bold19Lavender,
-              unselectedLabelStyle: AppStyles.bold17Black,
+              labelStyle: AppStyles.bold20Lavender,
+              unselectedLabelStyle: AppStyles.bold18Black,
               indicatorColor: AppColors.lavenderColor,
               labelColor: AppColors.lavenderColor,
               unselectedLabelColor: AppColors.blackColor,
               tabs: const [
-                Tab(
-                  text: "Journals",
-                ),
+                Tab(text: "Journals"),
                 Tab(text: "Memories"),
               ],
             ),

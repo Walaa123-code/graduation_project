@@ -27,7 +27,41 @@ class ProfileUserScreen extends StatelessWidget {
           if (state is ProfileLoadingState) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileErrorState) {
-            return Center(child: Text(state.failures.errors.toString()));
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.cloud_off_rounded,
+                        size: 75, color: AppColors.gray300),
+                    const SizedBox(height: 20),
+                    Text("Connection Problem",
+                        style: AppStyles.bold20Black),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.failures.errors,
+                      textAlign: TextAlign.center,
+                      style: AppStyles.medium16DarkGray,
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton.icon(
+                      onPressed: () =>
+                          context.read<ProfileCubit>().getProfile(),
+                      icon: const Icon(Icons.refresh, color: Colors.white),
+                      label: Text("Try Again", style: AppStyles.bold20Whit),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.lavenderColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           } else if (state is ProfileSuccessState) {
             var response = state.profileResponseEntity.data;
 
