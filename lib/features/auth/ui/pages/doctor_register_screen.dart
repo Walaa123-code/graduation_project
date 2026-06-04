@@ -4,6 +4,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/components/custom_text_field.dart';
 import '../../../../core/components/custom_button.dart';
 import '../../login/ui/pages/login_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../manager/auth_cubit.dart';
 
 /// Doctor Registration Screen
 /// Create account for therapists and counselors
@@ -22,6 +24,9 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   final _specialtyController = TextEditingController();
   final _licenseController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _bioController = TextEditingController();
+  int _selectedGender = 0;
 
   @override
   void dispose() {
@@ -31,17 +36,22 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
     _confirmPasswordController.dispose();
     _specialtyController.dispose();
     _licenseController.dispose();
+    _ageController.dispose();
+    _bioController.dispose();
     super.dispose();
   }
 
   void _handleRegister() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Implement doctor registration logic
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Doctor registration successful!'),
-          backgroundColor: AppColors.purpleSoft,
-        ),
+      context.read<AuthCubit>().registerDoctor(
+        fullName: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        gender: _selectedGender,
+        age: int.parse(_ageController.text),
+        licenseNumber: _licenseController.text,
+        specialization: _specialtyController.text,
+        bio: _bioController.text,
       );
     }
   }
@@ -50,8 +60,31 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppTheme.spacingLg),
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSuccessState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Doctor registration successful!'),
+                  backgroundColor: AppColors.purpleSoft,
+                ),
+              );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            } else if (state is AuthErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.failure.errors ?? 'An error occurred'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            bool isLoading = state is AuthLoadingState;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppTheme.spacingLg),
           child: Form(
             key: _formKey,
             child: Column(
@@ -117,7 +150,7 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
 
                 // Password Field
                 CustomTextField(
-                  hintText: 'Password',
+                  hintText: 'Password (min 6 chars, 1 uppercase, 1 special)',
                   controller: _passwordController,
                   isPassword: true,
                   validator: (value) {
@@ -126,6 +159,12 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
                     }
                     if (value.length < 6) {
                       return 'Password must be at least 6 characters';
+                    }
+                    if (!value.contains(RegExp(r'[A-Z]'))) {
+                      return 'Password must contain an uppercase letter';
+                    }
+                    if (!value.contains(RegExp(r'[^a-zA-Z0-9]'))) {
+                      return 'Password must contain a special character';
                     }
                     return null;
                   },
@@ -177,12 +216,79 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
                   },
                 ),
 
+                const SizedBox(height: AppTheme.spacingMd),
+
+                // Bio Field
+                CustomTextField(
+                  hintText: 'Bio (Optional)',
+                  controller: _bioController,
+                  validator: (value) {
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: AppTheme.spacingMd),
+
+                // Age Field
+                CustomTextField(
+                  hintText: 'Age (25 - 100)',
+                  controller: _ageController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your age';
+                    }
+                    final age = int.tryParse(value);
+                    if (age == null) {
+                      return 'Please enter a valid number';
+                    }
+                    if (age < 25 || age > 100) {
+                      return 'Age must be between 25 and 100';
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: AppTheme.spacingMd),
+
+                // Gender Selection
+                DropdownButtonFormField<int>(
+                  initialValue: _selectedGender,
+                  decoration: InputDecoration(
+                    labelText: 'Gender',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.gray200),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.gray200),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.primary),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  ),
+                  items: const [
+                    DropdownMenuItem(value: 0, child: Text('Male')),
+                    DropdownMenuItem(value: 1, child: Text('Female')),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGender = value!;
+                    });
+                  },
+                ),
+
                 const SizedBox(height: AppTheme.spacingXl),
 
                 // Create Doctor Account Button
                 CustomButton(
-                  text: 'Create Doctor Account',
-                  onPressed: _handleRegister,
+                  text: isLoading ? 'Loading...' : 'Create Doctor Account',
+                  onPressed: isLoading ? () {} : _handleRegister,
                   width: double.infinity,
                 ),
 
@@ -221,7 +327,9 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
               ],
             ),
           ),
-        ),
+        );
+        },
+      ),
       ),
     );
   }

@@ -8,4 +8,6 @@ abstract class ScheduleRepository {
     required String startTime,
     required String endTime,
   });
+
+  Future<Either<Failures, List<ScheduleEntity>>> getSchedules({required String doctorId});
 }

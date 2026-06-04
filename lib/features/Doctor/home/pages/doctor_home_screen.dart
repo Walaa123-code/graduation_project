@@ -1,177 +1,294 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../shared/models/doctor_action_item.dart';
 import '../../shared/widgets/action_grid.dart';
 import '../../shared/widgets/doctor_header_widget.dart';
-
 import '../../shared/widgets/stats_card.dart';
+import '../../ui/manager/doctor_cubit.dart';
+import '../../ui/manager/schedule_cubit.dart';
 
-class DoctorHomeScreen extends StatelessWidget {
-  const DoctorHomeScreen({super.key});
+class DoctorHomeScreen extends StatefulWidget {
+  final void Function(int index)? onTabChange;
+  const DoctorHomeScreen({super.key, this.onTabChange});
+
+  @override
+  State<DoctorHomeScreen> createState() => _DoctorHomeScreenState();
+}
+
+class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<DoctorCubit>().getDoctorProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Dummy Data for Actions
     final List<DoctorActionItem> actions = [
       DoctorActionItem(
         title: 'Appointments',
-        subtitle: '2 Pending',
+        subtitle: 'Schedule',
         icon: Icons.calendar_month,
         color: AppColors.purpleSoft,
         onTap: () {
-          Navigator.pushNamed(context, '/doctor/appointments');
+          if (widget.onTabChange != null) {
+            widget.onTabChange!(2); // 2 is Appointments/Schedule tab
+          } else {
+            Navigator.pushNamed(context, '/doctor/appointments');
+          }
         },
       ),
       DoctorActionItem(
         title: 'Patients',
-        subtitle: '3 New',
+        subtitle: 'My Patients',
         icon: Icons.people_alt,
         color: AppColors.primary,
         onTap: () {
-          Navigator.pushNamed(context, '/doctor/patients');
+          if (widget.onTabChange != null) {
+            widget.onTabChange!(1); // 1 is Patients tab
+          } else {
+            Navigator.pushNamed(context, '/doctor/patients');
+          }
         },
       ),
       DoctorActionItem(
         title: 'Messages',
-        subtitle: '5 Unread',
+        subtitle: 'Inbox',
         icon: Icons.chat_bubble_outline,
         color: Colors.orange,
-        onTap: () {
-          Navigator.pushNamed(context, '/doctor/messages');
-        },
+        onTap: () => Navigator.pushNamed(context, '/doctor/messages'),
       ),
       DoctorActionItem(
         title: 'Reports',
         subtitle: 'Weekly Summary',
         icon: Icons.analytics_outlined,
         color: Colors.blue,
-        onTap: () {
-          Navigator.pushNamed(context, '/doctor/reports');
-        },
+        onTap: () => Navigator.pushNamed(context, '/doctor/reports'),
       ),
     ];
 
     return Scaffold(
       backgroundColor: AppColors.gray50,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header
-            DoctorHeaderWidget(
-              doctorName: 'Dr. Wafaa Sakr',
-              greeting: 'Good Morning,',
-              imageUrl: 'assets/images/doctor_avatar.png', // Placeholder
-              onNotificationTap: () {},
-              onProfileTap: () {
-                // Navigate to Profile
-                // Navigator.pushNamed(context, '/doctor-profile');
-              },
-            ),
+      body: BlocListener<DoctorCubit, DoctorState>(
+        listenWhen: (previous, current) =>
+            previous.profile == null && current.profile != null,
+        listener: (context, state) {
+          if (state.profile != null) {
+            context.read<ScheduleCubit>().getSchedules(doctorId: state.profile!.id);
+          }
+        },
+        child: BlocBuilder<DoctorCubit, DoctorState>(
+          builder: (context, doctorState) {
+          final doctorName = doctorState.profile != null
+              ? 'Dr. ${doctorState.profile!.fullName}'
+              : 'Doctor';
+          final specialization = doctorState.profile?.specialization ?? '';
+          final profilePic = doctorState.profile?.profilePicture;
 
-            Padding(
-              padding: const EdgeInsets.all(AppTheme.spacingMd),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Stats Row
-                  const Row(
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                DoctorHeaderWidget(
+                  doctorName: doctorName,
+                  greeting: 'Good Morning,',
+                  imageUrl: profilePic ?? '',
+                  onNotificationTap: () {},
+                  onProfileTap: () {},
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(AppTheme.spacingMd),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: StatsCard(
-                          label: 'Sessions',
-                          value: '12',
-                          icon: Icons.video_call,
-                          color: AppColors.purpleSoft,
-                        ),
+                      // Stats Row
+                      Row(
+                        children: [
+                          Expanded(
+                            child: StatsCard(
+                              label: 'Specialty',
+                              value: specialization.isNotEmpty ? specialization : '—',
+                              icon: Icons.medical_services_outlined,
+                              color: AppColors.purpleSoft,
+                            ),
+                          ),
+                          const SizedBox(width: AppTheme.spacingMd),
+                          // Schedule count from real API
+                          BlocBuilder<ScheduleCubit, ScheduleState>(
+                            builder: (ctx, schedState) {
+                              final count = schedState is ScheduleListLoadedState
+                                  ? schedState.schedules.length
+                                  : 0;
+                              return Expanded(
+                                child: StatsCard(
+                                  label: 'Schedules',
+                                  value: '$count',
+                                  icon: Icons.calendar_today,
+                                  color: AppColors.primary,
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(width: AppTheme.spacingMd),
+                          // Patients count
+                          BlocBuilder<DoctorCubit, DoctorState>(
+                            builder: (ctx, state) {
+                              final count = state.patients?.totalCount ?? 0;
+                              return Expanded(
+                                child: StatsCard(
+                                  label: 'Patients',
+                                  value: '$count',
+                                  icon: Icons.person_outline,
+                                  color: Colors.orange,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      SizedBox(width: AppTheme.spacingMd),
-                      Expanded(
-                        child: StatsCard(
-                          label: 'Patients',
-                          value: '45',
-                          icon: Icons.person_outline,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      // Add a third card if needed to match 3-card design
-                      SizedBox(width: AppTheme.spacingMd),
-                      Expanded(
-                        child: StatsCard(
-                          label: 'Rating',
-                          value: '4.9',
-                          icon: Icons.star_outline,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
 
-                  const SizedBox(height: AppTheme.spacingLg),
+                      const SizedBox(height: AppTheme.spacingLg),
 
-                  // Schedule Section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                      // Today's Schedule from API
+                      BlocBuilder<ScheduleCubit, ScheduleState>(
+                        builder: (ctx, schedState) {
+                          final schedules = schedState is ScheduleListLoadedState
+                              ? schedState.schedules
+                              : <dynamic>[];
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'My Schedules (${schedules.length})',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(fontSize: 18),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      if (widget.onTabChange != null) {
+                                        widget.onTabChange!(2);
+                                      } else {
+                                        Navigator.pushNamed(context, '/doctor/appointments');
+                                      }
+                                    },
+                                    child: const Text('View All'),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: AppTheme.spacingSm),
+
+                              if (schedState is ScheduleLoadingState)
+                                const Center(child: CircularProgressIndicator())
+                              else if (schedules.isEmpty)
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(AppTheme.spacingXl),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.circular(AppTheme.radiusLg),
+                                    border: Border.all(color: AppColors.gray200),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      const Icon(Icons.calendar_today,
+                                          size: 48, color: AppColors.gray300),
+                                      const SizedBox(height: AppTheme.spacingMd),
+                                      Text('No schedules set up yet',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium),
+                                    ],
+                                  ),
+                                )
+                              else
+                                ...schedules.take(3).map((s) {
+                                  const days = [
+                                    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+                                  ];
+                                  // ignore: avoid_dynamic_calls
+                                  final dayLabel = days[(s as dynamic).dayOfWeek % 7];
+                                  return Container(
+                                    margin: const EdgeInsets.only(bottom: 8),
+                                    padding: const EdgeInsets.all(AppTheme.spacingMd),
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [Color(0xFFEEE6FF), Color(0xFFE0E8FF)],
+                                      ),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                                      border: Border.all(color: AppColors.purpleLight),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.access_time,
+                                            color: AppColors.purpleSoft, size: 20),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '$dayLabel  ${s.startTime} – ${s.endTime}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.purpleSoft,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: s.isActive
+                                                ? AppColors.primary.withValues(alpha: 0.1)
+                                                : AppColors.gray200,
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Text(
+                                            s.isActive ? 'Active' : 'Off',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
+                                              color: s.isActive
+                                                  ? AppColors.primary
+                                                  : AppColors.gray500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                            ],
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: AppTheme.spacingLg),
+
+                      // Quick Actions
                       Text(
-                        'Today\'s Schedule (0)', // Dynamic count
+                        'Quick Actions',
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium
-                            ?.copyWith(
-                              fontSize: 18,
-                            ),
+                            ?.copyWith(fontSize: 18),
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('View All'),
-                      ),
+                      const SizedBox(height: AppTheme.spacingMd),
+                      ActionGrid(actions: actions),
+                      const SizedBox(height: AppTheme.spacingLg),
                     ],
                   ),
-                  const SizedBox(height: AppTheme.spacingSm),
-
-                  // Empty State or List
-                  // For now, let's show one dummy card or empty state text
-                  // "No appointments today" if empty
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppTheme.spacingXl),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-                      border: Border.all(color: AppColors.gray200),
-                    ),
-                    child: Column(
-                      children: [
-                        const Icon(Icons.calendar_today,
-                            size: 48, color: AppColors.gray300),
-                        const SizedBox(height: AppTheme.spacingMd),
-                        Text(
-                          'No appointments today',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: AppTheme.spacingLg),
-
-                  // Quick Actions
-                  Text(
-                    'Quick Actions',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontSize: 18,
-                        ),
-                  ),
-                  const SizedBox(height: AppTheme.spacingMd),
-                  ActionGrid(actions: actions),
-
-                  const SizedBox(height: AppTheme.spacingLg),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
+      ),
       ),
     );
   }

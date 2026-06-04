@@ -15,11 +15,15 @@ class DoctorMainScreen extends StatefulWidget {
 class _DoctorMainScreenState extends State<DoctorMainScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    DoctorHomeScreen(),
-    PatientsScreen(),
-    AppointmentsScreen(),
-    DoctorProfileScreen(),
+  void _switchTab(int index) {
+    setState(() => _currentIndex = index);
+  }
+
+  late final List<Widget> _screens = [
+    DoctorHomeScreen(onTabChange: _switchTab),
+    const PatientsScreen(),
+    const AppointmentsScreen(),
+    const DoctorProfileScreen(),
   ];
 
   @override

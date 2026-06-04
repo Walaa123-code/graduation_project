@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mindecho/features/appointments/ui/manager/booking_cubit.dart';
 
 /// Gradient header card for the Appointments screen.
 /// Shows title, subtitle, and three quick-stat counters.
@@ -44,14 +46,33 @@ class AppointmentsHeader extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               // Stat cards row
-              const Row(
-                children: [
-                  _StatChip(label: 'Completed', value: '1'),
-                  SizedBox(width: 10),
-                  _StatChip(label: 'Upcoming', value: '3'),
-                  SizedBox(width: 10),
-                  _StatChip(label: 'Today', value: '0'),
-                ],
+              BlocBuilder<BookingCubit, BookingState>(
+                builder: (context, state) {
+                  int completedCount = 0;
+                  int upcomingCount = 0;
+                  int todayCount = 0;
+                  
+                  if (state is BookingsLoadedState) {
+                    final now = DateTime.now();
+                    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+                    
+                    for (var b in state.bookings) {
+                      if (b.bookingStatus == 3) completedCount++;
+                      if (b.bookingStatus == 1 || b.bookingStatus == 0) upcomingCount++;
+                      if (b.requestedAt.startsWith(todayStr)) todayCount++;
+                    }
+                  }
+                  
+                  return Row(
+                    children: [
+                      _StatChip(label: 'Completed', value: completedCount.toString()),
+                      const SizedBox(width: 10),
+                      _StatChip(label: 'Upcoming', value: upcomingCount.toString()),
+                      const SizedBox(width: 10),
+                      _StatChip(label: 'Today', value: todayCount.toString()),
+                    ],
+                  );
+                },
               ),
             ],
           ),

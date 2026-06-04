@@ -38,3 +38,11 @@ class GetAllDoctorsUseCase {
   Future<Either<Failures, DoctorListEntity>> call() =>
       doctorRepository.getAllDoctors();
 }
+
+class GetDoctorPatientsUseCase {
+  final DoctorRepository doctorRepository;
+  GetDoctorPatientsUseCase({required this.doctorRepository});
+
+  Future<Either<Failures, DoctorListEntity>> call() =>
+      doctorRepository.getDoctorPatients();
+}

@@ -7,9 +7,12 @@ part 'schedule_state.dart';
 
 class ScheduleCubit extends Cubit<ScheduleState> {
   final AddScheduleUseCase addScheduleUseCase;
+  final GetSchedulesUseCase getSchedulesUseCase;
 
-  ScheduleCubit({required this.addScheduleUseCase})
-      : super(ScheduleInitialState());
+  ScheduleCubit({
+    required this.addScheduleUseCase,
+    required this.getSchedulesUseCase,
+  }) : super(ScheduleInitialState());
 
   Future<void> addSchedule({
     required int dayOfWeek,
@@ -25,6 +28,15 @@ class ScheduleCubit extends Cubit<ScheduleState> {
     result.fold(
       (failure) => emit(ScheduleErrorState(failure: failure)),
       (schedule) => emit(ScheduleAddedState(schedule: schedule)),
+    );
+  }
+
+  Future<void> getSchedules({required String doctorId}) async {
+    emit(ScheduleLoadingState());
+    final result = await getSchedulesUseCase(doctorId: doctorId);
+    result.fold(
+      (failure) => emit(ScheduleErrorState(failure: failure)),
+      (schedules) => emit(ScheduleListLoadedState(schedules: schedules)),
     );
   }
 }

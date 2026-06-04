@@ -14,14 +14,14 @@ class DoctorProfileDM extends DoctorProfileEntity {
 
   factory DoctorProfileDM.fromJson(Map<String, dynamic> json) {
     return DoctorProfileDM(
-      id: json['id'] as String? ?? '',
-      fullName: json['fullName'] as String? ?? '',
-      email: json['email'] as String?,
-      gender: json['gender'] as int? ?? 0,
-      age: json['age'] as int? ?? 0,
-      specialization: json['specialization'] as String?,
-      bio: json['bio'] as String?,
-      profilePicture: json['profilePicture'] as String?,
+      id: (json['id'] ?? json['Id']) as String? ?? '',
+      fullName: (json['fullName'] ?? json['FullName']) as String? ?? '',
+      email: (json['email'] ?? json['Email']) as String?,
+      gender: (json['gender'] ?? json['Gender']) as int? ?? 0,
+      age: (json['age'] ?? json['Age']) as int? ?? 0,
+      specialization: (json['specialization'] ?? json['Specialization']) as String?,
+      bio: (json['bio'] ?? json['Bio']) as String?,
+      profilePicture: (json['profilePicture'] ?? json['ProfilePicture']) as String?,
     );
   }
 }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:mindecho/features/Doctor/ui/manager/schedule_cubit.dart';
+import 'package:mindecho/features/Doctor/domain/entities/schedule_entity.dart';
+import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
 
 class ScheduleView extends StatefulWidget {
   const ScheduleView({super.key});
@@ -10,103 +14,93 @@ class ScheduleView extends StatefulWidget {
 }
 
 class _ScheduleViewState extends State<ScheduleView> {
-  // Base date: today (Feb 24 2026 based on current time)
-  final DateTime _today = DateTime(2026, 2, 24);
+  final DateTime _today = DateTime.now();
   late DateTime _selectedDate;
-
-  // Dummy booked slots for demo  – key = "yyyy-MM-dd HH"
-  static const Set<String> _bookedSlots = {
-    '2026-02-24 10',
-    '2026-02-26 09',
-    '2026-02-27 14',
-  };
 
   @override
   void initState() {
     super.initState();
     _selectedDate = _today;
+    
+    // Read the doctor ID from DoctorCubit
+    final doctorId = context.read<DoctorCubit>().state.profile?.id ?? '';
+    context.read<ScheduleCubit>().getSchedules(doctorId: doctorId);
   }
 
-  /// Returns the list of 7 days starting from Monday of the current week.
   List<DateTime> get _weekDays {
     final monday = _today.subtract(Duration(days: _today.weekday - 1));
     return List.generate(7, (i) => monday.add(Duration(days: i)));
   }
 
   static const List<String> _dayLabels = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun'
+    'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
   ];
 
   String _monthLabel(DateTime d) {
     const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
     ];
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
 
-  String _slotKey(DateTime date, int hour) =>
-      '${date.year.toString().padLeft(4, '0')}-'
-      '${date.month.toString().padLeft(2, '0')}-'
-      '${date.day.toString().padLeft(2, '0')} '
-      '${hour.toString().padLeft(2, '0')}';
-
-  bool _isBooked(int hour) =>
-      _bookedSlots.contains(_slotKey(_selectedDate, hour));
-
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
-  int get _appointmentsOnDay =>
-      List.generate(24, (h) => h).where((h) => _isBooked(h)).length;
+  /// Maps weekday (Mon=1..Sun=7) to API dayOfWeek (Sun=0,Mon=1..Sat=6)
+  int _selectedDayOfWeek() => _selectedDate.weekday % 7;
+
+  /// Returns schedules for the selected day of week
+  List<ScheduleEntity> _schedulesForDay(
+      List<ScheduleEntity> all, int dayOfWeek) {
+    return all.where((s) => s.dayOfWeek == dayOfWeek && s.isActive).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _WeekDayPicker(
-          weekDays: _weekDays,
-          dayLabels: _dayLabels,
-          selectedDate: _selectedDate,
-          today: _today,
-          isSameDay: _isSameDay,
-          onDaySelected: (d) => setState(() => _selectedDate = d),
-        ),
-        _DateHeader(
-          label: _monthLabel(_selectedDate),
-          appointmentCount: _appointmentsOnDay,
-        ),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-            // Show hours 08:00 – 20:00
-            itemCount: 13,
-            itemBuilder: (context, index) {
-              final hour = 8 + index;
-              return _TimeSlotRow(
-                hour: hour,
-                isBooked: _isBooked(hour),
-              );
-            },
-          ),
-        ),
-      ],
+    return BlocBuilder<ScheduleCubit, ScheduleState>(
+      builder: (context, state) {
+        final List<ScheduleEntity> schedules = state is ScheduleListLoadedState
+            ? (state as ScheduleListLoadedState).schedules
+            : const <ScheduleEntity>[];
+        final isLoading = state is ScheduleLoadingState;
+
+        final daySchedules =
+            _schedulesForDay(schedules, _selectedDayOfWeek());
+
+        return Column(
+          children: [
+            _WeekDayPicker(
+              weekDays: _weekDays,
+              dayLabels: _dayLabels,
+              selectedDate: _selectedDate,
+              today: _today,
+              isSameDay: _isSameDay,
+              onDaySelected: (d) => setState(() => _selectedDate = d),
+            ),
+            _DateHeader(
+              label: _monthLabel(_selectedDate),
+              appointmentCount: daySchedules.length,
+            ),
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : daySchedules.isEmpty
+                      ? const _EmptyDayState()
+                      : ListView.builder(
+                          padding:
+                              const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                          itemCount: daySchedules.length,
+                          itemBuilder: (context, index) {
+                            return _ScheduleSlotRow(
+                              schedule: daySchedules[index],
+                            );
+                          },
+                        ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -152,7 +146,8 @@ class _WeekDayPicker extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: isSelected ? AppColors.primary : AppColors.gray400,
+                      color:
+                          isSelected ? AppColors.primary : AppColors.gray400,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -231,13 +226,15 @@ class _DateHeader extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
               color: AppColors.purpleBg,
-              borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+              borderRadius:
+                  BorderRadius.circular(AppTheme.radiusFull),
             ),
             child: Text(
-              '$appointmentCount appointment${appointmentCount == 1 ? '' : 's'}',
+              '$appointmentCount slot${appointmentCount == 1 ? '' : 's'}',
               style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -251,122 +248,109 @@ class _DateHeader extends StatelessWidget {
   }
 }
 
-// ── Time Slot Row ─────────────────────────────────────────────────────────────
+// ── Empty Day State ───────────────────────────────────────────────────────────
 
-class _TimeSlotRow extends StatelessWidget {
-  final int hour;
-  final bool isBooked;
+class _EmptyDayState extends StatelessWidget {
+  const _EmptyDayState();
 
-  const _TimeSlotRow({required this.hour, required this.isBooked});
-
-  String get _timeLabel {
-    final h = hour.toString().padLeft(2, '0');
-    return '$h:00';
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.event_busy, size: 64, color: AppColors.gray300),
+          SizedBox(height: AppTheme.spacingMd),
+          Text(
+            'No active slots on this day',
+            style: TextStyle(color: AppColors.gray500, fontSize: 15),
+          ),
+        ],
+      ),
+    );
   }
+}
+
+// ── Real Schedule Slot Row ─────────────────────────────────────────────────────
+
+class _ScheduleSlotRow extends StatelessWidget {
+  final ScheduleEntity schedule;
+
+  const _ScheduleSlotRow({required this.schedule});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Time label
-          SizedBox(
-            width: 48,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.all(AppTheme.spacingMd),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFEEE6FF), Color(0xFFE0E8FF)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+          border: Border.all(color: AppColors.purpleLight, width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 4,
+              height: 36,
+              decoration: BoxDecoration(
+                color: AppColors.purpleSoft,
+                borderRadius:
+                    BorderRadius.circular(AppTheme.radiusFull),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Icon(Icons.access_time_rounded,
+                size: 18, color: AppColors.purpleSoft),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${schedule.startTime} – ${schedule.endTime}',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.purpleSoft,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Slot ID #${schedule.id}',
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColors.gray500),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: schedule.isActive
+                    ? AppColors.primary.withValues(alpha: 0.12)
+                    : AppColors.gray200,
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: Text(
-                _timeLabel,
-                style: const TextStyle(
+                schedule.isActive ? 'Active' : 'Off',
+                style: TextStyle(
                   fontSize: 12,
-                  color: AppColors.gray400,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
+                  color: schedule.isActive
+                      ? AppColors.primary
+                      : AppColors.gray500,
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 10),
-          // Slot card
-          Expanded(
-            child: isBooked ? const _BookedSlot() : const _AvailableSlot(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AvailableSlot extends StatelessWidget {
-  const _AvailableSlot();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        color: AppColors.gray50,
-        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-        border: Border.all(color: AppColors.gray200, width: 1),
-      ),
-      child: const Row(
-        children: [
-          SizedBox(width: 12),
-          Icon(Icons.access_time_rounded, size: 15, color: AppColors.gray300),
-          SizedBox(width: 8),
-          Text(
-            'Available for booking',
-            style: TextStyle(
-              fontSize: 13,
-              color: AppColors.gray400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BookedSlot extends StatelessWidget {
-  const _BookedSlot();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFEEE6FF), Color(0xFFE0E8FF)],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+          ],
         ),
-        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-        border: Border.all(color: AppColors.purpleLight, width: 1),
-      ),
-      child: Row(
-        children: [
-          const SizedBox(width: 12),
-          Container(
-            width: 4,
-            height: 28,
-            decoration: BoxDecoration(
-              color: AppColors.purpleSoft,
-              borderRadius: BorderRadius.circular(AppTheme.radiusFull),
-            ),
-          ),
-          const SizedBox(width: 10),
-          const Icon(Icons.person_outline_rounded,
-              size: 16, color: AppColors.purpleSoft),
-          const SizedBox(width: 6),
-          const Text(
-            'Appointment booked',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.purpleSoft,
-            ),
-          ),
-        ],
       ),
     );
   }

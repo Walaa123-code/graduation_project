@@ -4,6 +4,8 @@ import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/components/custom_text_field.dart';
 import '../../../../../core/components/custom_button.dart';
 import '../../../ui/pages/user_register_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../ui/manager/auth_cubit.dart';
 
 /// Login Screen
 /// Welcome back screen for existing users
@@ -18,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isDoctorLogin = false;
 
   @override
   void dispose() {
@@ -28,18 +31,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Implement real login logic
-      // Mock login for doctor
-      final email = _emailController.text.toLowerCase();
-      if (email.contains('doctor') || email == 'wafaasakr044@gmail.com') {
-        Navigator.pushReplacementNamed(context, '/doctor/main');
+      final email = _emailController.text;
+      final password = _passwordController.text;
+      if (_isDoctorLogin) {
+        context.read<AuthCubit>().loginDoctor(email: email, password: password);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Logged in as user (Home not implemented yet)'),
-            backgroundColor: AppColors.purpleSoft,
-          ),
-        );
+        context.read<AuthCubit>().loginUser(email: email, password: password);
       }
     }
   }
@@ -48,8 +45,32 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppTheme.spacingLg),
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSuccessState) {
+              if (_isDoctorLogin) {
+                Navigator.pushReplacementNamed(context, '/doctor/main');
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Logged in as user (Home not implemented yet)'),
+                    backgroundColor: AppColors.purpleSoft,
+                  ),
+                );
+              }
+            } else if (state is AuthErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.failure.errors ?? 'An error occurred'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            bool isLoading = state is AuthLoadingState;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppTheme.spacingLg),
           child: Form(
             key: _formKey,
             child: Column(
@@ -65,6 +86,63 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.w700,
                     color: AppColors.purpleSoft, // Changed to Purple
                     letterSpacing: -0.5,
+                  ),
+                ),
+
+                const SizedBox(height: AppTheme.spacingXl),
+
+                // Role Toggle
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: AppColors.gray200,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _isDoctorLogin = false),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: !_isDoctorLogin ? Colors.white : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: !_isDoctorLogin
+                                  ? [const BoxShadow(color: Colors.black12, blurRadius: 4)]
+                                  : null,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'User',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _isDoctorLogin = true),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: _isDoctorLogin ? Colors.white : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: _isDoctorLogin
+                                  ? [const BoxShadow(color: Colors.black12, blurRadius: 4)]
+                                  : null,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Doctor',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -125,8 +203,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Login Button
                 CustomButton(
-                  text: 'Login',
-                  onPressed: _handleLogin,
+                  text: isLoading ? 'Logging in...' : 'Login',
+                  onPressed: isLoading ? () {} : _handleLogin,
                   width: double.infinity,
                   backgroundColor: AppColors.purpleSoft,
                 ),
@@ -166,7 +244,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-        ),
+        );
+        },
+      ),
       ),
     );
   }

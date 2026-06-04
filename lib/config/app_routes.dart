@@ -5,11 +5,11 @@ import '../features/auth/ui/pages/account_type_screen.dart';
 import '../features/auth/ui/pages/user_register_screen.dart';
 import '../features/auth/ui/pages/doctor_register_screen.dart';
 import '../features/auth/login/ui/pages/login_screen.dart';
-import '../features/doctor/main/pages/doctor_main_screen.dart';
-import '../features/doctor/patients/pages/patients_screen.dart';
-import '../features/doctor/appointments/pages/appointments_screen.dart';
-import '../features/doctor/messages/pages/messages_screen.dart';
-import '../features/doctor/reports/pages/reports_screen.dart';
+import '../features/Doctor/main/pages/doctor_main_screen.dart';
+import '../features/Doctor/patients/pages/patients_screen.dart';
+import '../features/Doctor/appointments/pages/appointments_screen.dart';
+import '../features/Doctor/messages/pages/messages_screen.dart';
+import '../features/Doctor/reports/pages/reports_screen.dart';
 
 class Routes {
   static const String splash = '/';

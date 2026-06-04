@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mindecho/core/api/api_manager.dart';
-import 'package:mindecho/core/api/end_points.dart';
 import 'package:mindecho/core/errors/failures.dart';
 import 'package:mindecho/features/home_tab/data/models/MoodResponseDM.dart';
 import 'package:mindecho/features/home_tab/domain/entities/MoodResponseEntity.dart';
@@ -21,7 +20,7 @@ class MoodRemoteDataSourceImpl implements MoodRemoteDataSource {
       // todo internet
       try {
         var response = await apiManager.postData(
-          endPoint: EndPoints.selectMood,
+          endPoint: 'removed', // EndPoints.selectMood,
           body: {
             "moodType": id,
           },

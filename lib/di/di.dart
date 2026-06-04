@@ -140,11 +140,15 @@ Future<void> initAppModule() async {
   getIt.registerLazySingleton<GetAllDoctorsUseCase>(
     () => GetAllDoctorsUseCase(doctorRepository: getIt<DoctorRepository>()),
   );
+  getIt.registerLazySingleton<GetDoctorPatientsUseCase>(
+    () => GetDoctorPatientsUseCase(doctorRepository: getIt<DoctorRepository>()),
+  );
   getIt.registerFactory<DoctorCubit>(
     () => DoctorCubit(
       getDoctorProfileUseCase: getIt<GetDoctorProfileUseCase>(),
       updateDoctorProfileUseCase: getIt<UpdateDoctorProfileUseCase>(),
       getAllDoctorsUseCase: getIt<GetAllDoctorsUseCase>(),
+      getDoctorPatientsUseCase: getIt<GetDoctorPatientsUseCase>(),
     ),
   );
 
@@ -155,9 +159,13 @@ Future<void> initAppModule() async {
   getIt.registerLazySingleton<AddScheduleUseCase>(
     () => AddScheduleUseCase(scheduleRepository: getIt<ScheduleRepository>()),
   );
+  getIt.registerLazySingleton<GetSchedulesUseCase>(
+    () => GetSchedulesUseCase(scheduleRepository: getIt<ScheduleRepository>()),
+  );
   getIt.registerFactory<ScheduleCubit>(
     () => ScheduleCubit(
       addScheduleUseCase: getIt<AddScheduleUseCase>(),
+      getSchedulesUseCase: getIt<GetSchedulesUseCase>(),
     ),
   );
 

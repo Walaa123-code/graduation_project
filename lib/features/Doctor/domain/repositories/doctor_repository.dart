@@ -17,4 +17,7 @@ abstract class DoctorRepository {
 
   /// GET /api/Doctor/get-all-doctors — list all doctors
   Future<Either<Failures, DoctorListEntity>> getAllDoctors();
+
+  /// GET /api/Doctor/patients — fetch doctor's patients
+  Future<Either<Failures, DoctorListEntity>> getDoctorPatients();
 }

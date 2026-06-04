@@ -18,3 +18,11 @@ class AddScheduleUseCase {
         endTime: endTime,
       );
 }
+
+class GetSchedulesUseCase {
+  final ScheduleRepository scheduleRepository;
+  GetSchedulesUseCase({required this.scheduleRepository});
+
+  Future<Either<Failures, List<ScheduleEntity>>> call({required String doctorId}) =>
+      scheduleRepository.getSchedules(doctorId: doctorId);
+}

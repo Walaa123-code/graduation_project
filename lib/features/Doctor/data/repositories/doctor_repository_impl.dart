@@ -88,4 +88,33 @@ class DoctorRepositoryImpl implements DoctorRepository {
       return Left(ServerError(errors: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failures, DoctorListEntity>> getDoctorPatients() async {
+    if (!await _hasInternet()) {
+      return Left(NetworkError(errors: 'No internet connection'));
+    }
+    try {
+      final response =
+          await apiManager.getData(endPoint: EndPoints.getDoctorPatients);
+      // API returns { "data": [...list of patients...] }
+      final data = response.data as Map<String, dynamic>;
+      final list = (data['data'] as List<dynamic>? ?? [])
+          .map((e) => DoctorProfileDM.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return Right(DoctorListEntity(doctors: list, totalCount: list.length));
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.data is Map) {
+        final mapData = e.response!.data as Map<String, dynamic>;
+        final msg = mapData['message']?.toString() ?? '';
+        if (msg.toLowerCase().contains('no patients found')) {
+          return const Right(DoctorListEntity(doctors: [], totalCount: 0));
+        }
+        return Left(ServerError(errors: msg.isNotEmpty ? msg : e.toString()));
+      }
+      return Left(ServerError(errors: e.toString()));
+    } catch (e) {
+      return Left(ServerError(errors: e.toString()));
+    }
+  }
 }

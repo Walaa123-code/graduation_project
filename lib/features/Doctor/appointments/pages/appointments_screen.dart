@@ -6,6 +6,8 @@ import '../widgets/appointments_tab_bar.dart';
 import '../widgets/appointments_search_bar.dart';
 import '../widgets/appointment_card.dart';
 import '../widgets/schedule_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mindecho/features/appointments/ui/manager/booking_cubit.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -17,40 +19,12 @@ class AppointmentsScreen extends StatefulWidget {
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
   int _selectedTab = 0;
 
-  static const List<AppointmentItem> _upcoming = [
-    AppointmentItem(
-      patientName: 'Ahmed Mohamed',
-      patientInitials: 'AM',
-      avatarColor: Color(0xFF9B7EBD),
-      status: AppointmentStatus.confirmed,
-      durationMinutes: 60,
-      date: 'Feb 26, 2026',
-      time: '10:00 AM',
-      sessionType: SessionType.online,
-      notes: 'Follow-up on anxiety treatment plan.',
-    ),
-    AppointmentItem(
-      patientName: 'Fatima Ali',
-      patientInitials: 'FA',
-      avatarColor: Color(0xFF4ECDC4),
-      status: AppointmentStatus.pending,
-      durationMinutes: 45,
-      date: 'Feb 27, 2026',
-      time: '2:30 PM',
-      sessionType: SessionType.inPerson,
-      notes: 'Initial consultation – depression screening.',
-    ),
-    AppointmentItem(
-      patientName: 'Omar Hassan',
-      patientInitials: 'OH',
-      avatarColor: Color(0xFFFF6B6B),
-      status: AppointmentStatus.confirmed,
-      durationMinutes: 30,
-      date: 'Feb 28, 2026',
-      time: '11:15 AM',
-      sessionType: SessionType.online,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    context.read<BookingCubit>().getAllBookings(isDoctor: true);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +44,32 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           // Body switches between Upcoming list and Schedule calendar view
           Expanded(
             child: _selectedTab == 0
-                ? const _UpcomingList(appointments: _upcoming)
+                ? BlocBuilder<BookingCubit, BookingState>(
+                    builder: (context, state) {
+                      if (state is BookingLoadingState) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (state is BookingErrorState) {
+                        return Center(child: Text(state.failure.errors ?? 'Failed to load bookings'));
+                      }
+                      if (state is BookingsLoadedState) {
+                        final items = state.bookings.map((b) {
+                          return AppointmentItem(
+                            patientName: 'Patient ${b.userId.length > 4 ? b.userId.substring(0,4) : b.userId}',
+                            patientInitials: 'PT',
+                            avatarColor: const Color(0xFF9B7EBD),
+                            status: b.bookingStatus == 0 ? AppointmentStatus.pending : b.bookingStatus == 2 ? AppointmentStatus.cancelled : AppointmentStatus.confirmed,
+                            durationMinutes: 60,
+                            date: b.requestedAt.contains('T') ? b.requestedAt.split('T')[0] : b.requestedAt,
+                            time: b.requestedAt.contains('T') ? b.requestedAt.split('T')[1].substring(0, 5) : '',
+                            sessionType: SessionType.online,
+                          );
+                        }).toList();
+                        return _UpcomingList(appointments: items);
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  )
                 : const ScheduleView(),
           ),
         ],

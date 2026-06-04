@@ -49,13 +49,17 @@ class DoctorHeaderWidget extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 24,
                       backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundImage:
-                            AssetImage(imageUrl), // Or NetworkImage
-                        onBackgroundImageError: (_, __) =>
-                            const Icon(Icons.person),
-                      ),
+                      child: imageUrl.isNotEmpty
+                          ? CircleAvatar(
+                              radius: 22,
+                              backgroundImage: NetworkImage(imageUrl),
+                              onBackgroundImageError: (_, __) {},
+                            )
+                          : const CircleAvatar(
+                              radius: 22,
+                              backgroundColor: Color(0xFFEEE6FF),
+                              child: Icon(Icons.person, color: Color(0xFF9B7EBD), size: 22),
+                            ),
                     ),
                   ),
                   const SizedBox(width: AppTheme.spacingMd),

@@ -45,4 +45,24 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
       return Left(ServerError(errors: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failures, List<ScheduleEntity>>> getSchedules({required String doctorId}) async {
+    if (!await _hasInternet()) {
+      return Left(NetworkError(errors: 'No internet connection'));
+    }
+    try {
+      final response = await apiManager.getData(
+        endPoint: EndPoints.getDoctorSchedules,
+        queryParameters: {'DoctorId': doctorId},
+      );
+      final data = response.data as Map<String, dynamic>;
+      final list = (data['data'] as List<dynamic>? ?? [])
+          .map((e) => ScheduleDM.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return Right(list);
+    } catch (e) {
+      return Left(ServerError(errors: e.toString()));
+    }
+  }
 }

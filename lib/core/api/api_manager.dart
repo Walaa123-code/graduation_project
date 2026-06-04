@@ -14,6 +14,7 @@ class ApiManager {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '69420',
         },
       ),
     );
@@ -32,6 +33,12 @@ class ApiManager {
           return handler.next(options);
         },
         onError: (DioException error, handler) {
+          // Log detailed error information
+          print('--- Dio Error ---');
+          print('URL: ${error.requestOptions.uri}');
+          print('Status Code: ${error.response?.statusCode}');
+          print('Response Data: ${error.response?.data}');
+          print('-------------------');
           // Pass the error along; callers handle it individually.
           return handler.next(error);
         },

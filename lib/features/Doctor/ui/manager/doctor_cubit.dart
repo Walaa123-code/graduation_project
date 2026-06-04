@@ -9,19 +9,21 @@ class DoctorCubit extends Cubit<DoctorState> {
   final GetDoctorProfileUseCase getDoctorProfileUseCase;
   final UpdateDoctorProfileUseCase updateDoctorProfileUseCase;
   final GetAllDoctorsUseCase getAllDoctorsUseCase;
+  final GetDoctorPatientsUseCase getDoctorPatientsUseCase;
 
   DoctorCubit({
     required this.getDoctorProfileUseCase,
     required this.updateDoctorProfileUseCase,
     required this.getAllDoctorsUseCase,
-  }) : super(DoctorInitialState());
+    required this.getDoctorPatientsUseCase,
+  }) : super(DoctorState());
 
   Future<void> getDoctorProfile() async {
-    emit(DoctorLoadingState());
+    emit(state.copyWith(isLoading: true, clearError: true));
     final result = await getDoctorProfileUseCase();
     result.fold(
-      (failure) => emit(DoctorErrorState(failure: failure)),
-      (profile) => emit(DoctorProfileLoadedState(profile: profile)),
+      (failure) => emit(state.copyWith(isLoading: false, error: failure)),
+      (profile) => emit(state.copyWith(isLoading: false, profile: profile)),
     );
   }
 
@@ -32,7 +34,7 @@ class DoctorCubit extends Cubit<DoctorState> {
     required String bio,
     String? profilePicturePath,
   }) async {
-    emit(DoctorLoadingState());
+    emit(state.copyWith(isLoading: true, clearError: true));
     final result = await updateDoctorProfileUseCase(
       fullName: fullName,
       email: email,
@@ -41,17 +43,26 @@ class DoctorCubit extends Cubit<DoctorState> {
       profilePicturePath: profilePicturePath,
     );
     result.fold(
-      (failure) => emit(DoctorErrorState(failure: failure)),
-      (profile) => emit(DoctorProfileUpdatedState(profile: profile)),
+      (failure) => emit(state.copyWith(isLoading: false, error: failure)),
+      (profile) => emit(state.copyWith(isLoading: false, profile: profile)),
     );
   }
 
   Future<void> getAllDoctors() async {
-    emit(DoctorLoadingState());
+    emit(state.copyWith(isLoading: true, clearError: true));
     final result = await getAllDoctorsUseCase();
     result.fold(
-      (failure) => emit(DoctorErrorState(failure: failure)),
-      (list) => emit(DoctorListLoadedState(doctorList: list)),
+      (failure) => emit(state.copyWith(isLoading: false, error: failure)),
+      (list) => emit(state.copyWith(isLoading: false, allDoctors: list)),
+    );
+  }
+
+  Future<void> getDoctorPatients() async {
+    emit(state.copyWith(isLoading: true, clearError: true));
+    final result = await getDoctorPatientsUseCase();
+    result.fold(
+      (failure) => emit(state.copyWith(isLoading: false, error: failure)),
+      (patients) => emit(state.copyWith(isLoading: false, patients: patients)),
     );
   }
 }

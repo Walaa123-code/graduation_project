@@ -4,7 +4,11 @@ import 'config/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/my_bloc_observar.dart';
 import 'di/di.dart';
+import 'features/Doctor/ui/manager/doctor_cubit.dart';
+import 'features/Doctor/ui/manager/schedule_cubit.dart';
 import 'features/home_tab/ui/manager/mood_cubit.dart';
+import 'features/auth/ui/manager/auth_cubit.dart';
+import 'features/appointments/ui/manager/booking_cubit.dart';
 
 
 void main() async{
@@ -24,6 +28,18 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => getIt<MoodCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<AuthCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<DoctorCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<ScheduleCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<BookingCubit>(),
         ),
       ],
       child: MaterialApp(

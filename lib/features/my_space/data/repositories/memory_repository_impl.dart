@@ -41,7 +41,7 @@ class MemoryRepositoryImpl implements MemoryRepository {
       }
       final formData = FormData.fromMap(fields);
       final response = await apiManager.postFormData(
-        endPoint: EndPoints.createMemory,
+        endPoint: 'removed', // EndPoints.createMemory,
         formData: formData,
       );
       final data = (response.data as Map<String, dynamic>)['data']
