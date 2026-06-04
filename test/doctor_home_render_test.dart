@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mindecho/features/doctor/home/pages/doctor_home_screen.dart';
+import 'package:mindecho/features/Doctor/ui/pages/home/pages/doctor_home_screen.dart';
 
 void main() {
   testWidgets('DoctorHomeScreen renders correctly',

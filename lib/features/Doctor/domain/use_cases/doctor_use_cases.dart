@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:mindecho/core/errors/failures.dart';
 import 'package:mindecho/features/Doctor/domain/entities/doctor_entity.dart';
-import 'package:mindecho/features/Doctor/domain/repositories/doctor_repository.dart';
+import 'package:mindecho/features/Doctor/domain/repositories/repository/doctor_repository.dart';
 
 class GetDoctorProfileUseCase {
   final DoctorRepository doctorRepository;

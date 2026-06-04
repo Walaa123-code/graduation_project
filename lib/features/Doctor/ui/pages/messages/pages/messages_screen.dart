@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../di/di.dart';
+import '../../../chat/ui/manager/chat_cubit.dart';
+import '../../../chat/ui/pages/chat_screen.dart';
 import '../widgets/message_tile.dart';
 import '../models/message_item.dart';
 
@@ -12,8 +17,11 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
-  final List<MessageItem> _messages = [
-    const MessageItem(
+  // ── Demo conversation list ─────────────────────────────────────
+  // Replace with real data from a bookings API when available.
+  // Each item now carries a bookingId so the chat room can be opened.
+  final List<MessageItem> _messages = const [
+    MessageItem(
       patientName: 'Ahmed Mohamed',
       lastMessage: 'Doctor, I have been feeling anxious lately...',
       time: '10:32 AM',
@@ -21,8 +29,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
       isOnline: true,
       initials: 'AM',
       avatarColor: Color(0xFF9B7EBD),
+      bookingId: null, // set to real bookingId when available
     ),
-    const MessageItem(
+    MessageItem(
       patientName: 'Fatima Ali',
       lastMessage: 'Thank you for the prescription, I will start today.',
       time: '9:15 AM',
@@ -30,8 +39,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
       isOnline: false,
       initials: 'FA',
       avatarColor: Color(0xFF4ECDC4),
+      bookingId: null,
     ),
-    const MessageItem(
+    MessageItem(
       patientName: 'Omar Hassan',
       lastMessage: 'Can we reschedule our session to Thursday?',
       time: 'Yesterday',
@@ -39,8 +49,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
       isOnline: true,
       initials: 'OH',
       avatarColor: Color(0xFFFF6B6B),
+      bookingId: null,
     ),
-    const MessageItem(
+    MessageItem(
       patientName: 'Sara Khalid',
       lastMessage: 'I completed the mindfulness exercises you recommended.',
       time: 'Yesterday',
@@ -48,8 +59,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
       isOnline: false,
       initials: 'SK',
       avatarColor: Color(0xFFFFB84D),
+      bookingId: null,
     ),
-    const MessageItem(
+    MessageItem(
       patientName: 'Yousef Nasser',
       lastMessage: 'The new medication is working well, thank you!',
       time: 'Monday',
@@ -57,8 +69,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
       isOnline: false,
       initials: 'YN',
       avatarColor: Color(0xFF56AB2F),
+      bookingId: null,
     ),
-    const MessageItem(
+    MessageItem(
       patientName: 'Layla Ibrahim',
       lastMessage: 'I have a question about my sleep schedule...',
       time: 'Sunday',
@@ -66,8 +79,17 @@ class _MessagesScreenState extends State<MessagesScreen> {
       isOnline: true,
       initials: 'LI',
       avatarColor: Color(0xFFA8D8EA),
+      bookingId: null,
     ),
   ];
+
+  String _searchQuery = '';
+
+  List<MessageItem> get _filteredMessages => _messages
+      .where((m) =>
+          m.patientName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          m.lastMessage.toLowerCase().contains(_searchQuery.toLowerCase()))
+      .toList();
 
   @override
   Widget build(BuildContext context) {
@@ -84,13 +106,47 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 horizontal: AppTheme.spacingMd,
                 vertical: AppTheme.spacingXs,
               ),
-              itemCount: _messages.length,
+              itemCount: _filteredMessages.length,
               itemBuilder: (context, index) {
-                return MessageTile(message: _messages[index]);
+                final message = _filteredMessages[index];
+                return MessageTile(
+                  message: message,
+                  onTap: () => _openChat(context, message),
+                );
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Opens the SignalR chat screen for the selected conversation.
+  /// If [MessageItem.bookingId] is null the tile is not yet linked to a real
+  /// booking — a placeholder snackbar is shown instead.
+  void _openChat(BuildContext context, MessageItem message) {
+    if (message.bookingId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No booking linked to this conversation yet.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          // Factory registration → fresh ChatCubit per navigation
+          create: (_) => getIt<ChatCubit>(),
+          child: ChatScreen(
+            bookingId: message.bookingId!,
+            chatPartnerName: message.patientName,
+            // Doctor is the current user on this screen
+            currentUserSenderType: 1,
+          ),
+        ),
       ),
     );
   }
@@ -108,10 +164,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
         ),
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.search, color: AppColors.gray600),
-          onPressed: () {},
-        ),
         IconButton(
           icon: const Icon(Icons.tune_rounded, color: AppColors.gray600),
           onPressed: () {},
@@ -137,6 +189,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
           boxShadow: AppTheme.shadowSm,
         ),
         child: TextField(
+          onChanged: (v) => setState(() => _searchQuery = v),
           decoration: InputDecoration(
             hintText: 'Search conversations...',
             hintStyle: const TextStyle(color: AppColors.gray400, fontSize: 14),

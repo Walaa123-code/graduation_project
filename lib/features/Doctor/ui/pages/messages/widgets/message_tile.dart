@@ -5,8 +5,10 @@ import '../models/message_item.dart';
 
 class MessageTile extends StatelessWidget {
   final MessageItem message;
+  final VoidCallback? onTap;
 
-  const MessageTile({super.key, required this.message});
+  const MessageTile({super.key, required this.message, this.onTap});
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class MessageTile extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-          onTap: () {},
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.spacingMd),
             child: Row(

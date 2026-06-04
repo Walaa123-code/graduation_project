@@ -28,4 +28,9 @@ class EndPoints {
 
   // ── Memory ───────────────────────────────────────────────────────
   static const String getMemories  = '/api/Memory';
+
+  // ── SignalR ───────────────────────────────────────────────────────
+  /// Full URL: ApiConstants.baseUrl + EndPoints.chatHub
+  /// → https://chef-reclining-deodorize.ngrok-free.dev/hubs/chat
+  static const String chatHub = '/hubs/chat';
 }
