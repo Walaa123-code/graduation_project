@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/components/app_card.dart';
-import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../journals/ui/manager/delete_journal_cubit.dart';
 import '../../journals/ui/manager/journal_cubit.dart';
@@ -31,7 +30,7 @@ class SpaceItemCard extends StatefulWidget {
 
 class _SpaceItemCardState extends State<SpaceItemCard> {
   void _navigateToEdit() {
-    print("Navigate to edit ${widget.itemData.id}");
+    debugPrint("Navigate to edit ${widget.itemData.id}");
   }
 
   void _executeDelete() {
@@ -89,7 +88,9 @@ class _SpaceItemCardState extends State<SpaceItemCard> {
               onSelected: (value) {
                 if (value == 'edit') {
                   _navigateToEdit();
-                } else if (value == 'delete') _showDeleteDialog(context);
+                } else if (value == 'delete') {
+                  _showDeleteDialog(context);
+                }
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(value: 'edit', child: Text("Edit")),

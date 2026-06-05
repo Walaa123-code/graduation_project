@@ -2,7 +2,23 @@ import 'package:get_it/get_it.dart';
 import '../core/api/api_manager.dart';
 
 // Mood
+import '../features/auth/login/ui/manager/cubit/login_cubit.dart';
+import '../features/auth/register/ui/manager/cubit/register_cubit.dart';
 import '../features/home_tab/data/data_sources/remote_data_source_impl/mood_remote_data_source_impl.dart';
+
+// Login
+import '../features/auth/login/data/data_sources/remote/login_remote_data_source.dart';
+import '../features/auth/login/data/data_sources/remote/login_remote_data_source_impl.dart';
+import '../features/auth/login/data/repositories/login_repository_impl.dart';
+import '../features/auth/login/domain/repositories/login_repository.dart';
+import '../features/auth/login/domain/use_cases/login_use_case.dart';
+
+// Register
+import '../features/auth/register/data/data_sources/remote/register_remote_data_source.dart';
+import '../features/auth/register/data/data_sources/remote/register_remote_data_source_impl.dart';
+import '../features/auth/register/data/repositories/register_repository_impl.dart';
+import '../features/auth/register/domain/repositories/register_repository.dart';
+import '../features/auth/register/domain/use_cases/register_use_case.dart';
 
 // Appointments
 import '../features/appointments/data/data_sources/booking_data_source_impl.dart';
@@ -10,7 +26,15 @@ import '../features/appointments/data/repositories/booking_repository_impl.dart'
 import '../features/appointments/domain/repositories/data_source/remote_data_source/booking_data_source.dart';
 import '../features/appointments/domain/repositories/repositories/booking_repository.dart';
 import '../features/appointments/domain/use_cases/booking_use_case.dart';
-import '../features/appointments/ui/manager/booking_cubit.dart';import '../features/home_tab/data/repositories/mood_repository_impl.dart';
+import '../features/appointments/ui/manager/booking_cubit.dart';
+
+// ChatBot
+import '../features/chatbot/data/data_sources/chatbot_data_source_impl.dart';
+import '../features/chatbot/data/repositories/chatbot_repository_impl.dart';
+import '../features/chatbot/domain/repositories/chatbot_repository.dart';
+import '../features/chatbot/domain/repositories/data_source/chatbot_data_source.dart';
+import '../features/chatbot/domain/use_cases/chatbot_use_case.dart';
+import '../features/chatbot/ui/manager/chatbot_cubit.dart';import '../features/home_tab/data/repositories/mood_repository_impl.dart';
 import '../features/home_tab/domain/repositories/data_source/remote_data_source/mood_remote_data_source.dart';
 import '../features/home_tab/domain/repositories/repositories/mood_repository.dart';
 import '../features/home_tab/domain/use_cases/MoodUseCase.dart';
@@ -59,6 +83,26 @@ final getIt = GetIt.instance;
 Future<void> initAppModule() async {
   // --- Core ---
   getIt.registerLazySingleton<ApiManager>(() => ApiManager());
+
+  // --- Login ---
+  getIt.registerLazySingleton<LoginRemoteDataSource>(
+      () => LoginRemoteDataSourceImpl(apiManager: getIt<ApiManager>()));
+  getIt.registerLazySingleton<LoginRepository>(
+      () => LoginRepositoryImpl(loginRemoteDataSource: getIt<LoginRemoteDataSource>()));
+  getIt.registerLazySingleton<LoginUseCase>(
+      () => LoginUseCase(loginRepository: getIt<LoginRepository>()));
+  getIt.registerFactory<LoginCubit>(
+      () => LoginCubit(loginUseCase: getIt<LoginUseCase>()));
+
+  // --- Register ---
+  getIt.registerLazySingleton<RegisterRemoteDataSource>(
+      () => RegisterRemoteDataSourceImpl(apiManager: getIt<ApiManager>()));
+  getIt.registerLazySingleton<RegisterRepository>(
+      () => RegisterRepositoryImpl(registerRemoteDataSource: getIt<RegisterRemoteDataSource>()));
+  getIt.registerLazySingleton<RegisterUseCase>(
+      () => RegisterUseCase(registerRepository: getIt<RegisterRepository>()));
+  getIt.registerFactory<RegisterCubit>(
+      () => RegisterCubit(registerUseCase: getIt<RegisterUseCase>()));
 
   // --- Profile ---
   getIt.registerLazySingleton<ProfileRemoteDataSource>(
@@ -123,6 +167,16 @@ Future<void> initAppModule() async {
       () => BookingUseCase(bookingRepository: getIt<BookingRepository>()));
   getIt.registerFactory<BookingCubit>(
       () => BookingCubit(bookingUseCase: getIt<BookingUseCase>()));
+
+  // --- ChatBot ---
+  getIt.registerLazySingleton<ChatBotDataSource>(
+      () => ChatBotDataSourceImpl(apiManager: getIt<ApiManager>()));
+  getIt.registerLazySingleton<ChatBotRepository>(
+      () => ChatBotRepositoryImpl(chatBotDataSource: getIt<ChatBotDataSource>()));
+  getIt.registerLazySingleton<ChatBotUseCase>(
+      () => ChatBotUseCase(chatBotRepository: getIt<ChatBotRepository>()));
+  getIt.registerFactory<ChatBotCubit>(
+      () => ChatBotCubit(chatBotUseCase: getIt<ChatBotUseCase>()));
 
   // --- Memories ---
   getIt.registerLazySingleton<MemoryDataSource>(      () => MemoryDataSourceImpl(apiManager: getIt<ApiManager>()));

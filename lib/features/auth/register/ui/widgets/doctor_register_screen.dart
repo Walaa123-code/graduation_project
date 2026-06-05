@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/components/custom_text_field.dart';
-import '../../../../core/components/custom_button.dart';
-import '../../../../core/utils/app_colors.dart';
-import '../../login/ui/pages/login_screen.dart';
+import '../../../../../core/theme/app_theme.dart';
+import '../../../../../core/components/custom_text_field.dart';
+import '../../../../../core/components/custom_button.dart';
+import '../../../../../core/utils/app_colors.dart';
+import '../../../login/ui/pages/login_screen.dart';
 
-/// User Registration Screen
-/// Create account for users seeking mental health support
-class UserRegisterScreen extends StatefulWidget {
-  const UserRegisterScreen({super.key});
+/// Doctor Registration Screen
+/// Create account for therapists and counselors
+class DoctorRegisterScreen extends StatefulWidget {
+  const DoctorRegisterScreen({super.key});
 
   @override
-  State<UserRegisterScreen> createState() => _UserRegisterScreenState();
+  State<DoctorRegisterScreen> createState() => _DoctorRegisterScreenState();
 }
 
-class _UserRegisterScreenState extends State<UserRegisterScreen> {
+class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _specialtyController = TextEditingController();
+  final _licenseController = TextEditingController();
 
   @override
   void dispose() {
@@ -27,16 +29,18 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _specialtyController.dispose();
+    _licenseController.dispose();
     super.dispose();
   }
 
   void _handleRegister() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Implement registration logic
+      // TODO: Implement doctor registration logic
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Registration successful!'),
-          backgroundColor: AppColors.primary,
+          content: Text('Doctor registration successful!'),
+          backgroundColor: AppColors.purpleSoft,
         ),
       );
     }
@@ -57,7 +61,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
 
                 // Title
                 const Text(
-                  'Create Account',
+                  'Join Us as a Doctor',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w700,
@@ -70,7 +74,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
 
                 // Subtitle
                 const Text(
-                  'Join MINDECHO and start your wellness journey',
+                  'Create your doctor account and start helping patients',
                   style: TextStyle(
                     fontSize: 16,
                     color: AppColors.gray500,
@@ -145,11 +149,39 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
                   },
                 ),
 
+                const SizedBox(height: AppTheme.spacingMd),
+
+                // Specialty Field
+                CustomTextField(
+                  hintText: 'Specialty',
+                  controller: _specialtyController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your specialty';
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: AppTheme.spacingMd),
+
+                // License Number Field
+                CustomTextField(
+                  hintText: 'License Number',
+                  controller: _licenseController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your license number';
+                    }
+                    return null;
+                  },
+                ),
+
                 const SizedBox(height: AppTheme.spacingXl),
 
-                // Create Account Button
+                // Create Doctor Account Button
                 CustomButton(
-                  text: 'Create Account',
+                  text: 'Create Doctor Account',
                   onPressed: _handleRegister,
                   width: double.infinity,
                 ),

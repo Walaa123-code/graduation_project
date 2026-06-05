@@ -12,6 +12,7 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final int maxLines;
 
   const CustomTextField({
@@ -23,6 +24,7 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.prefixIcon,
+    this.suffixIcon,
     this.maxLines = 1,
   });
 
@@ -67,7 +69,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   });
                 },
               )
-            : null,
+            : widget.suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTheme.radiusMd),
           borderSide: const BorderSide(color: AppColors.gray200, width: 2),

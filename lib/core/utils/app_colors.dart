@@ -20,7 +20,7 @@ class AppColors{
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  // Primary Colors
+  // Primary Colors   9B7EBDFF
   static const Color primary = purpleSoft; // New Primary
   static const Color primaryTeal = Color(0xFF4ECDC4); // Kept for Splash
   static const Color tealLight = Color(0xFF7FE3DB);
@@ -28,7 +28,7 @@ class AppColors{
 
   // Secondary Colors
   static const Color blueLightCalm = Color(0xFFA8D8EA);
-  static const Color purpleSoft = Color(0xFF9B7EBD);
+  static const Color purpleSoft = Color(0xFF9643B6);
   static const Color purpleLight = Color(0xFFD4B5F0);
   static const Color purpleBg = Color(0xFFF3E8FF);
 

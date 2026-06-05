@@ -3,10 +3,9 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/components/custom_text_field.dart';
 import '../../../../core/components/custom_button.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../login/ui/pages/login_screen.dart';
+import '../../../auth/login/ui/widgets/auth_header.dart';
+import '../../../auth/login/ui/widgets/login_link_row.dart';
 
-/// Doctor Registration Screen
-/// Create account for therapists and counselors
 class DoctorRegisterScreen extends StatefulWidget {
   const DoctorRegisterScreen({super.key});
 
@@ -49,175 +48,131 @@ class _DoctorRegisterScreenState extends State<DoctorRegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.purpleSoft),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppTheme.spacingLg),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: AppTheme.spacingXl),
+                const SizedBox(height: 8),
 
-                // Title
-                const Text(
-                  'Join Us as a Doctor',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.gray800,
-                    letterSpacing: -0.5,
+                // Icon
+                Center(
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: AppColors.purpleSoft.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.medical_services_outlined,
+                        size: 36, color: AppColors.purpleSoft),
                   ),
                 ),
 
-                const SizedBox(height: AppTheme.spacingSm),
+                const SizedBox(height: 20),
 
-                // Subtitle
-                const Text(
-                  'Create your doctor account and start helping patients',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.gray500,
-                  ),
+                const AuthHeader(
+                  title: 'Join Us as a Doctor',
+                  subtitle: 'Create your doctor account and start helping patients',
                 ),
 
-                const SizedBox(height: AppTheme.spacingXl),
+                const SizedBox(height: 28),
 
-                // Full Name Field
                 CustomTextField(
                   hintText: 'Full Name',
                   controller: _nameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your full name';
-                    }
+                  prefixIcon: const Icon(Icons.person_outline, color: AppColors.gray400),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please enter your full name';
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
-                const SizedBox(height: AppTheme.spacingMd),
-
-                // Email Field
                 CustomTextField(
                   hintText: 'Email Address',
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!value.contains('@')) {
-                      return 'Please enter a valid email';
-                    }
+                  prefixIcon: const Icon(Icons.email_outlined, color: AppColors.gray400),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please enter your email';
+                    if (!v.contains('@')) return 'Please enter a valid email';
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
-                const SizedBox(height: AppTheme.spacingMd),
-
-                // Password Field
                 CustomTextField(
                   hintText: 'Password',
                   controller: _passwordController,
                   isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
+                  prefixIcon: const Icon(Icons.lock_outline, color: AppColors.gray400),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please enter a password';
+                    if (v.length < 6) return 'Password must be at least 6 characters';
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
-                const SizedBox(height: AppTheme.spacingMd),
-
-                // Confirm Password Field
                 CustomTextField(
                   hintText: 'Confirm Password',
                   controller: _confirmPasswordController,
                   isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Passwords do not match';
-                    }
+                  prefixIcon: const Icon(Icons.lock_outline, color: AppColors.gray400),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please confirm your password';
+                    if (v != _passwordController.text) return 'Passwords do not match';
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
-                const SizedBox(height: AppTheme.spacingMd),
-
-                // Specialty Field
                 CustomTextField(
                   hintText: 'Specialty',
                   controller: _specialtyController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your specialty';
-                    }
+                  prefixIcon: const Icon(Icons.psychology_outlined, color: AppColors.gray400),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please enter your specialty';
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
-                const SizedBox(height: AppTheme.spacingMd),
-
-                // License Number Field
                 CustomTextField(
                   hintText: 'License Number',
                   controller: _licenseController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your license number';
-                    }
+                  prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.gray400),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please enter your license number';
                     return null;
                   },
                 ),
 
-                const SizedBox(height: AppTheme.spacingXl),
+                const SizedBox(height: 28),
 
-                // Create Doctor Account Button
                 CustomButton(
                   text: 'Create Doctor Account',
                   onPressed: _handleRegister,
                   width: double.infinity,
+                  backgroundColor: AppColors.purpleSoft,
                 ),
 
-                const SizedBox(height: AppTheme.spacingLg),
-
-                // Login Link
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Already have an account? ',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: AppColors.gray500,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                const SizedBox(height: 24),
+                const LoginLinkRow(),
+                const SizedBox(height: 24),
               ],
             ),
           ),

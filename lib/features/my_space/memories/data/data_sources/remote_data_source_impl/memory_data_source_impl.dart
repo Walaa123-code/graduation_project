@@ -4,6 +4,7 @@ import '../../../../../../core/api/api_manager.dart';
 import '../../../../../../core/api/end_points.dart';
 import '../../../../../../core/cashe/shared_preferences_utils.dart';
 import '../../../../../../core/errors/failures.dart';
+import 'package:mindecho/core/errors/exceptions.dart';
 import '../../../domain/entities/DeleteMemoryResEntity.dart';
 import '../../../domain/entities/GetMemoryByIDResEntity.dart';
 import '../../../domain/entities/GetMemoryResponseEntity.dart';
@@ -36,7 +37,7 @@ class MemoryDataSourceImpl implements MemoryDataSource {
         );
         return Right(GetMemoryResponseDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: _handleError(e)));
+        return Left(ServerError(errors: handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
@@ -52,7 +53,7 @@ class MemoryDataSourceImpl implements MemoryDataSource {
         );
         return Right(GetMemoryByIdResDm.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: _handleError(e)));
+        return Left(ServerError(errors: handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
@@ -70,7 +71,7 @@ class MemoryDataSourceImpl implements MemoryDataSource {
         );
         return Right(GetMemoryResponseDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: _handleError(e)));
+        return Left(ServerError(errors: handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
@@ -93,7 +94,7 @@ class MemoryDataSourceImpl implements MemoryDataSource {
         );
         return Right(GetMemoryResponseDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: _handleError(e)));
+        return Left(ServerError(errors: handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
@@ -109,22 +110,9 @@ class MemoryDataSourceImpl implements MemoryDataSource {
         );
         return Right(DeleteMemoryResDM.fromJson(response.data));
       } catch (e) {
-        return Left(ServerError(errors: _handleError(e)));
+        return Left(ServerError(errors: handleError(e)));
       }
     }
     return Left(NetworkError(errors: "No Internet Connection"));
   }
-}
-
-String _handleError(dynamic e) {
-  final msg = e.toString();
-  if (msg.contains('400')) return "Bad request. Please try again.";
-  if (msg.contains('401')) return "Session expired. Please login again.";
-  if (msg.contains('403')) return "Access denied.";
-  if (msg.contains('404')) return "Data not found.";
-  if (msg.contains('500')) return "Server error. Please try later.";
-  if (msg.contains('host lookup') || msg.contains('SocketException')) {
-    return "Server unreachable. Check your connection.";
-  }
-  return "Something went wrong. Please try again.";
 }

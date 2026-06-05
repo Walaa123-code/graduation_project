@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import '../features/auth/register/ui/widgets/doctor_register_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/ui/pages/splash_screen.dart';
 import '../features/onboarding/ui/pages/onboarding_screen.dart';
-import '../features/auth/ui/pages/account_type_screen.dart';
-import '../features/auth/ui/pages/user_register_screen.dart';
-import '../features/auth/ui/pages/doctor_register_screen.dart';
+import '../features/auth/register/ui/widgets/account_type_screen.dart';
+import '../features/auth/register/ui/pages/register_screen.dart';
 import '../features/auth/login/ui/pages/login_screen.dart';
 import '../features/doctor/main/pages/doctor_main_screen.dart';
 import '../features/doctor/patients/pages/patients_screen.dart';
@@ -48,7 +48,7 @@ class AppRoutes {
             builder: (context) => const AccountTypeScreen());
       case Routes.userRegister:
         return MaterialPageRoute(
-            builder: (context) => const UserRegisterScreen());
+            builder: (context) => const RegisterScreen());
       case Routes.doctorRegister:
         return MaterialPageRoute(
             builder: (context) => const DoctorRegisterScreen());

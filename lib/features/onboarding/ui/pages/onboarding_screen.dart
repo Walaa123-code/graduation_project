@@ -3,7 +3,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/components/page_indicator.dart';
 import '../../../../core/components/custom_button.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../auth/ui/pages/account_type_screen.dart';
+import '../../../auth/register/ui/widgets/account_type_screen.dart';
 
 /// Onboarding Screen with PageView
 /// 3 screens: Practice Mindfulness, Connect with Professionals, Track Your Journey

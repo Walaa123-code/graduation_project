@@ -5,8 +5,6 @@ import 'package:mindecho/features/libiraries/ui/pages/library_tab.dart';
 import 'package:mindecho/features/my_space/ui/pages/my_space_screen.dart';
 import 'package:mindecho/features/profile_user/ui/pages/profile_user_screen.dart';
 import '../../core/utils/app_colors.dart';
-import '../Doctor/appointments/pages/appointments_screen.dart';
-import '../my_space/ui/pages/my_space_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +19,7 @@ class _TestState extends State<HomeScreen> {
     const HomeTab(),
     const LibraryTab(),
     const MySpaceScreen(),
-    const AppointmentsScreen(),
+    const AppointmentsTab(),
     const ProfileUserScreen(),
   ];
   int currentIndex = 0;

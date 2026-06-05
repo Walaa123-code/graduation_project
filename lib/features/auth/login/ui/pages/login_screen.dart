@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/components/custom_text_field.dart';
 import '../../../../../core/components/custom_button.dart';
 import '../../../../../core/utils/app_colors.dart';
-import '../../../ui/pages/user_register_screen.dart';
+import '../../../../../di/di.dart';
+import '../../../register/ui/pages/register_screen.dart';
+import '../manager/cubit/login_cubit.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/register_link_row.dart';
 
-/// Login Screen
-/// Welcome back screen for existing users
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -18,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final LoginCubit _loginCubit = getIt<LoginCubit>();
 
   @override
   void dispose() {
@@ -26,144 +30,134 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Implement real login logic
-      // Mock login for doctor
-      final email = _emailController.text.toLowerCase();
-      if (email.contains('doctor') || email == 'wafaasakr044@gmail.com') {
-        Navigator.pushReplacementNamed(context, '/doctor/main');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Logged in as user (Home not implemented yet)'),
-            backgroundColor: AppColors.purpleSoft,
-          ),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppTheme.spacingLg),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: AppTheme.spacing2xl),
-
-                // Title
-                const Text(
-                  'Welcome Back',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.purpleSoft, // Changed to Purple
-                    letterSpacing: -0.5,
-                  ),
-                ),
-
-                const SizedBox(height: AppTheme.spacingXl),
-
-                // Email Field
-                CustomTextField(
-                  hintText: 'Email Address',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!value.contains('@')) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: AppTheme.spacingMd),
-
-                // Password Field
-                CustomTextField(
-                  hintText: 'Password',
-                  controller: _passwordController,
-                  isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: AppTheme.spacingSm),
-
-                // Forgot Password Link
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // TODO: Implement forgot password
-                    },
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.purpleSoft, // Changed to Purple
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: AppTheme.spacingLg),
-
-                // Login Button
-                CustomButton(
-                  text: 'Login',
-                  onPressed: _handleLogin,
-                  width: double.infinity,
-                  backgroundColor: AppColors.purpleSoft,
-                ),
-
-                const SizedBox(height: AppTheme.spacingLg),
-
-                // Register Link
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return BlocProvider.value(
+      value: _loginCubit,
+      child: BlocListener<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is LoginSuccessState) {
+            final doctorId = state.loginResponseEntity.data?.doctorId;
+            if (doctorId != null) {
+              Navigator.pushReplacementNamed(context, '/doctor/main');
+            } else {
+              Navigator.pushReplacementNamed(context, 'home_screen');
+            }
+          }
+          if (state is LoginErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.failures.errors),
+              backgroundColor: Colors.red,
+            ));
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.white,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text(
-                      'New here? ',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: AppColors.gray500,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const UserRegisterScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'Register now',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: AppColors.purpleSoft, // Changed to Purple
-                          fontWeight: FontWeight.w600,
+                    const SizedBox(height: 48),
+
+                    // Logo
+                    Center(
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: AppColors.purpleSoft.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.self_improvement,
+                          size: 44,
+                          color: AppColors.purpleSoft,
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 28),
+
+                    const AuthHeader(
+                      title: 'Welcome Back',
+                      subtitle: 'Sign in to continue your wellness journey',
+                      titleColor: AppColors.purpleSoft,
+                    ),
+
+                    const SizedBox(height: 35),
+
+                    CustomTextField(
+                      hintText: 'Email Address',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      prefixIcon: const Icon(Icons.email_outlined,
+                          color: AppColors.gray400),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return 'Please enter your email';
+                        if (!v.contains('@')) return 'Please enter a valid email';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextField(
+                      hintText: 'Password',
+                      controller: _passwordController,
+                      isPassword: true,
+                      prefixIcon: const Icon(Icons.lock_outline,
+                          color: AppColors.gray400),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return 'Please enter your password';
+                        return null;
+                      },
+                    ),
+
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text('Forgot Password?',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.purpleSoft,
+                                fontWeight: FontWeight.w500)),
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    BlocBuilder<LoginCubit, LoginState>(
+                      builder: (context, state) {
+                        if (state is LoginLoadingState) {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColors.purpleSoft));
+                        }
+                        return CustomButton(
+                          text: 'Login',
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _loginCubit.login(
+                                _emailController.text.trim(),
+                                _passwordController.text.trim(),
+                              );
+                            }
+                          },
+                          width: double.infinity,
+                          backgroundColor: AppColors.purpleSoft,
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 24),
+                    const RegisterLinkRow(),
+                    const SizedBox(height: 24),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

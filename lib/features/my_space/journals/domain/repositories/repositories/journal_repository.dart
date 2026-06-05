@@ -1,7 +1,5 @@
 import 'package:dartz/dartz.dart';
-
 import '../../../../../../core/errors/failures.dart';
-import '../../../../memories/domain/entities/DeleteMemoryResEntity.dart';
 import '../../entities/DeleteJournalResEntity.dart';
 import '../../entities/GetJournalByIDResEntity.dart';
 import '../../entities/GetJournalResponseEntity.dart';
@@ -13,6 +11,5 @@ abstract class JournalRepository {
       String title, String content);
   Future<Either<Failures, GetJournalByIdResEntity>> updateJournal(
       int id, String title, String content);
-
   Future<Either<Failures, DeleteJournalResEntity>> deleteJournal(int id);
 }
