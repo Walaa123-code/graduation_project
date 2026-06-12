@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../di/di.dart';
-import '../../../chat/ui/manager/chat_cubit.dart';
-import '../../../chat/ui/pages/chat_screen.dart';
+import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/di/di.dart';
+import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart';
+import 'package:mindecho/features/chat/ui/pages/chat_screen.dart';
 import '../widgets/message_tile.dart';
 import '../models/message_item.dart';
 

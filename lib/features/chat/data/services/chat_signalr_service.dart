@@ -10,8 +10,8 @@ import 'package:mindecho/features/chat/data/models/booking_status_dm.dart';
 import 'package:mindecho/features/chat/data/models/chat_message_dm.dart';
 import 'package:mindecho/features/chat/domain/entities/booking_status_entity.dart';
 import 'package:mindecho/features/chat/domain/entities/chat_message_entity.dart';
-import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart'
-    show ChatConnectionState;
+import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart';
+
 
 /// Low-level SignalR hub wrapper.
 ///

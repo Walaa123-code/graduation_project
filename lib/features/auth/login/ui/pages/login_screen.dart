@@ -4,6 +4,8 @@ import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/components/custom_text_field.dart';
 import '../../../../../core/components/custom_button.dart';
 import '../../../ui/pages/user_register_screen.dart';
+import '../../../ui/pages/doctor_register_screen.dart';
+import '../../../forgot_password/ui/pages/forgot_password_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../ui/manager/auth_cubit.dart';
 
@@ -186,7 +188,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Implement forgot password
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordScreen(),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Forgot Password?',
@@ -224,11 +230,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const UserRegisterScreen(),
-                          ),
-                        );
+                        if (_isDoctorLogin) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const DoctorRegisterScreen(),
+                            ),
+                          );
+                        } else {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const UserRegisterScreen(),
+                            ),
+                          );
+                        }
                       },
                       child: const Text(
                         'Register now',

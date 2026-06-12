@@ -32,13 +32,13 @@ import '../features/Doctor/domain/repositories/data_source/remote_data_source/do
 import '../features/Doctor/data/repositories/doctor_repository_impl.dart';
 import '../features/Doctor/domain/repositories/repository/doctor_repository.dart';
 import '../features/Doctor/domain/use_cases/doctor_use_cases.dart';
-import '../features/Doctor/ui/manager/doctor_cubit.dart';
+import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
 import '../features/Doctor/data/data_sources/schedule_remote_data_source_impl.dart';
 import '../features/Doctor/domain/repositories/data_source/remote_data_source/schedule_remote_data_source.dart';
 import '../features/Doctor/data/repositories/schedule_repository_impl.dart';
 import '../features/Doctor/domain/repositories/repository/schedule_repository.dart';
 import '../features/Doctor/domain/use_cases/add_schedule_use_case.dart';
-import '../features/Doctor/ui/manager/schedule_cubit.dart';
+import 'package:mindecho/features/Doctor/ui/manager/schedule_cubit.dart';
 import '../features/my_space/data/repositories/journal_repository_impl.dart';
 import '../features/my_space/domain/repositories/journal_repository.dart';
 import '../features/my_space/domain/use_cases/journal_use_cases.dart';
@@ -54,7 +54,7 @@ import '../features/chat/data/repositories/chat_repository_impl.dart';
 import '../features/chat/data/services/chat_signalr_service.dart';
 import '../features/chat/domain/repositories/chat_repository.dart';
 import '../features/chat/domain/use_cases/chat_use_cases.dart';
-import '../features/chat/ui/manager/chat_cubit.dart';
+import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart';
 
 final getIt = GetIt.instance;
 

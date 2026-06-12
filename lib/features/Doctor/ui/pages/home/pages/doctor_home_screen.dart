@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../shared/models/doctor_action_item.dart';
-import '../../shared/widgets/action_grid.dart';
-import '../../shared/widgets/doctor_header_widget.dart';
-import '../../shared/widgets/stats_card.dart';
-import '../../ui/manager/doctor_cubit.dart';
-import '../../ui/manager/schedule_cubit.dart';
+import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/features/Doctor/ui/widgets/shared/models/doctor_action_item.dart';
+import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/action_grid.dart';
+import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/doctor_header_widget.dart';
+import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/stats_card.dart';
+import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
+import 'package:mindecho/features/Doctor/ui/manager/schedule_cubit.dart';
 
 class DoctorHomeScreen extends StatefulWidget {
   final void Function(int index)? onTabChange;
@@ -61,11 +61,17 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
         onTap: () => Navigator.pushNamed(context, '/doctor/messages'),
       ),
       DoctorActionItem(
-        title: 'Reports',
-        subtitle: 'Weekly Summary',
-        icon: Icons.analytics_outlined,
+        title: 'Profile',
+        subtitle: 'My Profile',
+        icon: Icons.person_outline,
         color: Colors.blue,
-        onTap: () => Navigator.pushNamed(context, '/doctor/reports'),
+        onTap: () {
+          if (widget.onTabChange != null) {
+            widget.onTabChange!(3); // 3 is Profile tab
+          } else {
+            Navigator.pushNamed(context, '/doctor/profile');
+          }
+        },
       ),
     ];
 

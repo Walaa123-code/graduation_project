@@ -1,7 +1,7 @@
 import 'package:mindecho/features/chat/domain/entities/booking_status_entity.dart';
 import 'package:mindecho/features/chat/domain/entities/chat_message_entity.dart';
-import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart'
-    show ChatConnectionState;
+import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart';
+
 
 /// Abstract interface for the chat SignalR repository.
 ///

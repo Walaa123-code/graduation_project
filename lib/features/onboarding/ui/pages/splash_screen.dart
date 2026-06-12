@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../../../core/theme/app_colors.dart';
+import 'package:mindecho/core/theme/app_colors.dart';
 import 'onboarding_screen.dart';
 
 /// Splash Screen

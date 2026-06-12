@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/core/theme/app_theme.dart';
 import '../models/patient_model.dart';
-import '../../../../core/components/custom_button.dart';
+import 'package:mindecho/core/components/custom_button.dart';
 
 class PatientCard extends StatelessWidget {
   final Patient patient;

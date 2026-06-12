@@ -2,8 +2,8 @@ import 'package:mindecho/features/chat/data/data_sources/chat_remote_data_source
 import 'package:mindecho/features/chat/domain/entities/booking_status_entity.dart';
 import 'package:mindecho/features/chat/domain/entities/chat_message_entity.dart';
 import 'package:mindecho/features/chat/domain/repositories/chat_repository.dart';
-import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart'
-    show ChatConnectionState;
+import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart';
+
 
 /// Concrete implementation of [ChatRepository].
 ///

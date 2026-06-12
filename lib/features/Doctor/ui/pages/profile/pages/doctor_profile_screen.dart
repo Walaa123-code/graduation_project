@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/cashe/cashe_helper.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../shared/widgets/stats_card.dart';
-import '../../ui/manager/doctor_cubit.dart';
-import '../../../auth/login/ui/pages/login_screen.dart';
+import 'package:mindecho/core/cashe/cashe_helper.dart';
+import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/stats_card.dart';
+import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
+import 'package:mindecho/features/auth/login/ui/pages/login_screen.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
   const DoctorProfileScreen({super.key});
@@ -19,6 +21,46 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   void initState() {
     super.initState();
     context.read<DoctorCubit>().getDoctorProfile();
+  }
+
+  Future<void> _pickAndCropImage(dynamic profile) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    
+    if (image != null) {
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Profile Picture',
+            toolbarColor: AppColors.purpleSoft,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: true,
+          ),
+          IOSUiSettings(
+            title: 'Crop Profile Picture',
+            aspectRatioLockEnabled: true,
+            resetAspectRatioEnabled: false,
+          ),
+          WebUiSettings(
+            context: context,
+            presentStyle: WebPresentStyle.dialog,
+          ),
+        ],
+      );
+
+      if (croppedFile != null && mounted) {
+        context.read<DoctorCubit>().updateDoctorProfile(
+          fullName: profile.fullName,
+          email: profile.email ?? '',
+          specialization: profile.specialization ?? '',
+          bio: profile.bio ?? '',
+          profilePicturePath: croppedFile.path,
+        );
+      }
+    }
   }
 
   @override
@@ -78,25 +120,45 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 const SizedBox(height: AppTheme.spacingMd),
 
                 // Avatar
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: AppColors.purpleBg,
-                  backgroundImage: profile.profilePicture != null &&
-                          profile.profilePicture!.isNotEmpty
-                      ? NetworkImage(profile.profilePicture!)
-                      : null,
-                  child: profile.profilePicture == null ||
-                          profile.profilePicture!.isEmpty
-                      ? Text(
-                          profile.fullName.isNotEmpty
-                              ? profile.fullName[0].toUpperCase()
-                              : '?',
-                          style: const TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.purpleSoft),
-                        )
-                      : null,
+                GestureDetector(
+                  onTap: () => _pickAndCropImage(profile),
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: AppColors.purpleBg,
+                        backgroundImage: profile.profilePicture != null &&
+                                profile.profilePicture!.isNotEmpty
+                            ? NetworkImage(profile.profilePicture!)
+                            : null,
+                        child: profile.profilePicture == null ||
+                                profile.profilePicture!.isEmpty
+                            ? Text(
+                                profile.fullName.isNotEmpty
+                                    ? profile.fullName[0].toUpperCase()
+                                    : '?',
+                                style: const TextStyle(
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.purpleSoft),
+                              )
+                            : null,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
                 const SizedBox(height: AppTheme.spacingMd),

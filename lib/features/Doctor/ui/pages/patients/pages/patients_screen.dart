@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../ui/manager/doctor_cubit.dart';
+import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
 
 class PatientsScreen extends StatefulWidget {
   const PatientsScreen({super.key});
