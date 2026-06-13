@@ -33,11 +33,11 @@ class BookingEmptyState extends StatelessWidget {
   }
 }
 
-class BookingErrorState extends StatelessWidget {
+class BookingErrorWidget extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
 
-  const BookingErrorState({
+  const BookingErrorWidget({
     super.key,
     required this.message,
     required this.onRetry,

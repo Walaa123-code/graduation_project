@@ -10,7 +10,7 @@ import '../../../domain/entities/GetMemoryByIDResEntity.dart';
 import '../../../domain/entities/GetMemoryResponseEntity.dart';
 import '../../../domain/repositories/data_source/remote_data_source/memory_data_source.dart';
 import '../../models/DeleteMemoryResDM.dart';
-import '../../models/GetMemoryByIdResDM.dart';
+import '../../models/GetMemoryByIDResDM.dart';
 import '../../models/GetMemoryResponseDM.dart';
 
 class MemoryDataSourceImpl implements MemoryDataSource {
