@@ -1,4 +1,14 @@
 class EndPoints {
+  // ── Mood ─────────────────────────────────────────────────────────
+  static const String selectMood  = '/api/MoodEntry/create';
+  static const String getAllMoods = '/api/MoodEntry/getall';
+  static const String getMoodById = '/api/MoodEntry/get/';
+  static const String updateMood  = '/api/MoodEntry/update';
+  static const String deleteMood  = '/api/MoodEntry/delete/';
+
+  // ── Library ──────────────────────────────────────────────────────
+  static const String getLibrary = '/api/Library/Library';
+
   // ── Auth ─────────────────────────────────────────────────────────
   static const String registerUser   = '/api/Auth/register-user';
   static const String loginUser      = '/api/Auth/login-user';

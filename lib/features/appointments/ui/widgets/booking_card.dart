@@ -4,6 +4,9 @@ import 'package:mindecho/core/utils/app_styles.dart';
 import 'package:mindecho/features/appointments/domain/entities/booking_entity.dart';
 import 'package:mindecho/features/appointments/ui/widgets/booking_info_chip.dart';
 import 'package:mindecho/features/appointments/ui/widgets/booking_status_badge.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mindecho/di/di.dart';
+import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart';
 import 'package:mindecho/features/chat/ui/pages/chat_screen.dart';
 
 class BookingCard extends StatelessWidget {
@@ -124,7 +127,7 @@ class _SessionInfo extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             booking.doctor!.specialization!,
-            style: AppStyles.medium14Gray,
+            style: AppStyles.medium14DarkGray,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -184,9 +187,13 @@ class _CardDetails extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ChatScreen(
-                      bookingId: booking.id,
-                      doctorId: booking.doctorId,
+                    builder: (_) => BlocProvider(
+                      create: (_) => getIt<ChatCubit>(),
+                      child: ChatScreen(
+                        bookingId: booking.id,
+                        chatPartnerName: booking.doctor?.fullName ?? 'Doctor',
+                        currentUserSenderType: 0,
+                      ),
                     ),
                   ),
                 ),
