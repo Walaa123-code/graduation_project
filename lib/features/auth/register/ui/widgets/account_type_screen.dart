@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/theme/app_theme.dart';
-import '../../../../../core/components/account_type_card.dart';
-import '../../../../../core/utils/app_colors.dart';
-import '../pages/register_screen.dart';
+import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/core/theme/app_theme.dart';
+import '../../../../core/components/account_type_card.dart';
+import 'user_register_screen.dart';
 import 'doctor_register_screen.dart';
 
 /// Account Type Selection Screen
@@ -20,6 +20,7 @@ class AccountTypeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Title
               const Text(
                 'Continue as',
                 textAlign: TextAlign.center,
@@ -33,6 +34,7 @@ class AccountTypeScreen extends StatelessWidget {
 
               const SizedBox(height: AppTheme.spacing2xl),
 
+              // User Card
               AccountTypeCard(
                 title: 'User',
                 description: 'For people seeking mental health support',
@@ -52,7 +54,7 @@ class AccountTypeScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const RegisterScreen(),
+                      builder: (context) => const UserRegisterScreen(),
                     ),
                   );
                 },
@@ -60,6 +62,7 @@ class AccountTypeScreen extends StatelessWidget {
 
               const SizedBox(height: AppTheme.spacingLg),
 
+              // Doctor Card
               AccountTypeCard(
                 title: 'Doctor',
                 description: 'For therapists and counselors',

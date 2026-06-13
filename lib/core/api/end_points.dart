@@ -1,32 +1,46 @@
 class EndPoints {
-  static const String getProfile = "/api/Client";
+  // ── Auth ─────────────────────────────────────────────────────────
+  static const String registerUser   = '/api/Auth/register-user';
+  static const String loginUser      = '/api/Auth/login-user';
+  static const String registerDoctor = '/api/Auth/register-doctor';
+  static const String loginDoctor    = '/api/Auth/login-doctor';
 
-  // Mood
-  static const String selectMood = "/api/MoodEntry/create";
-  static const String getAllMoods = "/api/MoodEntry/getall";
-  static const String getMoodById = "/api/MoodEntry/get/";
-  static const String updateMood = "/api/MoodEntry/update";
-  static const String deleteMood = "/api/MoodEntry/delete/";
+  // ── Booking ──────────────────────────────────────────────────────
+  static const String createBooking       = '/api/Booking/create';
+  static const String getAllBookings      = '/api/Booking/getAllBookings';
+  static const String changeBookingStatus = '/api/Booking/changeStatus';
 
-  // Journal
-  static const String getJournal = "/api/Journal/user";
-  static const String getJournalById = "/api/Journal/";
-  static const String createJournal = "/api/Journal";
-  static const String updateJournal = "/api/Journal/update";
-  static const String deleteJournal = "/api/Journal/";
+  // ── Doctor ───────────────────────────────────────────────────────
+  static const String getDoctorProfile  = '/api/Doctor/profile';
+  static const String updateDoctorProfile = '/api/Doctor';
+  static const String getAllDoctors     = '/api/Doctor/All';
+  static const String getDoctorPatients = '/api/Doctor/patients';
 
-  // Memory
-  static const String getMemory = "/api/Memory/user";
-  static const String getMemoryById = "/api/Memory/";
-  static const String createMemory = "/api/Memory/create";
-  static const String updateMemory = "/api/Memory/update";
-  static const String deleteMemory = "/api/Memory/";
+  // ── Doctor Schedule ──────────────────────────────────────────────
+  static const String addDoctorSchedule = '/api/DoctorSchedule/Add';
+  static const String updateDoctorSchedule = '/api/DoctorSchedule/update';
+  static const String getDoctorScheduleById = '/api/DoctorSchedule/{id}';
+  static const String getDoctorSchedules = '/api/DoctorSchedule/doctorSchedules';
+  static const String getDoctorScheduleSlots = '/api/DoctorSchedule/slots';
 
-  // Library
-  static const String getLibrary = "/api/Library/Library";
+  // ── Journal ──────────────────────────────────────────────────────
+  static const String createJournal    = '/api/Journal';
+  static const String getJournals      = '/api/Journal';
+  static const String getJournal       = '/api/Journal';
+  static const String getJournalById   = '/api/Journal/{id}';
+  static const String updateJournal    = '/api/Journal';
+  static const String deleteJournal    = '/api/Journal/{id}';
 
-  // Appointments
-  static const String createBooking = "/api/Booking/create";
-  static const String changeBookingStatus = "/api/Booking/change-status";
-  static const String getAllBookings = "/api/Booking/getAllBookings";
+  // ── Memory ───────────────────────────────────────────────────────
+  static const String getMemories      = '/api/Memory';
+  static const String getMemory        = '/api/Memory';
+  static const String getMemoryById    = '/api/Memory/{id}';
+  static const String createMemory     = '/api/Memory';
+  static const String updateMemory     = '/api/Memory';
+  static const String deleteMemory     = '/api/Memory/{id}';
+
+  // ── SignalR ───────────────────────────────────────────────────────
+  /// Full URL: ApiConstants.baseUrl + EndPoints.chatHub
+  /// → https://chef-reclining-deodorize.ngrok-free.dev/hubs/chat
+  static const String chatHub = '/hubs/chat';
 }

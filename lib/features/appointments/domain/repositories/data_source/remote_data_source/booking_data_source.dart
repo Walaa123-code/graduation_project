@@ -5,6 +5,6 @@ import '../../../entities/GetAllBookingsResponseEntity.dart';
 
 abstract class BookingDataSource {
   Future<Either<Failures, BookingResponseEntity>> createBooking(int doctorSessionSlotId);
-  Future<Either<Failures, BookingResponseEntity>> changeBookingStatus(int id, int status);
-  Future<Either<Failures, GetAllBookingsResponseEntity>> getAllBookings();
+  Future<Either<Failures, BookingResponseEntity>> changeBookingStatus({required int id, required int status});
+  Future<Either<Failures, GetAllBookingsResponseEntity>> getAllBookings({required bool isDoctor});
 }

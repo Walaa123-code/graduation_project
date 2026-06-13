@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../di/di.dart';
+import 'package:mindecho/di/di.dart';
 import '../manager/profile_cubit.dart';
 import '../widgets/help&support_screen.dart';
 import '../widgets/notifications_screen.dart';

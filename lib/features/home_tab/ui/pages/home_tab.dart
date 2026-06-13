@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
-import '../../../../di/di.dart';
+import 'package:mindecho/di/di.dart';
 import '../../../../core/components/app_card.dart';
 import '../../../libiraries/ui/manager/library_cubit.dart';
 import '../../../libiraries/ui/pages/library_tab.dart';

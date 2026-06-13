@@ -1,76 +1,187 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mindecho/features/chat/data/services/chat_signalr_service.dart';
-import 'package:mindecho/features/chat/domain/entities/booking_status_changed_entity.dart';
+import 'package:mindecho/features/chat/domain/entities/booking_status_entity.dart';
 import 'package:mindecho/features/chat/domain/entities/chat_message_entity.dart';
+import 'package:mindecho/features/chat/domain/repositories/chat_repository.dart';
+import 'package:mindecho/features/chat/domain/use_cases/chat_use_cases.dart';
 
 part 'chat_state.dart';
 
+// ── Connection lifecycle enum ──────────────────────────────────────
+
+/// Represents the SignalR hub connection lifecycle.
+/// Driven by [ChatSignalRService]'s [onreconnecting] / [onreconnected] /
+/// [onclose] callbacks.
+enum ChatConnectionState {
+  connecting,
+  connected,
+  reconnecting,
+  disconnected,
+  error,
+}
+
+// ── Cubit ──────────────────────────────────────────────────────────
+
 class ChatCubit extends Cubit<ChatState> {
-  final ChatSignalRService _signalRService;
-  final List<ChatMessageEntity> _messages = [];
-  int? _currentBookingId;
+  final ConnectChatUseCase connectChatUseCase;
+  final SendMessageUseCase sendMessageUseCase;
+  final MarkAsReadUseCase markAsReadUseCase;
+  final DisconnectChatUseCase disconnectChatUseCase;
+  final ChatRepository chatRepository;
 
-  ChatCubit({required ChatSignalRService signalRService})
-      : _signalRService = signalRService,
-        super(ChatInitialState()) {
-    _setupListeners();
-  }
+  StreamSubscription<ChatMessageEntity>?       _msgSub;
+  StreamSubscription<List<ChatMessageEntity>>? _historySub;
+  StreamSubscription<void>?                    _seenSub;
+  StreamSubscription<BookingStatusEntity>?     _statusSub;
+  StreamSubscription<ChatConnectionState>?     _connSub;
 
-  void _setupListeners() {
-    _signalRService.onReceiveMessage = (message) {
-      _messages.add(message);
-      emit(ChatNewMessageState(messages: List.from(_messages)));
-    };
+  ChatCubit({
+    required this.connectChatUseCase,
+    required this.sendMessageUseCase,
+    required this.markAsReadUseCase,
+    required this.disconnectChatUseCase,
+    required this.chatRepository,
+  }) : super(ChatInitialState());
 
-    _signalRService.onLoadMessages = (messages) {
-      _messages.clear();
-      _messages.addAll(messages);
-      emit(ChatMessagesLoadedState(messages: List.from(_messages)));
-    };
+  // ── Public API ─────────────────────────────────────────────────
 
-    _signalRService.onChatSeen = () {
-      emit(ChatSeenState());
-    };
-
-    _signalRService.onBookingStatusChanged = (data) {
-      emit(BookingStatusChangedState(statusData: data));
-    };
-  }
-
+  /// Opens the chat: subscribes to all streams → connects → joins room →
+  /// loads history.  Must be called from [ChatScreen.initState].
   Future<void> initChat(int bookingId) async {
-    _currentBookingId = bookingId;
-    _messages.clear();
-    emit(ChatConnectingState());
+    // Emit connecting state immediately
+    emit(ChatLoadedState(
+      messages: const [],
+      connectionState: ChatConnectionState.connecting,
+    ));
+
+    // Subscribe BEFORE connect so no events are missed during setup
+    _subscribeToStreams();
+
     try {
-      await _signalRService.connect();
-      await _signalRService.joinChat(bookingId);
-      await _signalRService.loadMessages(bookingId);
-      emit(ChatConnectedState());
+      await connectChatUseCase(bookingId);
     } catch (e) {
-      emit(ChatErrorState(message: "Failed to connect to chat"));
+      emit(ChatErrorState(
+        message: 'Failed to connect: $e',
+        connectionState: ChatConnectionState.error,
+      ));
     }
   }
 
-  Future<void> sendMessage(String content) async {
-    if (_currentBookingId == null || content.trim().isEmpty) return;
+  /// Sends a message to the booking room with an optimistic UI update.
+  Future<void> sendMessage(int bookingId, String content, int senderType) async {
+    final current = _currentLoaded();
+    if (current != null) {
+      // Optimistic append
+      final optimisticMsg = ChatMessageEntity(
+        content: content,
+        sentAt: DateTime.now(),
+        messageSenderType: senderType,
+      );
+      emit(current.copyWith(messages: [...current.messages, optimisticMsg]));
+    }
+
     try {
-      await _signalRService.sendMessage(_currentBookingId!, content);
+      await sendMessageUseCase(bookingId, content);
     } catch (e) {
-      emit(ChatErrorState(message: "Failed to send message"));
+      // Non-fatal — update errorMessage (we keep the optimistic message for now,
+      // or we could remove it if we want strict failure handling)
+      final stateAfter = _currentLoaded();
+      if (stateAfter != null) {
+        emit(stateAfter.copyWith(errorMessage: 'Send failed: $e'));
+      }
     }
   }
 
-  Future<void> markAsRead() async {
-    if (_currentBookingId == null) return;
-    await _signalRService.markAsRead(_currentBookingId!);
+  /// Marks the other side's messages as read.
+  /// Call when incoming messages become visible on screen.
+  Future<void> markAsRead(int bookingId) async {
+    try {
+      await markAsReadUseCase(bookingId);
+    } catch (e) {
+      // Silent — MarkAsRead failures are non-critical
+    }
   }
 
-  List<ChatMessageEntity> get messages => List.from(_messages);
+  // ── Stream subscriptions ───────────────────────────────────────
+
+  void _subscribeToStreams() {
+    // ReceiveMessage → append new message to the current list (with deduplication)
+    _msgSub = chatRepository.messageStream.listen((msg) {
+      final current = _currentLoaded();
+      var messages = current?.messages.toList() ?? [];
+
+      // Deduplicate optimistic messages by content, sender, and approximate time
+      final existingIndex = messages.indexWhere((m) =>
+          m.content == msg.content &&
+          m.messageSenderType == msg.messageSenderType &&
+          m.sentAt.difference(msg.sentAt).abs().inSeconds < 10);
+
+      if (existingIndex != -1) {
+        messages[existingIndex] = msg; // Replace optimistic with server confirmed
+      } else {
+        messages.add(msg);
+      }
+
+      emit(ChatLoadedState(
+        messages: messages,
+        connectionState: current?.connectionState ?? ChatConnectionState.connected,
+        seenByOther: current?.seenByOther ?? false,
+      ));
+    });
+
+    // LoadMessages → replace the full message list (history load)
+    _historySub = chatRepository.historyStream.listen((history) {
+      final current = _currentLoaded();
+      emit(ChatLoadedState(
+        messages: history,
+        connectionState: current?.connectionState ?? ChatConnectionState.connected,
+        seenByOther: current?.seenByOther ?? false,
+      ));
+    });
+
+    // ChatSeen → flip seenByOther flag; no payload from server
+    _seenSub = chatRepository.seenStream.listen((_) {
+      final current = _currentLoaded();
+      if (current != null) {
+        emit(current.copyWith(seenByOther: true));
+      }
+    });
+
+    // BookingStatusChanged → one-shot side-effect state for BlocListener
+    _statusSub = chatRepository.statusStream.listen((status) {
+      emit(BookingStatusUpdatedState(status: status));
+    });
+
+    // Connection lifecycle → update connectionState in ChatLoadedState
+    _connSub = chatRepository.connectionStateStream.listen((connState) {
+      final current = _currentLoaded();
+      if (current != null) {
+        emit(current.copyWith(connectionState: connState));
+      } else if (connState == ChatConnectionState.error) {
+        emit(ChatErrorState(
+          message: 'Connection error',
+          connectionState: connState,
+        ));
+      }
+    });
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────
+
+  ChatLoadedState? _currentLoaded() =>
+      state is ChatLoadedState ? state as ChatLoadedState : null;
+
+  // ── Dispose ────────────────────────────────────────────────────
 
   @override
   Future<void> close() async {
-    await _signalRService.disconnect();
+    await _msgSub?.cancel();
+    await _historySub?.cancel();
+    await _seenSub?.cancel();
+    await _statusSub?.cancel();
+    await _connSub?.cancel();
+    await disconnectChatUseCase();
     return super.close();
   }
 }

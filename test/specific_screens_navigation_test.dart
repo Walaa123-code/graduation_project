@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mindecho/features/doctor/home/pages/doctor_home_screen.dart';
-import 'package:mindecho/features/doctor/appointments/pages/appointments_screen.dart';
-import 'package:mindecho/features/doctor/messages/pages/messages_screen.dart';
-import 'package:mindecho/features/doctor/reports/pages/reports_screen.dart';
+import 'package:mindecho/features/Doctor/ui/pages/home/pages/doctor_home_screen.dart';
+import 'package:mindecho/features/Doctor/ui/pages/appointments/pages/appointments_screen.dart';
+import 'package:mindecho/features/Doctor/ui/pages/messages/pages/messages_screen.dart';
+import 'package:mindecho/features/Doctor/ui/pages/reports/pages/reports_screen.dart';
 import 'package:mindecho/core/theme/app_theme.dart';
 
 void main() {

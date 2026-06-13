@@ -23,6 +23,12 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
   String _searchQuery = '';
 
   @override
+  void initState() {
+    super.initState();
+    _bookingCubit.getAllBookings(isDoctor: false);
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -33,7 +39,7 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
     final height = MediaQuery.of(context).size.height;
 
     return BlocProvider.value(
-      value: _bookingCubit..getAllBookings(),
+      value: _bookingCubit,
       child: Scaffold(
         backgroundColor: AppColors.gray50,
         appBar: AppBar(
@@ -105,24 +111,25 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
               Expanded(
                 child: BlocBuilder<BookingCubit, BookingState>(
                   builder: (context, state) {
-                    if (state is GetAllBookingsLoadingState) {
+                    if (state is BookingLoadingState) {
                       return const Center(
                         child: CircularProgressIndicator(
                             color: AppColors.lavenderColor),
                       );
                     }
 
-                    if (state is GetAllBookingsErrorState) {
-                      return BookingErrorState(
-                        message: state.failures.errors,
-                        onRetry: () => _bookingCubit.getAllBookings(),
+                    if (state is BookingErrorState) {
+                      return BookingErrorWidget(
+                        message: state.failure.errors,
+                        onRetry: () =>
+                            _bookingCubit.getAllBookings(isDoctor: false),
                       );
                     }
 
-                    if (state is GetAllBookingsSuccessState) {
-                      final allItems =
-                          state.getAllBookingsResponseEntity.data ?? [];
+                    if (state is BookingsLoadedState) {
+                      final allItems = state.bookings;
 
+                      // 0=All, 1=Pending(status==0), 2=Confirmed(status==1)
                       var items = _selectedFilter == 0
                           ? allItems
                           : allItems
@@ -130,12 +137,14 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
                                   e.bookingStatus == _selectedFilter - 1)
                               .toList();
 
+                      // Search by doctor name or id
                       if (_searchQuery.isNotEmpty) {
-                        items = items
-                            .where((e) => (e.doctorId ?? '')
-                                .toLowerCase()
-                                .contains(_searchQuery))
-                            .toList();
+                        items = items.where((e) {
+                          final docName =
+                              (e.doctor?.fullName ?? e.doctorId)
+                                  .toLowerCase();
+                          return docName.contains(_searchQuery);
+                        }).toList();
                       }
 
                       if (items.isEmpty) return const BookingEmptyState();
@@ -146,8 +155,9 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
                         itemBuilder: (context, index) {
                           return BookingCard(
                             booking: items[index],
-                            onCancel: () => _bookingCubit.changeBookingStatus(
-                                items[index].id!.toInt(), 2),
+                            onCancel: () =>
+                                _bookingCubit.changeBookingStatus(
+                                    id: items[index].id, status: 2),
                           );
                         },
                       );

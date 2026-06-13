@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mindecho/core/utils/app_colors.dart';
 import 'package:mindecho/core/utils/app_styles.dart';
-import 'package:mindecho/features/appointments/domain/entities/BookingDataEntity.dart';
+import 'package:mindecho/features/appointments/domain/entities/booking_entity.dart';
 import 'package:mindecho/features/appointments/ui/widgets/booking_info_chip.dart';
 import 'package:mindecho/features/appointments/ui/widgets/booking_status_badge.dart';
 import 'package:mindecho/features/chat/ui/pages/chat_screen.dart';
 
 class BookingCard extends StatelessWidget {
-  final BookingDataEntity booking;
+  final BookingEntity booking;
   final VoidCallback onCancel;
 
   const BookingCard({
@@ -43,7 +43,7 @@ class BookingCard extends StatelessWidget {
 
 // --- Header ---
 class _CardHeader extends StatelessWidget {
-  final BookingDataEntity booking;
+  final BookingEntity booking;
   const _CardHeader({required this.booking});
 
   @override
@@ -63,10 +63,10 @@ class _CardHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _DoctorAvatar(),
+          _DoctorAvatar(profilePicture: booking.doctor?.profilePicture),
           const SizedBox(width: 14),
           Expanded(child: _SessionInfo(booking: booking)),
-          BookingStatusBadge(status: booking.bookingStatus?.toInt() ?? 0),
+          BookingStatusBadge(status: booking.bookingStatus),
         ],
       ),
     );
@@ -74,6 +74,9 @@ class _CardHeader extends StatelessWidget {
 }
 
 class _DoctorAvatar extends StatelessWidget {
+  final String? profilePicture;
+  const _DoctorAvatar({this.profilePicture});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -82,44 +85,58 @@ class _DoctorAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.lavenderColor.withValues(alpha: 0.15),
         shape: BoxShape.circle,
+        image: profilePicture != null && profilePicture!.isNotEmpty
+            ? DecorationImage(
+                image: NetworkImage(profilePicture!),
+                fit: BoxFit.cover,
+              )
+            : null,
       ),
-      child: const Icon(Icons.person_outline,
-          color: AppColors.lavenderColor, size: 28),
+      child: profilePicture == null || profilePicture!.isEmpty
+          ? const Icon(Icons.person_outline,
+              color: AppColors.lavenderColor, size: 28)
+          : null,
     );
   }
 }
 
 class _SessionInfo extends StatelessWidget {
-  final BookingDataEntity booking;
+  final BookingEntity booking;
   const _SessionInfo({required this.booking});
+
+  String get _doctorName => booking.doctor?.fullName ?? 'Dr. ${booking.doctorId.substring(0, 8)}...';
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Session #${booking.doctorSessionSlotId ?? '-'}",
+        Text("Session #${booking.doctorSessionSlotId}",
             style: AppStyles.bold18Black),
         const SizedBox(height: 3),
         Text(
-          "Doctor: ${_shortId(booking.doctorId)}",
+          _doctorName,
           style: AppStyles.medium15Gray,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        if (booking.doctor?.specialization != null) ...[
+          const SizedBox(height: 2),
+          Text(
+            booking.doctor!.specialization!,
+            style: AppStyles.medium14Gray,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ],
     );
-  }
-
-  String _shortId(String? id) {
-    if (id == null || id.length < 8) return id ?? '-';
-    return '${id.substring(0, 8)}...';
   }
 }
 
 // --- Details ---
 class _CardDetails extends StatelessWidget {
-  final BookingDataEntity booking;
+  final BookingEntity booking;
   final VoidCallback onCancel;
   const _CardDetails({required this.booking, required this.onCancel});
 
@@ -131,29 +148,34 @@ class _CardDetails extends StatelessWidget {
         children: [
           Row(
             children: [
-              BookingInfoChip(
-                icon: Icons.access_time_outlined,
-                label: "Requested",
-                value: _formatDate(booking.requestedAt),
-                color: AppColors.gray400,
+              Expanded(
+                child: BookingInfoChip(
+                  icon: Icons.access_time_outlined,
+                  label: "Requested",
+                  value: _formatDate(booking.requestedAt),
+                  color: AppColors.gray400,
+                ),
               ),
               if (booking.confirmedAt != null) ...[
                 const SizedBox(width: 12),
-                BookingInfoChip(
-                  icon: Icons.check_circle_outline,
-                  label: "Confirmed",
-                  value: _formatDate(booking.confirmedAt),
-                  color: Colors.green,
+                Expanded(
+                  child: BookingInfoChip(
+                    icon: Icons.check_circle_outline,
+                    label: "Confirmed",
+                    value: _formatDate(booking.confirmedAt),
+                    color: Colors.green,
+                  ),
                 ),
               ],
             ],
           ),
+          // Cancel button for Pending
           if (booking.bookingStatus == 0) ...[
             const SizedBox(height: 14),
             _CancelButton(onCancel: onCancel),
           ],
 
-          // زرار الـ chat لو Confirmed
+          // Chat button for Confirmed
           if (booking.bookingStatus == 1) ...[
             const SizedBox(height: 14),
             SizedBox(
@@ -163,8 +185,8 @@ class _CardDetails extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => ChatScreen(
-                      bookingId: booking.id!.toInt(),
-                      doctorId: booking.doctorId ?? '',
+                      bookingId: booking.id,
+                      doctorId: booking.doctorId,
                     ),
                   ),
                 ),

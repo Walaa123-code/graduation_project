@@ -1,39 +1,27 @@
 part of 'booking_cubit.dart';
 
-@immutable
-sealed class BookingState {}
+abstract class BookingState {}
 
-final class BookingInitialState extends BookingState {}
+class BookingInitialState extends BookingState {}
 
-// Get All Bookings
-final class GetAllBookingsLoadingState extends BookingState {}
-final class GetAllBookingsSuccessState extends BookingState {
-  final GetAllBookingsResponseEntity getAllBookingsResponseEntity;
-  GetAllBookingsSuccessState({required this.getAllBookingsResponseEntity});
-}
-final class GetAllBookingsErrorState extends BookingState {
-  final Failures failures;
-  GetAllBookingsErrorState({required this.failures});
+class BookingLoadingState extends BookingState {}
+
+class BookingCreatedState extends BookingState {
+  final BookingEntity booking;
+  BookingCreatedState({required this.booking});
 }
 
-// Create Booking
-final class CreateBookingLoadingState extends BookingState {}
-final class CreateBookingSuccessState extends BookingState {
-  final BookingResponseEntity bookingResponseEntity;
-  CreateBookingSuccessState({required this.bookingResponseEntity});
-}
-final class CreateBookingErrorState extends BookingState {
-  final Failures failures;
-  CreateBookingErrorState({required this.failures});
+class BookingsLoadedState extends BookingState {
+  final List<BookingEntity> bookings;
+  BookingsLoadedState({required this.bookings});
 }
 
-// Change Status
-final class ChangeStatusLoadingState extends BookingState {}
-final class ChangeStatusSuccessState extends BookingState {
-  final BookingResponseEntity bookingResponseEntity;
-  ChangeStatusSuccessState({required this.bookingResponseEntity});
+class BookingStatusChangedState extends BookingState {
+  final BookingEntity booking;
+  BookingStatusChangedState({required this.booking});
 }
-final class ChangeStatusErrorState extends BookingState {
-  final Failures failures;
-  ChangeStatusErrorState({required this.failures});
+
+class BookingErrorState extends BookingState {
+  final Failures failure;
+  BookingErrorState({required this.failure});
 }

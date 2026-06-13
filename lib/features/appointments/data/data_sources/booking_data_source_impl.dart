@@ -44,12 +44,12 @@ class BookingDataSourceImpl implements BookingDataSource {
 
   @override
   Future<Either<Failures, BookingResponseEntity>> changeBookingStatus(
-      int id, int status) async {
+      {required int id, required int status}) async {
     if (await _isConnected()) {
       try {
         var response = await apiManager.postData(
           endPoint: EndPoints.changeBookingStatus,
-          queryParameters: {'Id': id, 'status': status},
+          body: {'Id': id, 'status': status},
           headers: {'Authorization': 'Bearer ${_getToken()}'},
         );
         return Right(BookingResponseDM.fromJson(response.data));
@@ -62,12 +62,12 @@ class BookingDataSourceImpl implements BookingDataSource {
 
   @override
   Future<Either<Failures, GetAllBookingsResponseEntity>>
-      getAllBookings() async {
+      getAllBookings({required bool isDoctor}) async {
     if (await _isConnected()) {
       try {
-        var response = await apiManager.postData(
+        var response = await apiManager.getData(
           endPoint: EndPoints.getAllBookings,
-          queryParameters: {'isDoctor': false},
+          queryParameters: {'isDoctor': isDoctor},
           headers: {'Authorization': 'Bearer ${_getToken()}'},
         );
         return Right(GetAllBookingsResponseDM.fromJson(response.data));

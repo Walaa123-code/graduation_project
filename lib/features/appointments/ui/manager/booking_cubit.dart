@@ -1,43 +1,50 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/errors/failures.dart';
-import '../../domain/entities/BookingResponseEntity.dart';
-import '../../domain/entities/GetAllBookingsResponseEntity.dart';
-import '../../domain/use_cases/booking_use_case.dart';
+import 'package:mindecho/core/errors/failures.dart';
+import 'package:mindecho/features/appointments/domain/entities/booking_entity.dart';
+import 'package:mindecho/features/appointments/domain/use_cases/booking_use_cases.dart';
 
 part 'booking_state.dart';
 
 class BookingCubit extends Cubit<BookingState> {
-  final BookingUseCase bookingUseCase;
-  BookingCubit({required this.bookingUseCase}) : super(BookingInitialState());
+  final CreateBookingUseCase createBookingUseCase;
+  final GetAllBookingsUseCase getAllBookingsUseCase;
+  final ChangeBookingStatusUseCase changeBookingStatusUseCase;
 
-  Future<void> getAllBookings() async {
-    emit(GetAllBookingsLoadingState());
-    var either = await bookingUseCase.execute();
-    either.fold(
-      (error) => emit(GetAllBookingsErrorState(failures: error)),
-      (response) => emit(
-          GetAllBookingsSuccessState(getAllBookingsResponseEntity: response)),
+  BookingCubit({
+    required this.createBookingUseCase,
+    required this.getAllBookingsUseCase,
+    required this.changeBookingStatusUseCase,
+  }) : super(BookingInitialState());
+
+  Future<void> createBooking({required int doctorSessionSlotId}) async {
+    emit(BookingLoadingState());
+    final result = await createBookingUseCase(
+        doctorSessionSlotId: doctorSessionSlotId);
+    result.fold(
+      (failure) => emit(BookingErrorState(failure: failure)),
+      (booking) => emit(BookingCreatedState(booking: booking)),
     );
   }
 
-  Future<void> createBooking(int doctorSessionSlotId) async {
-    emit(CreateBookingLoadingState());
-    var either = await bookingUseCase.invoke(doctorSessionSlotId);
-    either.fold(
-      (error) => emit(CreateBookingErrorState(failures: error)),
-      (response) =>
-          emit(CreateBookingSuccessState(bookingResponseEntity: response)),
+  Future<void> getAllBookings({required bool isDoctor}) async {
+    emit(BookingLoadingState());
+    final result = await getAllBookingsUseCase(isDoctor: isDoctor);
+    result.fold(
+      (failure) => emit(BookingErrorState(failure: failure)),
+      (bookings) => emit(BookingsLoadedState(bookings: bookings)),
     );
   }
 
-  Future<void> changeBookingStatus(int id, int status) async {
-    emit(ChangeStatusLoadingState());
-    var either = await bookingUseCase.call(id, status);
-    either.fold(
-      (error) => emit(ChangeStatusErrorState(failures: error)),
-      (response) =>
-          emit(ChangeStatusSuccessState(bookingResponseEntity: response)),
+  Future<void> changeBookingStatus({
+    required int id,
+    required int status,
+  }) async {
+    emit(BookingLoadingState());
+    final result =
+        await changeBookingStatusUseCase(id: id, status: status);
+    result.fold(
+      (failure) => emit(BookingErrorState(failure: failure)),
+      (booking) => emit(BookingStatusChangedState(booking: booking)),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mindecho/features/doctor/patients/pages/patients_screen.dart';
-import 'package:mindecho/features/doctor/patients/widgets/patient_card.dart';
+import 'package:mindecho/features/Doctor/ui/pages/patients/pages/patients_screen.dart';
+import 'package:mindecho/features/Doctor/ui/pages/patients/widgets/patient_card.dart';
 
 void main() {
   testWidgets('PatientsScreen renders correctly', (WidgetTester tester) async {

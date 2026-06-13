@@ -6,11 +6,11 @@ import '../features/onboarding/ui/pages/onboarding_screen.dart';
 import '../features/auth/register/ui/widgets/account_type_screen.dart';
 import '../features/auth/register/ui/pages/register_screen.dart';
 import '../features/auth/login/ui/pages/login_screen.dart';
-import '../features/doctor/main/pages/doctor_main_screen.dart';
-import '../features/doctor/patients/pages/patients_screen.dart';
-import '../features/doctor/appointments/pages/appointments_screen.dart';
-import '../features/doctor/messages/pages/messages_screen.dart';
-import '../features/doctor/reports/pages/reports_screen.dart';
+import '../features/Doctor/ui/pages/main/pages/doctor_main_screen.dart';
+import '../features/Doctor/ui/pages/patients/pages/patients_screen.dart';
+import '../features/Doctor/ui/pages/appointments/pages/appointments_screen.dart';
+import '../features/Doctor/ui/pages/messages/pages/messages_screen.dart';
+import '../features/Doctor/ui/pages/reports/pages/reports_screen.dart';
 
 class Routes {
   static const String homeScreenRoutes = "home_screen";
