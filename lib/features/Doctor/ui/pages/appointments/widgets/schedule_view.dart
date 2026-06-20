@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mindecho/core/theme/app_colors.dart';
-import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/core/utils/app_theme.dart';
 import 'package:mindecho/features/Doctor/ui/manager/schedule_cubit.dart';
 import 'package:mindecho/features/Doctor/domain/entities/schedule_entity.dart';
 import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
+
+import 'package:mindecho/core/utils/app_colors.dart';
 
 class ScheduleView extends StatefulWidget {
   const ScheduleView({super.key});

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/features/user/appointments/ui/manager/booking_cubit.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
 import '../models/appointment_item.dart';
 import '../widgets/appointments_header.dart';
 import '../widgets/appointments_tab_bar.dart';
@@ -7,7 +9,6 @@ import '../widgets/appointments_search_bar.dart';
 import '../widgets/appointment_card.dart';
 import '../widgets/schedule_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mindecho/features/appointments/ui/manager/booking_cubit.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});

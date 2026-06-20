@@ -11,19 +11,38 @@ class RegisterCubit extends Cubit<RegisterState> {
   final RegisterUseCase registerUseCase;
   RegisterCubit({required this.registerUseCase}) : super(RegisterInitialState());
 
-  Future<void> register(String name, String email, String password) async {
+  Future<void> register(
+      String name,
+      String email,
+      String password,
+      int age,
+      String gender,
+      ) async {
     emit(RegisterLoadingState());
-    var either = await registerUseCase.invoke(name, email, password);
+
+    var either = await registerUseCase.invoke(
+      name,
+      email,
+      password,
+      age,
+      gender,
+    );
+
     either.fold(
-      (error) => emit(RegisterErrorState(failures: error)),
-      (response) async {
+          (error) => emit(RegisterErrorState(failures: error)),
+          (response) async {
         if (response.data?.token != null) {
           await SharedPreferencesUtils.saveData(
             key: 'token',
             value: response.data!.token!,
           );
         }
-        emit(RegisterSuccessState(registerResponseEntity: response));
+
+        emit(
+          RegisterSuccessState(
+            registerResponseEntity: response,
+          ),
+        );
       },
     );
   }

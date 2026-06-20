@@ -7,11 +7,26 @@ import '../data_sources/remote/register_remote_data_source.dart';
 class RegisterRepositoryImpl implements RegisterRepository {
   final RegisterRemoteDataSource registerRemoteDataSource;
   RegisterRepositoryImpl({required this.registerRemoteDataSource});
-
   @override
   Future<Either<Failures, RegisterResponseEntity>> register(
-      String name, String email, String password) async {
-    var either = await registerRemoteDataSource.register(name, email, password);
-    return either.fold((e) => left(e), (r) => right(r));
+      String name,
+      String email,
+      String password,
+      int age,
+      String gender,
+      ) async {
+    var either = await registerRemoteDataSource.register(
+      name,
+      email,
+      password,
+      age,
+      gender,
+    );
+
+    return either.fold(
+          (e) => left(e),
+          (r) => right(r),
+    );
+
   }
 }

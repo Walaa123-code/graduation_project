@@ -12,6 +12,8 @@ class AppStyles {
       color: AppColors.blackColor, fontSize: 24, fontWeight: FontWeight.bold);
   static TextStyle bold23Black = const TextStyle(
       color: AppColors.blackColor, fontSize: 23, fontWeight: FontWeight.bold);
+  static TextStyle bold22Black = const TextStyle(
+      color: AppColors.blackColor, fontSize: 22, fontWeight: FontWeight.bold);
   static TextStyle bold18Black = const TextStyle(
       color: AppColors.blackColor, fontSize: 18, fontWeight: FontWeight.bold);
   static TextStyle bold16Black = const TextStyle(
@@ -56,8 +58,16 @@ class AppStyles {
       color: AppColors.darkGrayColor,
       fontSize: 16,
       fontWeight: FontWeight.w500);
+  static TextStyle medium12DarkGray = const TextStyle(
+      color: AppColors.darkGrayColor,
+      fontSize: 12,
+      fontWeight: FontWeight.w500);
   static TextStyle medium14DarkGray = const TextStyle(
       color: AppColors.darkGrayColor,
+      fontSize: 14,
+      fontWeight: FontWeight.w500);
+  static TextStyle medium14Gray = const TextStyle(
+      color: AppColors.gray500,
       fontSize: 14,
       fontWeight: FontWeight.w500);
   static TextStyle medium18DarkGray = const TextStyle(

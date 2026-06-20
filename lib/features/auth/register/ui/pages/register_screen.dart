@@ -1,15 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../../../../core/theme/app_theme.dart';
-import '../../../../../core/components/custom_text_field.dart';
-import '../../../../../core/components/custom_button.dart';
-import '../../../../../core/utils/app_colors.dart';
-import '../../../../../di/di.dart';
+import 'package:mindecho/core/components/auth_background.dart';
+import 'package:mindecho/core/components/auth_header_section.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import 'package:mindecho/di/di.dart';
 import '../manager/cubit/register_cubit.dart';
-import '../../../login/ui/widgets/auth_header.dart';
-import '../../../login/ui/widgets/login_link_row.dart';
+import '../../../login/ui/pages/login_screen.dart';
+import '../widgets/register_form.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -24,19 +21,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _ageController = TextEditingController();
+  String? selectedGender;
   final RegisterCubit _registerCubit = getIt<RegisterCubit>();
-  final ImagePicker _picker = ImagePicker();
-  File? _profileImage;
-
-  Future<void> _pickImage() async {
-    final picked = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
-    if (picked != null) {
-      setState(() => _profileImage = File(picked.path));
-    }
-  }
 
   @override
   void dispose() {
@@ -44,7 +31,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _ageController.dispose();
     super.dispose();
+  }
+
+  void _handleRegister() {
+    if (_formKey.currentState!.validate()) {
+      _registerCubit.register(
+        _nameController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        int.parse(_ageController.text.trim()),
+        selectedGender!,
+      );
+    }
+
   }
 
   @override
@@ -52,145 +53,79 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return BlocProvider.value(
       value: _registerCubit,
       child: BlocListener<RegisterCubit, RegisterState>(
-          listener: (context, state) {
-            if (state is RegisterSuccessState) {
-              Navigator.pushReplacementNamed(context, 'home_screen');
-            }
-            if (state is RegisterErrorState) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(state.failures.errors),
-                backgroundColor: Colors.red,
-              ));
-            }
-          },
-          child: Scaffold(
-            backgroundColor: AppColors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios,
-                    color: AppColors.purpleSoft),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            body: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const AuthHeader(
-                      title: 'Create Account',
-                      subtitle:
-                          'Join MINDECHO and start your wellness journey',
-                    ),
+        listener: (context, state) {
+          if (state is RegisterSuccessState) {
+            Navigator.pushReplacementNamed(context, 'home_screen');
+          }
+          if (state is RegisterErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.failures.errors),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ));
+          }
+        },
+        child: Scaffold(
+          body: Expanded(
+            child: Stack(
+              children: [
+                const AuthBackground(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Column(
+                    children: [
+                      const AuthHeaderSection(
+                        title: 'Create Account',
+                        subtitle:
+                            'Join MINDECHO and start your wellness journey',
+                        showBackButton: true,
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: const BoxDecoration(
 
-                    const SizedBox(height: 28),
-
-
-
-
-
-                    const SizedBox(height: 24),
-                    CustomTextField(
-                      hintText: 'Full Name',
-                      controller: _nameController,
-                      prefixIcon: const Icon(Icons.person_outline,
-                          color: AppColors.gray400),
-                      validator: (v) {
-                        if (v == null || v.isEmpty)
-                          return 'Please enter your full name';
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    CustomTextField(
-                      hintText: 'Email Address',
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      prefixIcon: const Icon(Icons.email_outlined,
-                          color: AppColors.gray400),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        if (!v.contains('@')) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    CustomTextField(
-                      hintText: 'Password',
-                      controller: _passwordController,
-                      isPassword: true,
-                      prefixIcon: const Icon(Icons.lock_outline,
-                          color: AppColors.gray400),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        if (v.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    CustomTextField(
-                      hintText: 'Confirm Password',
-                      controller: _confirmPasswordController,
-                      isPassword: true,
-                      prefixIcon: const Icon(Icons.lock_outline,
-                          color: AppColors.gray400),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) {
-                          return 'Please confirm your password';
-                        }
-                        if (v != _passwordController.text) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    BlocBuilder<RegisterCubit, RegisterState>(
-                      builder: (context, state) {
-                        if (state is RegisterLoadingState) {
-                          return const Center(
-                              child: CircularProgressIndicator(
-                                  color: AppColors.purpleSoft));
-                        }
-                        return CustomButton(
-                          text: 'Create Account',
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _registerCubit.register(
-                                _nameController.text.trim(),
-                                _emailController.text.trim(),
-                                _passwordController.text.trim(),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(32)),
+                          ),
+                          child: BlocBuilder<RegisterCubit, RegisterState>(
+                            builder: (context, state) {
+                              return RegisterForm(
+                                ageController: _ageController,
+                                selectedGender: selectedGender,
+                                onGenderChanged: (value) {
+                                  setState(() {
+                                    selectedGender = value;
+                                  });
+                                },
+                                formKey: _formKey,
+                                nameController: _nameController,
+                                emailController: _emailController,
+                                passwordController: _passwordController,
+                                confirmPasswordController:
+                                    _confirmPasswordController,
+                                isLoading: state is RegisterLoadingState,
+                                onRegister: _handleRegister,
+                                onNavigateToLogin: () =>
+                                    Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (_) => const LoginScreen()),
+                                ),
                               );
-                            }
-                          },
-                          width: double.infinity,
-                          backgroundColor: AppColors.purpleSoft,
-                        );
-                      },
-                    ),
-
-                    const SizedBox(height: 24),
-                    const LoginLinkRow(),
-                    const SizedBox(height: 24),
-                  ],
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

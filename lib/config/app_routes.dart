@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../features/auth/register/ui/widgets/doctor_register_screen.dart';
-import '../features/home/home_screen.dart';
+import '../features/auth/ui/pages/doctor_register_screen.dart';
 import '../features/onboarding/ui/pages/splash_screen.dart';
 import '../features/onboarding/ui/pages/onboarding_screen.dart';
 import '../features/auth/register/ui/widgets/account_type_screen.dart';
@@ -11,15 +10,10 @@ import '../features/Doctor/ui/pages/patients/pages/patients_screen.dart';
 import '../features/Doctor/ui/pages/appointments/pages/appointments_screen.dart';
 import '../features/Doctor/ui/pages/messages/pages/messages_screen.dart';
 import '../features/Doctor/ui/pages/reports/pages/reports_screen.dart';
+import '../features/user/home/home_screen.dart';
 
 class Routes {
   static const String homeScreenRoutes = "home_screen";
-  static const String homeTabRoutes = "home_tab";
-  static const String libraryRoutes = "library_screen";
-  static const String mySpaceRoutes = "my_space_screen";
-  static const String appointmentsRoutes = "appointments_screen";
-  static const String profileRoutes = "profile_screen";
-  static const String journalDetailsRoutes = "journal_details";
   static const String splash = '/';
   static const String onboarding = '/onboarding';
   static const String accountType = '/account-type';

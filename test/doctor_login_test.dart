@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mindecho/features/auth/login/ui/pages/login_screen.dart';
 import 'package:mindecho/features/Doctor/ui/pages/main/pages/doctor_main_screen.dart';
 import 'package:mindecho/config/app_routes.dart';
-import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/core/utils/app_theme.dart';
 
 void main() {
   testWidgets('Doctor login navigates to DoctorMainScreen',

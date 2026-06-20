@@ -4,7 +4,7 @@ import 'package:mindecho/features/Doctor/ui/pages/home/pages/doctor_home_screen.
 import 'package:mindecho/features/Doctor/ui/pages/appointments/pages/appointments_screen.dart';
 import 'package:mindecho/features/Doctor/ui/pages/messages/pages/messages_screen.dart';
 import 'package:mindecho/features/Doctor/ui/pages/reports/pages/reports_screen.dart';
-import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/core/utils/app_theme.dart';
 
 void main() {
   // Helper to pump widget with routes

@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mindecho/core/cashe/cashe_helper.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
-import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/core/utils/app_theme.dart';
 import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/stats_card.dart';
 import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
+import 'package:mindecho/features/Doctor/ui/pages/profile/widgets/doctor_avatar_widget.dart';
+import 'package:mindecho/features/Doctor/ui/pages/profile/widgets/profile_error_widget.dart';
+import 'package:mindecho/features/Doctor/ui/pages/profile/widgets/profile_info_card.dart';
+import 'package:mindecho/features/Doctor/ui/pages/profile/widgets/profile_section_header.dart';
 import 'package:mindecho/features/auth/login/ui/pages/login_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+
+import 'package:mindecho/core/utils/app_colors.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
   const DoctorProfileScreen({super.key});
@@ -25,8 +31,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
   Future<void> _pickAndCropImage(dynamic profile) async {
     final ImagePicker picker = ImagePicker();
+    // Capture context before any await so it is not used across an async gap.
+    final buildContext = context;
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    
+
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
         sourcePath: image.path,
@@ -45,20 +53,20 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             resetAspectRatioEnabled: false,
           ),
           WebUiSettings(
-            context: context,
-            presentStyle: WebPresentStyle.dialog,
+            // ignore: use_build_context_synchronously
+            context: buildContext,
           ),
         ],
       );
 
       if (croppedFile != null && mounted) {
         context.read<DoctorCubit>().updateDoctorProfile(
-          fullName: profile.fullName,
-          email: profile.email ?? '',
-          specialization: profile.specialization ?? '',
-          bio: profile.bio ?? '',
-          profilePicturePath: croppedFile.path,
-        );
+              fullName: profile.fullName,
+              email: profile.email ?? '',
+              specialization: profile.specialization ?? '',
+              bio: profile.bio ?? '',
+              profilePicturePath: croppedFile.path,
+            );
       }
     }
   }
@@ -76,7 +84,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         ),
         title: const Text(
           'Profile',
-          style: TextStyle(color: AppColors.gray800, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: AppColors.gray800, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -86,28 +95,12 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (state.error != null && state.profile == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: AppColors.gray400),
-                  const SizedBox(height: AppTheme.spacingMd),
-                  Text(
-                    state.error!.errors ?? 'Failed to load profile',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.gray600),
-                  ),
-                  const SizedBox(height: AppTheme.spacingMd),
-                  ElevatedButton(
-                    onPressed: () => context.read<DoctorCubit>().getDoctorProfile(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
+            return ProfileErrorWidget(
+              message: state.error!.errors ?? 'Failed to load profile',
+              onRetry: () => context.read<DoctorCubit>().getDoctorProfile(),
             );
           }
 
-          // Extract profile — works for both Loaded and Updated states
           final profile = state.profile;
 
           if (profile == null) {
@@ -120,45 +113,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 const SizedBox(height: AppTheme.spacingMd),
 
                 // Avatar
-                GestureDetector(
+                DoctorAvatarWidget(
+                  profilePicture: profile.profilePicture,
+                  fullName: profile.fullName,
                   onTap: () => _pickAndCropImage(profile),
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: AppColors.purpleBg,
-                        backgroundImage: profile.profilePicture != null &&
-                                profile.profilePicture!.isNotEmpty
-                            ? NetworkImage(profile.profilePicture!)
-                            : null,
-                        child: profile.profilePicture == null ||
-                                profile.profilePicture!.isEmpty
-                            ? Text(
-                                profile.fullName.isNotEmpty
-                                    ? profile.fullName[0].toUpperCase()
-                                    : '?',
-                                style: const TextStyle(
-                                    fontSize: 36,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.purpleSoft),
-                              )
-                            : null,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
 
                 const SizedBox(height: AppTheme.spacingMd),
@@ -183,8 +141,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
                 // Stats
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppTheme.spacingMd),
                   child: Row(
                     children: [
                       Expanded(
@@ -220,40 +178,18 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 const SizedBox(height: AppTheme.spacingLg),
 
                 // Professional Info
-                _buildSectionHeader(context, 'Professional Info'),
-                Container(
-                  margin: const EdgeInsets.all(AppTheme.spacingMd),
-                  padding: const EdgeInsets.all(AppTheme.spacingMd),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        offset: const Offset(0, 4),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      _buildInfoRow('Specialty',
-                          profile.specialization ?? 'Not set'),
-                      const Divider(),
-                      _buildInfoRow('Email', profile.email ?? 'Not set'),
-                      if (profile.bio != null && profile.bio!.isNotEmpty) ...[
-                        const Divider(),
-                        _buildInfoRow('Bio', profile.bio!),
-                      ],
-                    ],
-                  ),
+                const ProfileSectionHeader(title: 'Professional Info'),
+                ProfileInfoCard(
+                  specialty: profile.specialization ?? 'Not set',
+                  email: profile.email ?? 'Not set',
+                  bio: profile.bio,
                 ),
 
                 // Settings & Logout
-                _buildSectionHeader(context, 'Settings'),
+                const ProfileSectionHeader(title: 'Settings'),
                 Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: AppTheme.spacingMd),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(AppTheme.radiusLg),
@@ -268,7 +204,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   child: Column(
                     children: [
                       ListTile(
-                        leading: const Icon(Icons.logout, color: Colors.red),
+                        leading:
+                            const Icon(Icons.logout, color: Colors.red),
                         title: const Text('Logout',
                             style: TextStyle(color: Colors.red)),
                         onTap: () async {
@@ -290,46 +227,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(BuildContext context, String title) {
-    return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd, vertical: 8),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          title,
-          style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.gray800),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label,
-              style: const TextStyle(color: AppColors.gray500, fontSize: 16)),
-          Flexible(
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: const TextStyle(
-                  color: AppColors.gray800,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16),
-            ),
-          ),
-        ],
       ),
     );
   }

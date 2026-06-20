@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
-import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/core/utils/app_theme.dart';
 import 'package:mindecho/features/chat/domain/entities/chat_message_entity.dart';
+
+import 'package:mindecho/core/utils/app_colors.dart';
 
 /// Renders a single chat message bubble.
 ///

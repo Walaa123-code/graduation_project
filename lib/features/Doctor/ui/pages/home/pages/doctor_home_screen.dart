@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
-import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:mindecho/core/utils/app_theme.dart';
 import 'package:mindecho/features/Doctor/ui/widgets/shared/models/doctor_action_item.dart';
 import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/action_grid.dart';
 import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/doctor_header_widget.dart';
-import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/stats_card.dart';
+import 'package:mindecho/features/Doctor/ui/widgets/shared/widgets/schedule_tile_card.dart';
 import 'package:mindecho/features/Doctor/ui/manager/doctor_cubit.dart';
 import 'package:mindecho/features/Doctor/ui/manager/schedule_cubit.dart';
+import 'package:mindecho/features/Doctor/ui/pages/home/widgets/empty_schedule.dart';
+import 'package:mindecho/features/Doctor/ui/pages/home/widgets/stats_row.dart';
+
+import 'package:mindecho/core/utils/app_colors.dart';
 
 class DoctorHomeScreen extends StatefulWidget {
   final void Function(int index)? onTabChange;
@@ -110,49 +114,18 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Stats Row
-                      Row(
-                        children: [
-                          Expanded(
-                            child: StatsCard(
-                              label: 'Specialty',
-                              value: specialization.isNotEmpty ? specialization : '—',
-                              icon: Icons.medical_services_outlined,
-                              color: AppColors.purpleSoft,
-                            ),
-                          ),
-                          const SizedBox(width: AppTheme.spacingMd),
-                          // Schedule count from real API
-                          BlocBuilder<ScheduleCubit, ScheduleState>(
-                            builder: (ctx, schedState) {
-                              final count = schedState is ScheduleListLoadedState
-                                  ? schedState.schedules.length
-                                  : 0;
-                              return Expanded(
-                                child: StatsCard(
-                                  label: 'Schedules',
-                                  value: '$count',
-                                  icon: Icons.calendar_today,
-                                  color: AppColors.primary,
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(width: AppTheme.spacingMd),
-                          // Patients count
-                          BlocBuilder<DoctorCubit, DoctorState>(
-                            builder: (ctx, state) {
-                              final count = state.patients?.totalCount ?? 0;
-                              return Expanded(
-                                child: StatsCard(
-                                  label: 'Patients',
-                                  value: '$count',
-                                  icon: Icons.person_outline,
-                                  color: Colors.orange,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                      BlocBuilder<ScheduleCubit, ScheduleState>(
+                        builder: (ctx, schedState) {
+                          final schedCount = schedState is ScheduleListLoadedState
+                              ? schedState.schedules.length
+                              : 0;
+                          final patientCount = doctorState.patients?.totalCount ?? 0;
+                          return StatsRow(
+                            specialization: specialization,
+                            scheduleCount: schedCount,
+                            patientCount: patientCount,
+                          );
+                        },
                       ),
 
                       const SizedBox(height: AppTheme.spacingLg),
@@ -194,27 +167,7 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                               if (schedState is ScheduleLoadingState)
                                 const Center(child: CircularProgressIndicator())
                               else if (schedules.isEmpty)
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(AppTheme.spacingXl),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.circular(AppTheme.radiusLg),
-                                    border: Border.all(color: AppColors.gray200),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      const Icon(Icons.calendar_today,
-                                          size: 48, color: AppColors.gray300),
-                                      const SizedBox(height: AppTheme.spacingMd),
-                                      Text('No schedules set up yet',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium),
-                                    ],
-                                  ),
-                                )
+                                const EmptySchedule()
                               else
                                 ...schedules.take(3).map((s) {
                                   const days = [
@@ -222,51 +175,12 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                   ];
                                   // ignore: avoid_dynamic_calls
                                   final dayLabel = days[(s as dynamic).dayOfWeek % 7];
-                                  return Container(
-                                    margin: const EdgeInsets.only(bottom: 8),
-                                    padding: const EdgeInsets.all(AppTheme.spacingMd),
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [Color(0xFFEEE6FF), Color(0xFFE0E8FF)],
-                                      ),
-                                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-                                      border: Border.all(color: AppColors.purpleLight),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.access_time,
-                                            color: AppColors.purpleSoft, size: 20),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '$dayLabel  ${s.startTime} – ${s.endTime}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.purpleSoft,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 2),
-                                          decoration: BoxDecoration(
-                                            color: s.isActive
-                                                ? AppColors.primary.withValues(alpha: 0.1)
-                                                : AppColors.gray200,
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: Text(
-                                            s.isActive ? 'Active' : 'Off',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w600,
-                                              color: s.isActive
-                                                  ? AppColors.primary
-                                                  : AppColors.gray500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  return ScheduleTileCard(
+                                    startTime: s.startTime as String,
+                                    endTime: s.endTime as String,
+                                    dayLabel: dayLabel,
+                                    slotId: s.id,
+                                    isActive: s.isActive as bool,
                                   );
                                 }),
                             ],
@@ -299,3 +213,4 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
     );
   }
 }
+

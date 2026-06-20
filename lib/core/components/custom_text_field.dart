@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import '../utils/app_theme.dart';
 import '../utils/app_colors.dart';
 
 /// Custom Text Field Widget
@@ -45,14 +45,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onChanged: widget.onChanged,
       maxLines: widget.maxLines,
       style: const TextStyle(
-        fontSize: 16,
+        fontSize: 18,
         color: AppColors.gray700,
       ),
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: const TextStyle(
           color: AppColors.gray400,
-          fontSize: 16,
+          fontSize: 18,
         ),
         filled: true,
         fillColor: AppColors.gray50,

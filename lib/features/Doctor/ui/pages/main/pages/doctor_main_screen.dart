@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
 import '../../home/pages/doctor_home_screen.dart';
 import '../../profile/pages/doctor_profile_screen.dart';
 import '../../patients/pages/patients_screen.dart';

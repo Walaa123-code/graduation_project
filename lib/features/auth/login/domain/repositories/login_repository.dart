@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../../../../core/errors/failures.dart';
+import 'package:mindecho/core/errors/failures.dart';
 import '../entities/login_response_entity.dart';
 
 abstract class LoginRepository {

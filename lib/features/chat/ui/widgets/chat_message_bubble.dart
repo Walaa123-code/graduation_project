@@ -14,7 +14,7 @@ class ChatMessageBubble extends StatelessWidget {
     final currentUserId =
         SharedPreferencesUtils.getData(key: 'userId') as String?;
     final isMe = message.senderId == currentUserId ||
-        message.senderType == 'User';
+        message.messageSenderType == 0;
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -73,24 +73,23 @@ class ChatMessageBubble extends StatelessWidget {
             ),
 
             // الوقت
-            if (message.createdAt != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  _formatTime(message.createdAt!),
-                  style: const TextStyle(
-                      fontSize: 11, color: AppColors.grayColor),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                _formatTime(message.sentAt),
+                style: const TextStyle(
+                    fontSize: 11, color: AppColors.grayColor),
               ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  String _formatTime(String dateStr) {
+  String _formatTime(DateTime dateTime) {
     try {
-      final d = DateTime.parse(dateStr).toLocal();
+      final d = dateTime.toLocal();
       final h = d.hour.toString().padLeft(2, '0');
       final m = d.minute.toString().padLeft(2, '0');
       return "$h:$m";

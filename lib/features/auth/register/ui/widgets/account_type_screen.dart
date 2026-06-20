@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
-import 'package:mindecho/core/theme/app_theme.dart';
-import '../../../../core/components/account_type_card.dart';
-import 'user_register_screen.dart';
-import 'doctor_register_screen.dart';
+import 'package:mindecho/core/utils/app_theme.dart';
+import 'package:mindecho/core/components/account_type_card.dart';
+import 'package:mindecho/core/utils/app_colors.dart';
+import '../../../ui/pages/doctor_register_screen.dart';
+import '../pages/register_screen.dart';
 
 /// Account Type Selection Screen
 /// Choose between User or Doctor account
@@ -54,7 +55,7 @@ class AccountTypeScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const UserRegisterScreen(),
+                      builder: (context) => const RegisterScreen(),
                     ),
                   );
                 },
