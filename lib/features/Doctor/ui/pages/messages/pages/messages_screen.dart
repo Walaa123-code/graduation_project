@@ -6,6 +6,7 @@ import 'package:mindecho/core/theme/app_theme.dart';
 import 'package:mindecho/di/di.dart';
 import 'package:mindecho/features/chat/ui/manager/chat_cubit.dart';
 import 'package:mindecho/features/chat/ui/pages/chat_screen.dart';
+import 'package:mindecho/features/appointments/ui/manager/booking_cubit.dart';
 import '../widgets/message_tile.dart';
 import '../models/message_item.dart';
 
@@ -17,79 +18,40 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
-  // ── Demo conversation list ─────────────────────────────────────
-  // Replace with real data from a bookings API when available.
-  // Each item now carries a bookingId so the chat room can be opened.
-  final List<MessageItem> _messages = const [
-    MessageItem(
-      patientName: 'Ahmed Mohamed',
-      lastMessage: 'Doctor, I have been feeling anxious lately...',
-      time: '10:32 AM',
-      unreadCount: 3,
-      isOnline: true,
-      initials: 'AM',
-      avatarColor: Color(0xFF9B7EBD),
-      bookingId: null, // set to real bookingId when available
-    ),
-    MessageItem(
-      patientName: 'Fatima Ali',
-      lastMessage: 'Thank you for the prescription, I will start today.',
-      time: '9:15 AM',
-      unreadCount: 0,
-      isOnline: false,
-      initials: 'FA',
-      avatarColor: Color(0xFF4ECDC4),
-      bookingId: null,
-    ),
-    MessageItem(
-      patientName: 'Omar Hassan',
-      lastMessage: 'Can we reschedule our session to Thursday?',
-      time: 'Yesterday',
-      unreadCount: 1,
-      isOnline: true,
-      initials: 'OH',
-      avatarColor: Color(0xFFFF6B6B),
-      bookingId: null,
-    ),
-    MessageItem(
-      patientName: 'Sara Khalid',
-      lastMessage: 'I completed the mindfulness exercises you recommended.',
-      time: 'Yesterday',
-      unreadCount: 0,
-      isOnline: false,
-      initials: 'SK',
-      avatarColor: Color(0xFFFFB84D),
-      bookingId: null,
-    ),
-    MessageItem(
-      patientName: 'Yousef Nasser',
-      lastMessage: 'The new medication is working well, thank you!',
-      time: 'Monday',
-      unreadCount: 0,
-      isOnline: false,
-      initials: 'YN',
-      avatarColor: Color(0xFF56AB2F),
-      bookingId: null,
-    ),
-    MessageItem(
-      patientName: 'Layla Ibrahim',
-      lastMessage: 'I have a question about my sleep schedule...',
-      time: 'Sunday',
-      unreadCount: 2,
-      isOnline: true,
-      initials: 'LI',
-      avatarColor: Color(0xFFA8D8EA),
-      bookingId: null,
-    ),
-  ];
-
   String _searchQuery = '';
 
-  List<MessageItem> get _filteredMessages => _messages
-      .where((m) =>
-          m.patientName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          m.lastMessage.toLowerCase().contains(_searchQuery.toLowerCase()))
-      .toList();
+  @override
+  void initState() {
+    super.initState();
+    context.read<BookingCubit>().getAllBookings(isDoctor: true);
+  }
+
+  List<MessageItem> _mapBookingsToMessageItems(BookingState state) {
+    if (state is BookingsLoadedState) {
+      return state.bookings.map((booking) {
+        final name = booking.user?.fullName ?? 'Booking #${booking.id}';
+        return MessageItem(
+          patientName: name,
+          lastMessage: 'Tap to view conversation',
+          time: '',
+          unreadCount: 0,
+          isOnline: false,
+          initials: name.isNotEmpty ? name[0].toUpperCase() : '?',
+          avatarColor: const Color(0xFF4ECDC4),
+          bookingId: booking.id,
+        );
+      }).toList();
+    }
+    return [];
+  }
+
+  List<MessageItem> _filterMessages(List<MessageItem> messages) {
+    return messages
+        .where((m) =>
+            m.patientName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            m.lastMessage.toLowerCase().contains(_searchQuery.toLowerCase()))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,17 +63,45 @@ class _MessagesScreenState extends State<MessagesScreen> {
           _buildSearchBar(),
           const SizedBox(height: AppTheme.spacingXs),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppTheme.spacingMd,
-                vertical: AppTheme.spacingXs,
-              ),
-              itemCount: _filteredMessages.length,
-              itemBuilder: (context, index) {
-                final message = _filteredMessages[index];
-                return MessageTile(
-                  message: message,
-                  onTap: () => _openChat(context, message),
+            child: BlocBuilder<BookingCubit, BookingState>(
+              builder: (context, state) {
+                if (state is BookingLoadingState) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is BookingErrorState) {
+                  return Center(
+                    child: Text(
+                      'Failed to load conversations: ${state.failure}',
+                      style: const TextStyle(color: AppColors.gray500),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+
+                final rawMessages = _mapBookingsToMessageItems(state);
+                final filteredMessages = _filterMessages(rawMessages);
+
+                if (state is BookingsLoadedState && rawMessages.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No conversations available.',
+                      style: TextStyle(color: AppColors.gray500),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppTheme.spacingMd,
+                    vertical: AppTheme.spacingXs,
+                  ),
+                  itemCount: filteredMessages.length,
+                  itemBuilder: (context, index) {
+                    final message = filteredMessages[index];
+                    return MessageTile(
+                      message: message,
+                      onTap: () => _openChat(context, message),
+                    );
+                  },
                 );
               },
             ),

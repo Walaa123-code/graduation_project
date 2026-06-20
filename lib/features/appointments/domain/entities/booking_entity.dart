@@ -8,6 +8,7 @@ class BookingEntity {
   final String requestedAt;
   final String? confirmedAt;
   final DoctorEntity? doctor;
+  final UserEntity? user;
 
   const BookingEntity({
     required this.id,
@@ -18,6 +19,21 @@ class BookingEntity {
     required this.requestedAt,
     this.confirmedAt,
     this.doctor,
+    this.user,
+  });
+}
+
+class UserEntity {
+  final String id;
+  final String fullName;
+  final String? email;
+  final String? profilePicture;
+
+  const UserEntity({
+    required this.id,
+    required this.fullName,
+    this.email,
+    this.profilePicture,
   });
 }
 

@@ -10,6 +10,7 @@ class BookingDM extends BookingEntity {
     required super.requestedAt,
     super.confirmedAt,
     super.doctor,
+    super.user,
   });
 
   factory BookingDM.fromJson(Map<String, dynamic> json) {
@@ -24,6 +25,27 @@ class BookingDM extends BookingEntity {
       doctor: json['doctor'] != null
           ? DoctorDM.fromJson(json['doctor'] as Map<String, dynamic>)
           : null,
+      user: (json['user'] != null || json['patient'] != null)
+          ? UserDM.fromJson((json['user'] ?? json['patient']) as Map<String, dynamic>)
+          : null,
+    );
+  }
+}
+
+class UserDM extends UserEntity {
+  UserDM({
+    required super.id,
+    required super.fullName,
+    super.email,
+    super.profilePicture,
+  });
+
+  factory UserDM.fromJson(Map<String, dynamic> json) {
+    return UserDM(
+      id: json['id'] as String? ?? '',
+      fullName: json['fullName'] as String? ?? '',
+      email: json['email'] as String?,
+      profilePicture: json['profilePicture'] as String?,
     );
   }
 }
