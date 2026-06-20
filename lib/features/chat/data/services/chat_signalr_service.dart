@@ -168,7 +168,10 @@ class ChatSignalRService {
 
     debugPrint('[Chat] Starting connection to '
         '${ApiConstants.baseUrl}${EndPoints.chatHub}');
-    await _connection.start();
+    
+    if (_connection.state == HubConnectionState.Disconnected) {
+      await _connection.start();
+    }
 
     _connectionStateController.add(ChatConnectionState.connected);
     debugPrint('[Chat] Connection started successfully. '
@@ -198,14 +201,14 @@ class ChatSignalRService {
   Future<void> dispose() async {
     debugPrint('[Chat] Disposing service — stopping connection.');
     try {
-      await _connection.stop();
+      if (_connection.state != HubConnectionState.Disconnected) {
+        await _connection.stop();
+      }
     } catch (e) {
       debugPrint('[Chat] Error stopping connection: $e');
     }
-    await _messageController.close();
-    await _historyController.close();
-    await _seenController.close();
-    await _statusController.close();
-    await _connectionStateController.close();
+    // We intentionally DO NOT close the StreamControllers here.
+    // ChatSignalRService is registered as a LazySingleton, so these controllers
+    // must remain open to handle events when the user re-enters the chat screen.
   }
 }

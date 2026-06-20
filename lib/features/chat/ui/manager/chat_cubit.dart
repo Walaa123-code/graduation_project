@@ -111,11 +111,12 @@ class ChatCubit extends Cubit<ChatState> {
       final current = _currentLoaded();
       var messages = current?.messages.toList() ?? [];
 
-      // Deduplicate optimistic messages by content, sender, and approximate time
-      final existingIndex = messages.indexWhere((m) =>
+      // Deduplicate optimistic messages by content and sender.
+      // The optimistic message will be at the end of the list.
+      // We look for the last message with the same content and sender.
+      final existingIndex = messages.lastIndexWhere((m) =>
           m.content == msg.content &&
-          m.messageSenderType == msg.messageSenderType &&
-          m.sentAt.difference(msg.sentAt).abs().inSeconds < 10);
+          m.messageSenderType == msg.messageSenderType);
 
       if (existingIndex != -1) {
         messages[existingIndex] = msg; // Replace optimistic with server confirmed
