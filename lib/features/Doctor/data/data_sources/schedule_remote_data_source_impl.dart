@@ -29,14 +29,14 @@ class ScheduleRemoteDataSourceImpl implements ScheduleRemoteDataSource {
       return Left(NetworkError(errors: 'No internet connection'));
     }
     try {
-      final formData = FormData.fromMap({
-        'DayOfWeek': dayOfWeek.toString(),
-        'StartTime': startTime,
-        'EndTime': endTime,
-      });
-      final response = await apiManager.postFormData(
+      final response = await apiManager.postData(
         endPoint: EndPoints.addDoctorSchedule,
-        formData: formData,
+        body: {
+          'dayOfWeek': dayOfWeek,
+          'startTime': startTime,
+          'endTime': endTime,
+        },
+        options: Options(contentType: 'application/json'),
       );
       final data = (response.data as Map<String, dynamic>)['data']
               as Map<String, dynamic>? ??
@@ -64,6 +64,21 @@ class ScheduleRemoteDataSourceImpl implements ScheduleRemoteDataSource {
           .map((e) => ScheduleDM.fromJson(e as Map<String, dynamic>))
           .toList();
       return Right(list);
+    } catch (e) {
+      return Left(ServerError(errors: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failures, bool>> deleteSchedule({required int id}) async {
+    if (!await _hasInternet()) {
+      return Left(NetworkError(errors: 'No internet connection'));
+    }
+    try {
+      final endpoint = EndPoints.deleteDoctorSchedule.replaceAll('{id}', id.toString());
+      final response = await apiManager.deleteData(endPoint: endpoint);
+      // Depending on the API, it might return true or some success indicator.
+      return const Right(true);
     } catch (e) {
       return Left(ServerError(errors: e.toString()));
     }

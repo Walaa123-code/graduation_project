@@ -17,6 +17,7 @@ class AppColors {
 
   // Neutral Colors
   static const Color white = Color(0xFFFFFFFF);
+  static const Color error = Colors.red;
   static const Color gray50 = Color(0xFFF7FAFC);
   static const Color gray100 = Color(0xFFEDF2F7);
   static const Color gray200 = Color(0xFFE2E8F0);

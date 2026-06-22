@@ -53,7 +53,7 @@ class JournalRepositoryImpl implements JournalRepository {
     }
     try {
       final response =
-          await apiManager.getData(endPoint: EndPoints.getJournals);
+          await apiManager.getData(endPoint: EndPoints.getUserJournals);
       final dataList =
           (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ??
               [];

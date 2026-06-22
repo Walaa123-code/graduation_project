@@ -26,3 +26,12 @@ class GetSchedulesUseCase {
   Future<Either<Failures, List<ScheduleEntity>>> call({required String doctorId}) =>
       scheduleRepository.getSchedules(doctorId: doctorId);
 }
+
+class DeleteScheduleUseCase {
+  final ScheduleRepository scheduleRepository;
+
+  DeleteScheduleUseCase({required this.scheduleRepository});
+
+  Future<Either<Failures, bool>> call({required int id}) =>
+      scheduleRepository.deleteSchedule(id: id);
+}

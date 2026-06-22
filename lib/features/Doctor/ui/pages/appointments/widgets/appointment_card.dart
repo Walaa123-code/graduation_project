@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
 import 'package:mindecho/core/theme/app_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mindecho/features/appointments/ui/manager/booking_cubit.dart';
 import '../models/appointment_item.dart';
 
 class AppointmentCard extends StatelessWidget {
@@ -147,6 +149,44 @@ class AppointmentCard extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context) {
+    if (appointment.status == AppointmentStatus.pending) {
+      return Padding(
+        padding: const EdgeInsets.all(AppTheme.spacingMd),
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  context.read<BookingCubit>().changeBookingStatus(id: appointment.bookingId, status: 2); // 2 = Rejected/Cancelled
+                },
+                icon: const Icon(Icons.close_rounded, size: 16),
+                label: const Text('Reject'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.error,
+                  side: const BorderSide(color: AppColors.error),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 11),
+                  textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _GradientButton(
+                label: 'Accept',
+                icon: Icons.check_rounded,
+                onTap: () {
+                  context.read<BookingCubit>().changeBookingStatus(id: appointment.bookingId, status: 1); // 1 = Accepted
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(AppTheme.spacingMd),
       child: Row(
