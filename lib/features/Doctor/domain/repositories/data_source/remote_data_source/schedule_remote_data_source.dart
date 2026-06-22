@@ -12,4 +12,6 @@ abstract class ScheduleRemoteDataSource {
   Future<Either<Failures, List<ScheduleEntity>>> getSchedules({
     required String doctorId,
   });
+
+  Future<Either<Failures, bool>> deleteSchedule({required int id});
 }

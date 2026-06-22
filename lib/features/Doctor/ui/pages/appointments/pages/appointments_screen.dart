@@ -30,8 +30,21 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.gray50,
-      body: Column(
-        children: [
+      body: BlocListener<BookingCubit, BookingState>(
+        listener: (context, state) {
+          if (state is BookingStatusChangedState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Booking status updated successfully!')),
+            );
+            context.read<BookingCubit>().getAllBookings(isDoctor: true);
+          } else if (state is BookingErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.failure.errors ?? 'An error occurred')),
+            );
+          }
+        },
+        child: Column(
+          children: [
           // Gradient header (includes SafeArea top)
           const AppointmentsHeader(),
 
@@ -63,6 +76,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             date: b.requestedAt.contains('T') ? b.requestedAt.split('T')[0] : b.requestedAt,
                             time: b.requestedAt.contains('T') ? b.requestedAt.split('T')[1].substring(0, 5) : '',
                             sessionType: SessionType.online,
+                            bookingId: b.id,
                           );
                         }).toList();
                         return _UpcomingList(appointments: items);
@@ -73,6 +87,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 : const ScheduleView(),
           ),
         ],
+      ),
       ),
     );
   }

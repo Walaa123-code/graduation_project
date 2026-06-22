@@ -41,7 +41,7 @@ class MemoryRepositoryImpl implements MemoryRepository {
       }
       final formData = FormData.fromMap(fields);
       final response = await apiManager.postFormData(
-        endPoint: 'removed', // EndPoints.createMemory,
+        endPoint: EndPoints.createMemory,
         formData: formData,
       );
       final data = (response.data as Map<String, dynamic>)['data']
@@ -59,7 +59,7 @@ class MemoryRepositoryImpl implements MemoryRepository {
       return Left(NetworkError(errors: 'No internet connection'));
     }
     try {
-      final response = await apiManager.getData(endPoint: EndPoints.getMemories);
+      final response = await apiManager.getData(endPoint: EndPoints.getUserMemories);
       final dataList =
           (response.data as Map<String, dynamic>)['data'] as List<dynamic>? ??
               [];

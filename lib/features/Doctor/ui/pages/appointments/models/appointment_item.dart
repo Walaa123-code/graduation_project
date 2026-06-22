@@ -14,6 +14,7 @@ class AppointmentItem {
   final String time;
   final SessionType sessionType;
   final String? notes;
+  final int bookingId;
 
   const AppointmentItem({
     required this.patientName,
@@ -24,6 +25,7 @@ class AppointmentItem {
     required this.date,
     required this.time,
     required this.sessionType,
+    required this.bookingId,
     this.notes,
   });
 

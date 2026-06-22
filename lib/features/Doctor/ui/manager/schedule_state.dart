@@ -20,3 +20,5 @@ class ScheduleErrorState extends ScheduleState {
   final Failures failure;
   ScheduleErrorState({required this.failure});
 }
+
+class ScheduleDeletedState extends ScheduleState {}

@@ -79,7 +79,7 @@ class BookingRepositoryImpl implements BookingRepository {
     try {
       final response = await apiManager.postData(
         endPoint: EndPoints.changeBookingStatus,
-        body: {'Id': id, 'status': status},
+        queryParameters: {'Id': id, 'status': status},
       );
       final data = (response.data as Map<String, dynamic>)['data']
           as Map<String, dynamic>? ?? {};

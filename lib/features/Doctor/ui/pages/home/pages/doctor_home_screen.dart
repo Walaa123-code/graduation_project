@@ -77,14 +77,31 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.gray50,
-      body: BlocListener<DoctorCubit, DoctorState>(
-        listenWhen: (previous, current) =>
-            previous.profile == null && current.profile != null,
-        listener: (context, state) {
-          if (state.profile != null) {
-            context.read<ScheduleCubit>().getSchedules(doctorId: state.profile!.id);
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<DoctorCubit, DoctorState>(
+            listenWhen: (previous, current) =>
+                previous.profile == null && current.profile != null,
+            listener: (context, state) {
+              if (state.profile != null) {
+                context.read<ScheduleCubit>().getSchedules(doctorId: state.profile!.id);
+              }
+            },
+          ),
+          BlocListener<ScheduleCubit, ScheduleState>(
+            listener: (context, state) {
+              if (state is ScheduleDeletedState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Schedule deleted successfully!')),
+                );
+                final profile = context.read<DoctorCubit>().state.profile;
+                if (profile != null) {
+                  context.read<ScheduleCubit>().getSchedules(doctorId: profile.id);
+                }
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<DoctorCubit, DoctorState>(
           builder: (context, doctorState) {
           final doctorName = doctorState.profile != null
@@ -264,6 +281,13 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                                   : AppColors.gray500,
                                             ),
                                           ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+                                          onPressed: () {
+                                            context.read<ScheduleCubit>().deleteSchedule(id: s.id);
+                                          },
                                         ),
                                       ],
                                     ),
