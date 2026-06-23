@@ -55,7 +55,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: BlocListener<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if (state is RegisterSuccessState) {
-            Navigator.pushReplacementNamed(context, 'home_screen');
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false,);
           }
           if (state is RegisterErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

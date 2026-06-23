@@ -36,11 +36,12 @@ class AppointmentsTabBar extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 11),
                 decoration: BoxDecoration(
                   gradient: isActive
-                      ? const LinearGradient(
-                          colors: [Color(0xFF9B7EBD), Color(0xFF5B6EE8)],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        )
+
+                ? const LinearGradient(
+                          colors: [Color(0xFF6B3FA0), Color(0xFF9643B6), Color(0xFFD4B5F0)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
                       : null,
                   color: isActive ? null : AppColors.gray100,
                   borderRadius: BorderRadius.circular(AppTheme.radiusMd),

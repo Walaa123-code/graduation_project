@@ -110,39 +110,50 @@ class MySpaceScreen extends StatelessWidget {
           BlocProvider(create: (context) => getIt<MemoryCubit>()..getMemory()),
           BlocProvider(create: (context) => getIt<DeleteMemoryCubit>()),
         ],
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            automaticallyImplyLeading: true, // بيسيب سهم الرجوع الأساسي مكانه
-            titleSpacing: 0.0, // بنصفر المسافة عشان نتحكم فيها يدوي جوه الـ Row
-            title: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // مسافة من اليمين والشمال للشاشة كلها
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'My Space',
-                    style: AppStyles.bold25Black,
+        child: Builder( // الـ Builder ده عشان نضمن إن الـ context يقدر يقرأ الـ Cubits اللي فوقيه
+            builder: (context) {
+              return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  automaticallyImplyLeading: true,
+                  titleSpacing: 0.0,
+                  title: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'My Space',
+                          style: AppStyles.bold25Black,
+                        ),
+                        ContactTherapistButton(
+                          onTap: () => _handleContactTherapist(context),
+                        ),
+                      ],
+                    ),
                   ),
-                  ContactTherapistButton(
-                    onTap: () => _handleContactTherapist(context),
+                  bottom: TabBar(
+                    labelStyle: AppStyles.bold20Lavender,
+                    unselectedLabelStyle: AppStyles.bold18Black,
+                    indicatorColor: AppColors.lavenderColor,
+                    labelColor: AppColors.lavenderColor,
+                    unselectedLabelColor: AppColors.blackColor,
+                    tabs: const [
+                      Tab(text: 'Journals'),
+                      Tab(text: 'Memories'),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            bottom: TabBar(
-              labelStyle: AppStyles.bold20Lavender,
-              unselectedLabelStyle: AppStyles.bold18Black,
-              indicatorColor: AppColors.lavenderColor,
-              labelColor: AppColors.lavenderColor,
-              unselectedLabelColor: AppColors.blackColor,
-              tabs: const [
-                Tab(text: 'Journals'),
-                Tab(text: 'Memories'),
-              ],
-            ),
-          ),
+                ),
+                body: TabBarView(
+                  children: [
+                    // 🔥 باصينا الـ Cubit الحالي هنا بشكل مباشر عشان نربطه بصفحة الـ Journals تماماً
+                    JournalsTab(journalCubit: context.read<JournalCubit>()),
+                    const MemoriesTab(),
+                  ],
+                ),
+              );
+            }
         ),
       ),
     );

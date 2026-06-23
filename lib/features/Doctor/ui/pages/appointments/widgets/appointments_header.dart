@@ -14,7 +14,7 @@ class AppointmentsHeader extends StatelessWidget {
       width: double.infinity,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF9B7EBD), Color(0xFF5B6EE8)],
+          colors: [Color(0xFF6B3FA0), Color(0xFF9643B6), Color(0xFFD4B5F0)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

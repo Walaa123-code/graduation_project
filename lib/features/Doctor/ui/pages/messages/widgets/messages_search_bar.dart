@@ -1,8 +1,7 @@
+// ملف مستقل: lib/features/Doctor/ui/pages/messages/widgets/messages_search_bar.dart
 import 'package:flutter/material.dart';
 import 'package:mindecho/core/theme/app_colors.dart';
 import 'package:mindecho/core/utils/app_theme.dart';
-
-import 'package:mindecho/core/utils/app_colors.dart';
 
 class MessagesSearchBar extends StatelessWidget {
   const MessagesSearchBar({super.key, required this.onChanged});
@@ -24,8 +23,7 @@ class MessagesSearchBar extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Search conversations...',
             hintStyle: const TextStyle(color: AppColors.gray400, fontSize: 14),
-            prefixIcon:
-                const Icon(Icons.search, color: AppColors.gray400, size: 20),
+            prefixIcon: const Icon(Icons.search, color: AppColors.gray400, size: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppTheme.radiusMd),
               borderSide: BorderSide.none,
@@ -36,7 +34,7 @@ class MessagesSearchBar extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-              borderSide: const BorderSide(color: AppColors.primary, width: 1),
+              borderSide: const BorderSide(color: AppColors.purpleSoft, width: 1),
             ),
             filled: true,
             fillColor: AppColors.white,
