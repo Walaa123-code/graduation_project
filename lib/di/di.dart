@@ -243,10 +243,14 @@ Future<void> initAppModule() async {
   getIt.registerLazySingleton<GetSchedulesUseCase>(
     () => GetSchedulesUseCase(scheduleRepository: getIt<ScheduleRepository>()),
   );
+  getIt.registerLazySingleton<DeleteScheduleUseCase>(
+    () => DeleteScheduleUseCase(scheduleRepository: getIt<ScheduleRepository>()),
+  );
   getIt.registerFactory<ScheduleCubit>(
     () => ScheduleCubit(
       addScheduleUseCase: getIt<AddScheduleUseCase>(),
       getSchedulesUseCase: getIt<GetSchedulesUseCase>(),
+      deleteScheduleUseCase: getIt<DeleteScheduleUseCase>(),
     ),
   );
 

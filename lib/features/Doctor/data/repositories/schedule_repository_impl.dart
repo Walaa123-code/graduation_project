@@ -26,4 +26,9 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
   Future<Either<Failures, List<ScheduleEntity>>> getSchedules({required String doctorId}) async {
     return await remoteDataSource.getSchedules(doctorId: doctorId);
   }
+
+  @override
+  Future<Either<Failures, bool>> deleteSchedule({required int id}) async {
+    return await remoteDataSource.deleteSchedule(id: id);
+  }
 }

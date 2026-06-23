@@ -81,14 +81,31 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.gray50,
-      body: BlocListener<DoctorCubit, DoctorState>(
-        listenWhen: (previous, current) =>
-            previous.profile == null && current.profile != null,
-        listener: (context, state) {
-          if (state.profile != null) {
-            context.read<ScheduleCubit>().getSchedules(doctorId: state.profile!.id);
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<DoctorCubit, DoctorState>(
+            listenWhen: (previous, current) =>
+                previous.profile == null && current.profile != null,
+            listener: (context, state) {
+              if (state.profile != null) {
+                context.read<ScheduleCubit>().getSchedules(doctorId: state.profile!.id);
+              }
+            },
+          ),
+          BlocListener<ScheduleCubit, ScheduleState>(
+            listener: (context, state) {
+              if (state is ScheduleDeletedState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Schedule deleted successfully!')),
+                );
+                final profile = context.read<DoctorCubit>().state.profile;
+                if (profile != null) {
+                  context.read<ScheduleCubit>().getSchedules(doctorId: profile.id);
+                }
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<DoctorCubit, DoctorState>(
           builder: (context, doctorState) {
           final doctorName = doctorState.profile != null
@@ -175,12 +192,67 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                   ];
                                   // ignore: avoid_dynamic_calls
                                   final dayLabel = days[(s as dynamic).dayOfWeek % 7];
+<<<<<<< HEAD
                                   return ScheduleTileCard(
                                     startTime: s.startTime as String,
                                     endTime: s.endTime as String,
                                     dayLabel: dayLabel,
                                     slotId: s.id,
                                     isActive: s.isActive as bool,
+=======
+                                  return Container(
+                                    margin: const EdgeInsets.only(bottom: 8),
+                                    padding: const EdgeInsets.all(AppTheme.spacingMd),
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [Color(0xFFEEE6FF), Color(0xFFE0E8FF)],
+                                      ),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                                      border: Border.all(color: AppColors.purpleLight),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.access_time,
+                                            color: AppColors.purpleSoft, size: 20),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '$dayLabel  ${s.startTime} – ${s.endTime}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.purpleSoft,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: s.isActive
+                                                ? AppColors.primary.withValues(alpha: 0.1)
+                                                : AppColors.gray200,
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Text(
+                                            s.isActive ? 'Active' : 'Off',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
+                                              color: s.isActive
+                                                  ? AppColors.primary
+                                                  : AppColors.gray500,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+                                          onPressed: () {
+                                            context.read<ScheduleCubit>().deleteSchedule(id: s.id);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+>>>>>>> 6338034f2d679fbb08a4f8588d97a614cea9de8d
                                   );
                                 }),
                             ],
